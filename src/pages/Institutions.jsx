@@ -56,9 +56,9 @@ export default function Institutions() {
                                     <p>+56 {user.phone} </p>
 
                                    <Link to={'/institutions/'+ user._id }>
-                                    <div className='flex items-center gap-2 rounded-lg bg-gray-200 p-2 ' >
-                                    <h3 className='text-gray-500'>ver mas</h3>
-                                    <FiMoreHorizontal  /> 
+                                    <div className='flex items-center gap-2 rounded-lg bg-green-200 p-2 ' >
+                                    <h3 className='text-green-500'>ver mas</h3>
+                                    <FiMoreHorizontal  className='text-green-500' /> 
 
                                     </div>
                                       
