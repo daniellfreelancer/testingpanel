@@ -10,7 +10,6 @@ import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import primero_sexto_basicoACT from '../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../data/primero_sexto_basicoATA'
-import ModaldetailEF from '../components/modal/ModaldetailEF';
 import GoBackToButton from '../components/GoBackButton';
 
 
@@ -74,6 +73,20 @@ export default function Tableplanification() {
         // eslint-disable-next-line
     }, []);
 
+
+
+    const customStyles = {
+        option: (provided, state) => ({
+          ...provided,
+          whiteSpace: "nowrap",
+          overflow: "hidden",
+          textOverflow: "ellipsis"
+        })
+      };
+      
+      const formatOptionLabel = ({ value, label }) => (
+        <div title={value}>{label}</div>
+      );
 
 
     return (
@@ -247,14 +260,18 @@ export default function Tableplanification() {
                                    
                                     <td className="py-3 px-2 border text-center ">
                                     <div className="flex items-center flex-col gap-5 justify-center rounded-lg w-[12rem] min-h-[10rem]">
-                                        <ModaldetailEF title={'Detalle de objetivos'} />
-                                        <Select
-                                            closeMenuOnSelect={false}
-                                            components={animatedComponents}
-                                            isMulti
-                                            options={dataPrimero}
-                                            className='w-full'
-                                        />
+                                       
+                                <Select
+                                    closeMenuOnSelect={false}
+                                    components={animatedComponents}
+                                    // components={customComponents}
+                                    isMulti
+                                    options={dataPrimero}
+                                    className='w-full'
+                                    styles={customStyles}
+                                    formatOptionLabel={formatOptionLabel}
+                                    placeholder='Selecciona un objetivo'
+                                />
                                         </div>
                                     </td>
 
@@ -267,13 +284,15 @@ export default function Tableplanification() {
                                     </td>
                                     <td className="py-3 px-2 border text-center">
                                     <div className="flex items-center flex-col gap-5 justify-center bg-gray-100 p-3 rounded-lg w-[12rem] min-h-[10rem]">
-                                        <p>Opciones</p>
                                         <Select
                                             closeMenuOnSelect={false}
                                             components={animatedComponents}
                                             isMulti
                                             options={ojbTransversalesActitudes}
                                             className='w-full'
+                                            styles={customStyles}
+                                            formatOptionLabel={formatOptionLabel}
+                                            placeholder='Selecciona un objetivo'
                                         />
                                         </div>
                                     </td>
@@ -292,6 +311,9 @@ export default function Tableplanification() {
                                             isMulti
                                             options={materialsSchool}
                                             className='w-full'
+                                            styles={customStyles}
+                                            formatOptionLabel={formatOptionLabel}
+                                            placeholder='Selecciona...'
                                             onChange={(selectedOptions) => {
                                                 const selectedValues = selectedOptions.map(option => option.value);
                                                 setMaterials(prevMaterials => {
