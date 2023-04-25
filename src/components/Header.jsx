@@ -53,17 +53,14 @@ export default function Header() {
 
 
   return (
-    <div className='flex justify-between p-5 items-center ' >
-        <h2> VitalMove Panel</h2>
+    <div className='flex justify-between px-5 pt-5 items-center ' >
+        <h2 className='font-semibold' > VitalMove Panel</h2>
         <div className='flex gap-3 mx-3 items-center' >
         <h2> Hola, {adminPanel ? adminPanel.name : ""} </h2>
-          <button onClick={handleSignout} className=' flex transition duration-200 bg-blue-500 hover:bg-blue-600 focus:bg-blue-700 focus:shadow-sm focus:ring-4 focus:ring-blue-500 focus:ring-opacity-50 text-white rounded-lg p-2 gap-2 text-sm shadow-sm hover:shadow-md font-semibold text-center' >
+          <button onClick={handleSignout} className=' flex bg-indigo-700 rounded hover:bg-indigo-600 transform duration-300 ease-in-out text-sm font-medium px-6 py-2 text-white lg:max-w-[110px] text-center gap-2' >
             Salir <IoMdLogOut size={20} / >
           </button>
           </div> 
-
-          
-
     </div>
   )
 }

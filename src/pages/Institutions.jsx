@@ -4,8 +4,7 @@ import Sidebar from '../components/Sidebar'
 import { useSelector } from 'react-redux'
 import { reloadValueState } from '../features/reloadSlice'
 import axios from 'axios'
-import {Link} from 'react-router-dom'
-import {FiMoreHorizontal} from 'react-icons/fi'
+import InstitutionsList from '../components/InstitutionsList'
 
 
 
@@ -39,38 +38,7 @@ export default function Institutions() {
                     <span className='hidden md:grid' >Email</span>
                     <span className='hidden sm:grid'>Telefono</span>
                 </div>
-
-                <ul>
-                    {
-                        usersData.map((user, _id) => (
-                            <li key={_id} className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 items-center justify-between cursor-pointer' >
-                                <div className='flex items-center ' >
-                                    {/* <div className='bg-purple-100 p-3 rounded-lg'>
-                                <BsPersonFill className='text-purple-800' />
-                            </div> */}
-                                    <p className='' >{`${user.name}`} </p>
-                                </div>
-                                <p className='text-gray-600 sm:text-left text-right '> {user.rut}</p>
-                                <p className='text-gray-600 sm:text-left text-right '> {user.email}</p>
-                                <div className='sm:flex hidden  justify-between items-center'>
-                                    <p>+56 {user.phone} </p>
-
-                                   <Link to={'/institutions/'+ user._id }>
-                                    <div className='flex items-center gap-2 rounded-lg bg-green-200 p-2 ' >
-                                    <h3 className='text-green-500'>ver mas</h3>
-                                    <FiMoreHorizontal  className='text-green-500' /> 
-
-                                    </div>
-                                      
-                                       
-                                   </Link> 
-                                    
-                                </div>
-
-                            </li>
-                        ))
-                    }
-                </ul>
+                <InstitutionsList usersData={usersData} />
 
 
             </div>

@@ -1,7 +1,7 @@
 import {Link } from 'react-router-dom'
 import React from 'react'
 import { RxPerson} from 'react-icons/rx'
-import {HiOutlineBell, HiCog} from 'react-icons/hi'
+import {HiOutlineBell} from 'react-icons/hi'
 import logoVM from '../assets/logoVMDark.png'
 import {GrPlan} from 'react-icons/gr'
 import { MdOutlineSchool } from 'react-icons/md'
@@ -57,10 +57,10 @@ export default function Sidebar({children}) {
                         <h2>Planificación Educativa</h2> 
                     </div>
                 </Link>
-                <Link to={'/create-planification'} >
+                <Link to={'/table'} >
                     <div className="bg-purple-200 hover:bg-gray-200 text-dark p-3 mb-3 rounded-lg  flex gap-5 w-[15rem] " >
-                        <HiCog size={20} />
-                        <h2>Crear Planificación</h2> 
+                        <GrPlan size={20} />
+                        <h2>Tablero Planificación</h2> 
                     </div>
                 </Link>
 

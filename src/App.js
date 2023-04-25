@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Homepage from "./pages/Homepage";
 import Loginpage from "./pages/Loginpage";
 import Users from "./pages/Users";
@@ -8,36 +8,65 @@ import Notifications from "./pages/Notifications";
 import Vmclass from "./pages/Vmclass";
 import CreatePlanifications from "./pages/CreatePlanifications";
 import Planifications from "./pages/Planifications";
+import Error404 from './pages/Error404';
+import { useSelector } from 'react-redux';
+import { adminValue } from './features/userApi';
+import SchoolDetail from './pages/SchoolDetail';
+import ClassroomDetail from './pages/ClassroomDetail';
+import Tableplanification from './pages/Tableplanification';
+
+// function App() {
 
 
+//   return (
+//     <>
+//       <BrowserRouter>
+//         <Routes>
+//           <Route path="/" element={<Loginpage />} />
+//           <Route path="/dashboard" element={<Homepage />} />
+//           <Route path="/users" element={<Users />} />
+//           <Route path="/institutions" element={<Institutions />} />
+//           <Route path="/institutions/:id" element={<InstitutionDetail />} />
+//           <Route path="/notifications" element={<Notifications />} />
+//           <Route path="/vmclass" element={<Vmclass />} />
+//           <Route path="/create-planification" element={<CreatePlanifications />} />
+//           <Route path="/planifications" element={<Planifications />} />
+//         </Routes>
+//       </BrowserRouter>
+//     </>
+
+//   );
+// }
+
+// export default App;
 
 
 function App() {
 
+  const userActive = useSelector(adminValue)
 
   return (
     <>
       <BrowserRouter>
-
-
         <Routes>
-          <Route path="/" element={<Loginpage />} />
-          <Route path="/dashboard" element={<Homepage />} />
-          <Route path="/users" element={<Users />} />
-          <Route path="/institutions" element={<Institutions />} />
-          <Route path="/institutions/:id" element={<InstitutionDetail />} />
-          <Route path="/notifications" element={<Notifications />} />
-          <Route path="/vmclass" element={<Vmclass />} />
-          <Route path="/create-planification" element={<CreatePlanifications />} />
-          <Route path="/planifications" element={<Planifications />} />
-
+          <Route path="/" index={true} element={<Loginpage />} /> 
+              <Route path="/dashboard" element={userActive && localStorage.getItem('token')  ? < Homepage /> : <Loginpage />} />
+              <Route path="/users" element={<Users />} />
+              <Route path="/institutions" element={<Institutions />} />
+              <Route path="/institutions/:id" element={<InstitutionDetail />} />
+              <Route path="/school/:id" element={<SchoolDetail />} />
+              <Route path="/classroom/:id" element={<ClassroomDetail />} />
+              <Route path="/notifications" element={<Notifications />} />
+              <Route path="/vmclass" element={<Vmclass />} />
+              <Route path="/create-planification" element={<CreatePlanifications />} />
+              <Route path="/planifications" element={<Planifications />} />
+              <Route path="/*" element={<Error404 />} />
+              <Route path="/table" element={<Tableplanification />} />
         </Routes>
-
-
       </BrowserRouter>
     </>
-
   );
 }
+
 
 export default App;
