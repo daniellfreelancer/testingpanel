@@ -5,12 +5,17 @@ import "react-datepicker/dist/react-datepicker.css";
 import ReactSwitch from 'react-switch';
 import axios from 'axios';
 import materialsSchool from '../data/materialsSchool';
-import dataPrimero from '../data/primeroBasicoABC'
+
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import primero_sexto_basicoACT from '../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../data/primero_sexto_basicoATA'
 import GoBackToButton from '../components/GoBackButton';
+
+import dataPrimeroBasico from '../data/primeroBasicoABC'
+import dataSegundoBasico from '../data/segundoBasicoABC'
+import dataTerceroBasico from '../data/terceroBasicoABC'
+import { useDispatch } from 'react-redux';
 
 
 export default function Tableplanification() {
@@ -43,12 +48,14 @@ export default function Tableplanification() {
     const [userClassroom, setUserClassroom] = useState({})
     const animatedComponents = makeAnimated();
     const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
+    const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([]) 
 
     let handleColor = (time) => {
         return time.getHours() > 6 ? "text-green-800" : "text-red-800";
     };
 
     const idPlanner = "6436efc2dfa4f4062385fa6c"
+    const dispatch = useDispatch()
 
 
     const fetchData = async () => {
@@ -60,18 +67,131 @@ export default function Tableplanification() {
 
             console.log(response.data.response)
             setUserClassroom(response.data.response)
+      
+
+
         } catch (error) {
             console.log(error);
         }
     };
+
+    const handleUserData = () => {
+        switch (userClassroom.grade) {
+          case "1":
+            switch (userClassroom.level) {
+              case "basico":
+                setObjBasalesComplementarios(dataPrimeroBasico);
+                break;
+              case "medio":
+                setObjBasalesComplementarios(dataPrimeroBasico);
+                break;
+              default:
+                console.log("El nivel no se encontró");
+            }
+            break;
+          case "2":
+            switch (userClassroom.level) {
+              case "basico":
+                setObjBasalesComplementarios(dataSegundoBasico);
+                break;
+              case "medio":
+                setObjBasalesComplementarios(dataSegundoBasico);
+                break;
+              default:
+                console.log("El nivel no se encontró");
+            }
+            break;
+          case "3":
+            switch (userClassroom.level) {
+              case "basico":
+                setObjBasalesComplementarios(dataTerceroBasico);
+                break;
+              case "medio":
+                setObjBasalesComplementarios(dataTerceroBasico);
+                break;
+              default:
+                console.log("El nivel no se encontró");
+            }
+            break;
+          case "4":
+            switch (userClassroom.level) {
+              case "basico":
+                console.log("El nivel no se encontró");
+                break;
+              case "medio":
+                console.log("El nivel no se encontró");
+                break;
+              default:
+                console.log("El nivel no se encontró");
+            }
+            break;
+          default:
+            console.log("El valor no se encontró");
+        }
+      }
+
+
 
 
 
     useEffect(() => {
 
         fetchData();
+        handleUserData();
         // eslint-disable-next-line
-    }, []);
+        // switch (userClassroom.grade) {
+        //     case "1":
+        //         switch (userClassroom.level) {
+        //             case "basico":
+        //                 setObjBasalesComplementarios(dataPrimeroBasico);
+        //                 break;
+        //             case "medio":
+        //                 setObjBasalesComplementarios(dataPrimeroBasico);
+        //                 break;
+        //             default:
+        //                 console.log("El nivel no se encontró");
+        //         }
+        //         break;
+        //     case "2":
+        //         switch (userClassroom.level) {
+        //             case "basico":
+        //                 setObjBasalesComplementarios(dataSegundoBasico);
+        //                 break;
+        //             case "medio":
+        //                 setObjBasalesComplementarios(dataSegundoBasico);
+        //                 break;
+        //             default:
+        //                 console.log("El nivel no se encontró");
+        //         }
+        //         break;
+        //     case "3":
+        //         switch (userClassroom.level) {
+        //             case "basico":
+        //                 setObjBasalesComplementarios(dataTerceroBasico);
+        //                 break;
+        //             case "medio":
+        //                 setObjBasalesComplementarios(dataTerceroBasico);
+        //                 break;
+        //             default:
+        //                 console.log("El nivel no se encontró");
+        //         }
+        //         break;
+        //     case "4":
+        //         switch (userClassroom.level) {
+        //             case "basico":
+        //                 console.log("El nivel no se encontró");
+        //                 break;
+        //             case "medio":
+        //                 console.log("El nivel no se encontró");
+        //                 break;
+        //             default:
+        //                 console.log("El nivel no se encontró");
+        //         }
+        //         break;
+        //     default:
+        //         console.log("El valor no se encontró");
+        // }
+    }, [userClassroom]);
 
 
 
@@ -328,7 +448,7 @@ export default function Tableplanification() {
                                     closeMenuOnSelect={false}
                                     components={animatedComponents}
                                     isMulti
-                                    options={dataPrimero}
+                                    options={objBasalesComplementarios}
                                     className='w-full'
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
