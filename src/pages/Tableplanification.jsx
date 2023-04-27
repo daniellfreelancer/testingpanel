@@ -22,6 +22,7 @@ import primeroBasicoIndicadores from '../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
 import Modalindicators from '../components/modal/Modalindicators';
+import {AiOutlineFileText} from 'react-icons/ai'
 
 
 export default function Tableplanification() {
@@ -32,10 +33,10 @@ export default function Tableplanification() {
         setDayWeek((e) => (e === "day" ? "week" : "day"));
     };
 
-/**
- * Datos para la planificación:
- * duraction
- */
+    /**
+     * Datos para la planificación:
+     * duraction
+     */
     const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])
     const [duration, setDuration] = useState(null)
     const [schoolBlock, setSchoolBlock] = useState(null)
@@ -47,7 +48,7 @@ export default function Tableplanification() {
     const [skills, setSkills] = useState("")
     const [activities, setActivities] = useState("")
     const [materials, setMaterials] = useState("")
-    const [evaluationType, setEvaluationType] = useState("")
+    const [evaluationType, setEvaluationType] = useState([])
 
     const [filteredIndicators, setFilteredIndicators] = useState([])
 
@@ -59,19 +60,34 @@ export default function Tableplanification() {
     const [startDate, setStartDate] = useState(new Date());
     const [endDate, setEndDate] = useState(null);
 
+
     const [userClassroom, setUserClassroom] = useState({})
     const animatedComponents = makeAnimated();
     const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
-    const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([]) 
+    const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
 
-    
+
 
     let handleColor = (time) => {
         return time.getHours() > 6 ? "text-green-800" : "text-red-800";
     };
 
-    const idPlanner = "643db8323130e8bfaac6baee"
+   const idPlanner = "643db8323130e8bfaac6baee"
+   // const idPlanner = "6436efc2dfa4f4062385fa6c"
     const dispatch = useDispatch()
+
+    const evaluationArrayType = [
+        {
+            id:"formativa",
+            label:"Formativa",
+            value:"Formativa"
+        },
+        {
+            id:"sumativa",
+            label: "Sumativa",
+            value: "Sumativa"
+        }
+    ]
 
 
     const fetchData = async () => {
@@ -83,7 +99,7 @@ export default function Tableplanification() {
 
             setUserClassroom(response.data.response)
             dispatch(reload())
-      
+
 
 
         } catch (error) {
@@ -93,51 +109,68 @@ export default function Tableplanification() {
 
     const handleUserData = () => {
         switch (userClassroom.grade) {
-          case "1":
-            switch (userClassroom.level) {
-              case "basico":
-                setObjBasalesComplementarios(dataPrimeroBasico);
-                setEvaluationIndicators(primeroBasicoIndicadores)
+            case "1":
+                switch (userClassroom.level) {
+                    case "basico":
+                        setObjBasalesComplementarios(dataPrimeroBasico);
+                        setEvaluationIndicators(primeroBasicoIndicadores)
+                        break;
+                    case "medio":
+                        setObjBasalesComplementarios(dataPrimeroBasico);
+                        break;
+                    default:
+                        console.log("El nivel no se encontró");
+                }
                 break;
-              case "medio":
-                setObjBasalesComplementarios(dataPrimeroBasico);
+            case "2":
+                switch (userClassroom.level) {
+                    case "basico":
+                        setObjBasalesComplementarios(dataSegundoBasico);
+                        setEvaluationIndicators(segundoBasicoIndicadores)
+                        break;
+                    case "medio":
+                        setObjBasalesComplementarios(dataSegundoBasico);
+                        break;
+                    default:
+                        console.log("El nivel no se encontró");
+                }
                 break;
-              default:
-                console.log("El nivel no se encontró");
-            }
-            break;
-          case "2":
-            switch (userClassroom.level) {
-              case "basico":
-                setObjBasalesComplementarios(dataSegundoBasico);
-                setEvaluationIndicators(segundoBasicoIndicadores)
+            case "3":
+                switch (userClassroom.level) {
+                    case "basico":
+                        setObjBasalesComplementarios(dataTerceroBasico);
+                        setEvaluationIndicators(terceroBasicoIndicadores);
+                        break;
+                    case "medio":
+                        setObjBasalesComplementarios(dataTerceroBasico);
+                        break;
+                    default:
+                        console.log("El nivel no se encontró");
+                }
                 break;
-              case "medio":
-                setObjBasalesComplementarios(dataSegundoBasico);
-                break;
-              default:
-                console.log("El nivel no se encontró");
-            }
-            break;
-          case "3":
-            switch (userClassroom.level) {
-              case "basico":
-                setObjBasalesComplementarios(dataTerceroBasico);
-                setEvaluationIndicators(terceroBasicoIndicadores);
-                break;
-              case "medio":
-                setObjBasalesComplementarios(dataTerceroBasico);
-                break;
-              default:
-                console.log("El nivel no se encontró");
-            }
-            break;
-          default:
-            console.log("El valor no se encontró");
+            default:
+                console.log("El valor no se encontró");
         }
-      }
+    }
 
 
+  function filterEvaluationIndicatorsByClassObjectives(evaluationIndicators, classObjectives) {
+  const selectedIds = classObjectives.map(obj => obj.id);
+  return evaluationIndicators.filter(indicator => selectedIds.includes(indicator.id));
+}
+
+useEffect(() => {
+    const filteredEvaluationIndicators = filterEvaluationIndicatorsByClassObjectives(evaluationIndicators, classObjectives);
+
+   if (filteredEvaluationIndicators.length > 0) {
+    setFilteredIndicators(filteredEvaluationIndicators)
+   }  
+
+   if(classObjectives.length === 0) {
+    setFilteredIndicators([])
+   }
+
+}, [classObjectives])
 
 
 
@@ -148,13 +181,6 @@ export default function Tableplanification() {
         fetchData();
         handleUserData();
 
-        // console.log(classObjectives)
-        if (classObjectives.length > 0) {
-            setFilteredIndicators(evaluationIndicators?.filter((objective) =>
-            classObjectives?.some((classObjective) => classObjective.id === objective.id)
-          ).map((objective) => objective.value))
-        }
-       
 
 
     }, [userClassroom]);
@@ -188,24 +214,24 @@ export default function Tableplanification() {
         width: 35,
         className: "react-switch",
         id: "small-radius-switch"
-      };
+    };
 
-      const switchDurationProps = {
-        onChange:toggleDuration,
-        checked:normalTime === "schoolTime",
-        onColor:"#8bce75",
-        onHandleColor:" rgb(67 56 202)",
-        handleDiameter:10,
-        uncheckedIcon:false,
-        checkedIcon:false,
-        boxShadow:"0px 1px 5px rgba(0, 0, 0, 0.6)",
-        activeBoxShadow:"0px 0px 1px 10px rgba(0, 0, 0, 0.2)",
-        height:20,
-        width:35,
-        className:"react-switch",
-        id:"small-radius-switch",
-      }
-      const tableHeaders = [
+    const switchDurationProps = {
+        onChange: toggleDuration,
+        checked: normalTime === "schoolTime",
+        onColor: "#8bce75",
+        onHandleColor: " rgb(67 56 202)",
+        handleDiameter: 10,
+        uncheckedIcon: false,
+        checkedIcon: false,
+        boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.6)",
+        activeBoxShadow: "0px 0px 1px 10px rgba(0, 0, 0, 0.2)",
+        height: 20,
+        width: 35,
+        className: "react-switch",
+        id: "small-radius-switch",
+    }
+    const tableHeaders = [
         "Contenido",
         "Objetivos Basales/Complementarios",
         "Indicadores de evaluacion",
@@ -213,62 +239,64 @@ export default function Tableplanification() {
         "Actividades",
         "Materiales",
         "Tipo de Evaluación"
-      ];
+    ];
 
-      const DateSelector = () => {
+    const DateSelector = () => {
         return (
-          <div className='rounded-lg'>
-            <p className='mb-1'>Inicio</p>
-            <DatePicker
-              showTimeSelect
-              showDisabledMonthNavigation
-              locale={es}
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              selectsStart
-              startDate={startDate}
-              endDate={endDate}
-              className="cursor-pointer p-1 border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
-              timeClassName={handleColor}
-            />
-          </div>
-        );
-      };
-      
-      const DateRangeSelector = () => {
-        return (
-          <>
-            <div className='flex flex-col items-center justify-center gap-2   rounded-lg pt-1'>
-              <DateSelector />
-              <div className='border border-gray-50 rounded-lg'>
-                <p>Fin</p>
+            <div className='rounded-lg'>
+                <p className='mb-1'>Inicio</p>
                 <DatePicker
-                  selected={endDate}
-                  onChange={(date) => setEndDate(date)}
-                  selectsEnd
-                  startDate={startDate}
-                  endDate={endDate}
-                  minDate={startDate}
-                  className="p-1 cursor-pointer border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
+                    showTimeSelect
+                    showDisabledMonthNavigation
+                    locale={es}
+                    selected={startDate}
+                    onChange={(date) => setStartDate(date)}
+                    selectsStart
+                    startDate={startDate}
+                    endDate={endDate}
+                    className="cursor-pointer p-1 border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
+                    timeClassName={handleColor}
                 />
-              </div>
             </div>
-          </>
         );
-      };
+    };
 
-      const handleCheckboxChange = (event, id, indicator) => {
+    const DateRangeSelector = () => {
+        return (
+            <>
+                <div className='flex flex-col items-center justify-center gap-2   rounded-lg pt-1'>
+                    <DateSelector />
+                    <div className='border border-gray-50 rounded-lg'>
+                        <p>Fin</p>
+                        <DatePicker
+                            selected={endDate}
+                            onChange={(date) => setEndDate(date)}
+                            selectsEnd
+                            startDate={startDate}
+                            endDate={endDate}
+                            minDate={startDate}
+                            className="p-1 cursor-pointer border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
+                        />
+                    </div>
+                </div>
+            </>
+        );
+    };
+
+    const handleCheckboxChange = (event, id, indicator) => {
         if (event.target.checked) {
             setIndicatorsForEvaluateClass((prevState) => [
-            ...prevState,
-            { id: id, indicator: indicator }
-          ]);
+                ...prevState,
+                { id: id, indicator: indicator }
+            ]);
         } else {
             setIndicatorsForEvaluateClass((prevState) =>
-            prevState.filter((selected) => selected.id !== id || selected.indicator !== indicator)
-          );
+                prevState.filter((selected) => selected.id !== id || selected.indicator !== indicator)
+            );
         }
-      };
+    };
+
+
 
 
     return (
@@ -278,7 +306,7 @@ export default function Tableplanification() {
             <GoBackToButton />
 
             <table className="min-w-max w-full rounded-lg border my-4 ">
-            <caption className="py-3 text-gray-600 border-t">Planificación: {`${userClassroom.grade}° ${userClassroom.level === 'basico' ? 'Básico' : 'Medio'} - Sección: "${userClassroom.section}"`}</caption>
+                <caption className="py-3 text-gray-600 border-t">Planificación: {`${userClassroom.grade}° ${userClassroom.level === 'basico' ? 'Básico' : 'Medio'} - Sección: "${userClassroom.section}"`}</caption>
                 <thead className='border'>
                     <tr className="bg-gray-200 text-gray-500  text-xs">
                         <th className="text-center border w-16">
@@ -291,7 +319,7 @@ export default function Tableplanification() {
                         <th className="py-1 px-3 text-center w-12 ">
                             <p>Duración</p>
                             <div className="flex items-center justify-start gap-2 ">
-                                <ReactSwitch {...switchDurationProps}    />
+                                <ReactSwitch {...switchDurationProps} />
                                 <label>{normalTime === "normalTime" ? (<p>Normal</p>) : (<p>Escolar</p>)}</label>
                             </div>
                         </th>
@@ -415,7 +443,7 @@ export default function Tableplanification() {
                             </div>
                         </td>
                         <td className="py-3 px-2 border text-center">
-                            <div className="flex flex-col items-cente rounded-lg min-h-[8rem] w-[9rem]">
+                            <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[9rem]">
                                 <textarea
                                     value={content}
                                     onChange={(e) => setContent(e.target.value)}
@@ -423,87 +451,91 @@ export default function Tableplanification() {
                             </div>
                         </td>
 
-                        <td className="py-3 px-2 border text-center ">
-                            <div className="flex items-start flex-col justify-center rounded-lg w-[12rem] min-h-[10rem]">
-                            <div> {
-                                classObjectives.length > 0 ? (
-                                    classObjectives.map((item)=> <p className='border-t border-b py-2 my-1 text-justify '>{item.id} : {item.value} </p> )
-                                ) : (
-                                    <span> No hay objetivos</span>
-                                )}  </div>
-
+                        <td className=" px-2 border text-center ">
+                            <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[12rem]">
                                 <Select
                                     closeMenuOnSelect={false}
                                     components={animatedComponents}
                                     isMulti
                                     options={objBasalesComplementarios}
-                                    className='w-full'
+                                    className='w-full font-thin'
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona un objetivo'
                                     onChange={(selected) => {
                                         const selectedValues = selected.map(option => ({ id: option.id, value: option.value }));
                                         setClassObjectives([...selectedValues]);
-                                      }}
+                                        dispatch(reload())
+                                    }}
                                 />
                             </div>
-
                         </td>
 
-                        <td className="py-3 px-2 border text-center">
-                            <div className="flex items-center flex-col gap-5 justify-center rounded-lg w-[10rem] min-h-[10rem]">
+                        <td className="py-3 border text-center">
+                            <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[10rem] gap-2 ">
+                                {
+                                     filteredIndicators?.length > 0 ? (
+                                        <Modalindicators title={"Ver Indicadores"} >
+                                        <div>
+    
+                                            {
+                                                filteredIndicators.map((item, index) => {
+                                                    return (
+                                                        <div className=' overflow-y-auto flex gap-2 p-5 border-lg my-5 bg-gray-100'>
+                                                            <p className='w-[5rem] ' >Indicadores: {item.id} </p>
+                                                            <ul className='flex flex-wrap p-10 gap-2 overflow-y-auto max-h-[20vh]'>
+                                                                {
+                                                                    item.indicators.map((indicator, indx)=>{
+                                                                        return (
 
-                                <div>
-                                    {
-                                        filteredIndicators?.length > 0 ? (
-                                            <Modalindicators title={"Ver Indicadores"} >
-                                            <div>
-                                                {filteredIndicators?.map((indicator) => (
-                                                    <div key={indicator} className='flex flex-col items-center bg-gray-100' >
-                                                        <h3>{indicator}</h3>
-                                                        <h3>Indicadores</h3>
-                                                        <ul className='flex flex-wrap p-10 gap-2 overflow-y-auto max-h-[60vh] max-w-[80%]'>
+
+                                                                           
+                                                                            <li key={index} className='w-[15rem] font-thin'>
+                                                                            <label className='flex  text-justify gap-3 my-2 border rounded-lg p-2 text-xs' >
+                                                                                <input type="checkbox" onChange={(event) => handleCheckboxChange(event, indx,indicator)} />
+                                                                                {indicator}
+                                                                            </label>
+                                                                        </li>
+
+                                                                        )
+                                                                    })
+                                                                }
+    
+                                                            </ul>
                                                             
-                                                            {evaluationIndicators?.filter((obj) => obj.value === indicator)[0]?.indicators?.map((ind, index) => (
-                                                                <li key={index} className='w-[16rem]'>
-                                                                    <label className='flex  text-justify gap-3 my-2 border rounded-lg p-2 text-xs' >
-                                                                        <input type="checkbox" onChange={(event) => handleCheckboxChange(event, index, ind)} />
-                                                                        {ind}
-                                                                    </label>
-                                                                </li>
-                                                            ))}
-                                                        </ul>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                            </Modalindicators>
-
-                                        ) : <p>Sin indicadores asignados</p>
-                                    }
+                                                        </div>
+    
+                                                    )
+                                                })
+                                            }
+                                        </div>
+                                    </Modalindicators>
+                                     ) : (
+                                        <p>Sin indicadores asignados</p>
+                                     )
+                                }
 
 
-                                    aqui van los indicadores:
-                                </div>
                                 <div className='rounded-lg' >
-                                    <p>otros indicadores</p>
-                                    <input
+                                    <p>Otros indicadores</p>
+                                    <textarea
 
                                         // value={materials}
                                         // onChange={(e) => setMaterials(e.target.value)}
-                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
+                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[3rem] " />
                                 </div>
 
                             </div>
 
                         </td>
-                        <td className="py-3 px-2 border text-center">
-                            <div className="flex items-center flex-col gap-5 justify-center  rounded-lg w-[12rem] min-h-[10rem]">
+                        <td className="px-2 border text-center">
+                            <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[10rem]">
                                 <Select
                                     closeMenuOnSelect={false}
                                     components={animatedComponents}
                                     isMulti
                                     options={ojbTransversalesActitudes}
-                                    className='w-full'
+                                    className='w-full font-thin'
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona un objetivo'
@@ -511,52 +543,70 @@ export default function Tableplanification() {
                             </div>
                         </td>
                         <td className="py-3 px-2 border text-center">
-                        <div className="flex flex-col items-cente rounded-lg min-h-[8rem] w-[9rem]">
+                            <div className="flex flex-col items-cente rounded-lg min-h-[8rem] w-[9rem]">
                                 <textarea
                                     value={activities}
                                     onChange={(e) => setActivities(e.target.value)}
                                     className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7rem] " />
                             </div>
                         </td>
-                        <td className="py-3 px-2 border text-center">
-                            <div className="flex items-center flex-col gap-5 justify-center rounded-lg w-[12rem] min-h-[10rem]">
+                        <td className="px-2 border text-center">
+                            <div className="pt-1 flex flex-col items-center rounded-lg min-h-[8rem] w-[12rem] gap-2 ">
                                 <Select
                                     closeMenuOnSelect={false}
                                     components={animatedComponents}
                                     isMulti
                                     options={materialsSchool}
-                                    className='w-full'
+                                    className='w-full font-thin'
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona...'
                                     onChange={(selected) => {
-                                        const selectedValues = selected.map(option =>  option.value );
+                                        const selectedValues = selected.map(option => option.value);
                                         setMaterials([...selectedValues]);
-                                      }}
-                                    // onChange={(selectedOptions) => {
-                                    //     const selectedValues = selectedOptions.map(option => option.value);
-                                    //     setMaterials(prevMaterials => {
-                                    //         // Si la opción seleccionada ya está en el array, se elimina del array.
-                                    //         // De lo contrario, se agrega al array.
-                                    //         return prevMaterials.includes(selectedValues[0])
-                                    //             ? prevMaterials.filter(material => material !== selectedValues[0])
-                                    //             : [...prevMaterials, selectedValues[0]];
-                                    //     });
-                                    // }}
+                                    }}
                                 />
-
-                                <div className='rounded-lg' >
-                                    <p>otros</p>
-                                    <input
-
+                                <div className="flex flex-col items-center rounded-lg h-[4rem] w-full">
+                                    <p>Otros materiales</p>
+                                    <textarea
                                         value={materials}
                                         onChange={(e) => setMaterials(e.target.value)}
-                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
+                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7rem] " />
                                 </div>
+
                             </div>
                         </td>
-                        <td className="py-3 px-6 text-justify border">
-                            <span className="py-1 rounded-full text-xs">Formativa </span>
+                        <td className="py-3 px-2 text-justify border">
+                            <div className="pt-1 flex flex-col items-center rounded-lg min-h-[8rem] w-[8rem] gap-2 ">
+                                <Select
+                                    closeMenuOnSelect={true}
+                                    components={animatedComponents}
+                                    options={evaluationArrayType}
+                                    className='w-full font-thin'
+                                    styles={customStyles}
+                                    formatOptionLabel={formatOptionLabel}
+                                    placeholder='Selecciona...'
+                                    onChange={(selectedOption) => setEvaluationType(selectedOption.value)}
+                                />
+                                                             {
+                                evaluationType === "Sumativa" ? (
+                                    
+                                        <div className='flex gap-2 border bg-gray-200 px-2 py-1 rounded ' >
+                                            <AiOutlineFileText size={20} />
+                                            <input className='w-full font-thin cursor-pointer'  type="file" onChange={(event) => {
+                                                const selectedFile = event.target.files[0];
+                                                console.log(selectedFile);
+                                            }} />
+                                        </div>
+                                ) : (
+                                    null
+                                )
+                             } 
+                            </div>
+
+      
+
+
                         </td>
 
                     </tr>
