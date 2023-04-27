@@ -49,7 +49,7 @@ const terceroBasicoIndicadores = [
             "Elaboran y aplican estrategias que impliquen ataque y defensa, buscando objetivos: goles, canastas, ensayos, toques de suelo, etc."
 
         ]
-    },
+    }
 ]
 
 export default terceroBasicoIndicadores

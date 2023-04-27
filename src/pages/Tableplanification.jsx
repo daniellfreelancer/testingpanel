@@ -26,6 +26,24 @@ import {AiOutlineFileText} from 'react-icons/ai'
 
 
 export default function Tableplanification() {
+
+    /**
+     * DATA DE PLANIFICACION PARA ENVIAR A BASE DE DATOS
+     */
+    const [startDate, setStartDate] = useState(new Date());                                     //FECHA Y HORA DE INICIO
+    const [endDate, setEndDate] = useState(null);                                               //FECHA DE FIN
+    const [duration, setDuration] = useState(null)                                              //DURACIÓN EN MINUTOS
+    const [schoolBlock, setSchoolBlock] = useState(null)                                        //BLOQUES
+    const [content, setContent] = useState()                                                    //CONTENIDO
+    const [classObjectives, setClassObjectives] = useState([])                                  //OBJ BASALES Y COMPLEMENTARIOS
+    const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])            //INDICADORES DEPENDIENTES DE OBJ BASALES/COMPLEMENTARIOS
+    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState([])//INDICADORES CARGA MANUAL POR EL PROFESOR
+    const [learningObjetives, setLearningObjetives] = useState([])                              //OBJ TRANSVERSALES Y ACTITUDES
+    const [activities, setActivities] = useState([])                                            //ACTIVIDADES
+    const [materials, setMaterials] = useState([])                                              //MATERIALES
+    const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
+
+
     const toggleDuration = () => {
         setNormalTime((e) => (e === "normalTime" ? "schoolTime" : "normalTime"));
     };
@@ -37,28 +55,26 @@ export default function Tableplanification() {
      * Datos para la planificación:
      * duraction
      */
-    const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])
-    const [duration, setDuration] = useState(null)
-    const [schoolBlock, setSchoolBlock] = useState(null)
-    const [classObjectives, setClassObjectives] = useState([])
-
-
-    const [learningObjetives, setLearningObjetives] = useState("")
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
+    
+    
+    
+
+
+    
+    
     const [skills, setSkills] = useState("")
-    const [activities, setActivities] = useState("")
-    const [materials, setMaterials] = useState("")
-    const [evaluationType, setEvaluationType] = useState([])
+
+    
 
     const [filteredIndicators, setFilteredIndicators] = useState([])
 
-    const [content, setContent] = useState()
+    
 
     const [dayWeek, setDayWeek] = useState("day")
     const [normalTime, setNormalTime] = useState("normalTime")
 
-    const [startDate, setStartDate] = useState(new Date());
-    const [endDate, setEndDate] = useState(null);
+
 
 
     const [userClassroom, setUserClassroom] = useState({})
@@ -296,6 +312,27 @@ useEffect(() => {
         }
     };
 
+    const [selectedIndicators, setSelectedIndicators] = useState([]);
+
+
+    const handleCheckboxChangeIndicators = (event, index, indicator) => {
+        if (event.target.checked) {
+            setIndicatorsForEvaluateClass([...indicatorsForEvaluateClass, indicator]);
+            setSelectedIndicators([...indicatorsForEvaluateClass, indicator])
+        } else {
+            setIndicatorsForEvaluateClass(
+                indicatorsForEvaluateClass.filter((value) => value !== indicator)
+                
+          );
+          setSelectedIndicators(
+            selectedIndicators.filter((value) => value !== indicator)
+            
+      )
+        }
+      };
+
+
+
 
 
 
@@ -365,6 +402,7 @@ useEffect(() => {
                                                     minDate={startDate}
                                                     className="p-1 cursor-pointer border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
                                                     dateFormat='dd/MM/yyyy'
+                                                    locale={es}
                                                 />
                                             </div>
 
@@ -471,8 +509,8 @@ useEffect(() => {
                             </div>
                         </td>
 
-                        <td className="py-3 border text-center">
-                            <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[10rem] gap-2 ">
+                        <td className="border text-center">
+                            <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[10rem] gap-2 ">
                                 {
                                      filteredIndicators?.length > 0 ? (
                                         <Modalindicators title={"Ver Indicadores"} >
@@ -486,13 +524,18 @@ useEffect(() => {
                                                             <ul className='flex flex-wrap p-10 gap-2 overflow-y-auto max-h-[20vh]'>
                                                                 {
                                                                     item.indicators.map((indicator, indx)=>{
+                                                                        const isChecked = selectedIndicators.includes(indicator);
                                                                         return (
-
-
-                                                                           
                                                                             <li key={index} className='w-[15rem] font-thin'>
                                                                             <label className='flex  text-justify gap-3 my-2 border rounded-lg p-2 text-xs' >
-                                                                                <input type="checkbox" onChange={(event) => handleCheckboxChange(event, indx,indicator)} />
+                                                                                <input 
+                                                                                type="checkbox" 
+                                                                                // onChange={(event) => handleCheckboxChange(event, indx,indicator)} 
+                                                                                onChange={(event) =>
+                                                                                    handleCheckboxChangeIndicators(event, indx, indicator)
+                                                                                  }
+                                                                                  checked={isChecked}
+                                                                                />
                                                                                 {indicator}
                                                                             </label>
                                                                         </li>
@@ -511,7 +554,7 @@ useEffect(() => {
                                         </div>
                                     </Modalindicators>
                                      ) : (
-                                        <p>Sin indicadores asignados</p>
+                                        null
                                      )
                                 }
 
@@ -520,9 +563,9 @@ useEffect(() => {
                                     <p>Otros indicadores</p>
                                     <textarea
 
-                                        // value={materials}
-                                        // onChange={(e) => setMaterials(e.target.value)}
-                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[3rem] " />
+                                        value={indicatorsForEvaluateClassManual}
+                                        onChange={(e) => setIndicatorsForEvaluateClassManual(e.target.value)}
+                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[6rem] " />
                                 </div>
 
                             </div>
@@ -539,6 +582,11 @@ useEffect(() => {
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona un objetivo'
+                                    onChange={(selected) => {
+                                        const selectedValues = selected.map(option => ({ id: option.id, value: option.value }));
+                                        setLearningObjetives([...selectedValues]);
+                                        dispatch(reload())
+                                    }}
                                 />
                             </div>
                         </td>
@@ -556,7 +604,11 @@ useEffect(() => {
                                     closeMenuOnSelect={false}
                                     components={animatedComponents}
                                     isMulti
-                                    options={materialsSchool}
+                                    options={materialsSchool.sort((a, b) => {
+                                        if (a.label < b.label) return -1;
+                                        if (a.label > b.label) return 1;
+                                        return 0;
+                                      })}
                                     className='w-full font-thin'
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
