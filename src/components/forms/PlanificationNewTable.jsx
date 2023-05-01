@@ -1,28 +1,33 @@
-import React, { useEffect, useState } from 'react'
+import React, {useState, useEffect} from 'react'
 import DatePicker from 'react-datepicker';
 import es from 'date-fns/locale/es';
 import "react-datepicker/dist/react-datepicker.css";
 import ReactSwitch from 'react-switch';
 import axios from 'axios';
-import materialsSchool from '../data/materialsSchool';
-import { reload } from '../features/reloadSlice';
+import materialsSchool from '../../data/materialsSchool';
+import { reload } from '../../features/reloadSlice';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
-import primero_sexto_basicoACT from '../data/primero_sexto_basicoACT';
-import primero_sexto_basicoATA from '../data/primero_sexto_basicoATA'
-import GoBackToButton from '../components/GoBackButton';
-import dataPrimeroBasico from '../data/primeroBasicoABC'
-import dataSegundoBasico from '../data/segundoBasicoABC'
-import dataTerceroBasico from '../data/terceroBasicoABC'
+import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
+import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'
+import dataPrimeroBasico from '../../data/primeroBasicoABC'
+import dataSegundoBasico from '../../data/segundoBasicoABC'
+import dataTerceroBasico from '../../data/terceroBasicoABC'
 import { useDispatch } from 'react-redux';
-import primeroBasicoIndicadores from '../data/primeroBasicoIndicadores'
-import segundoBasicoIndicadores from '../data/segundoBasicoIndicadores'
-import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
-import Modalindicators from '../components/modal/Modalindicators';
+import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
+import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
+import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
+import Modalindicators from '../../components/modal/Modalindicators';
 import {AiOutlineFileText} from 'react-icons/ai'
-
-
-export default function Tableplanification() {
+import { useParams } from 'react-router';
+import swal from 'sweetalert2'
+export default function PlanificationNewTable() {
+    /**
+     * HOOKS / PARAMS
+     */
+        const dispatch = useDispatch()
+        const {id} = useParams()
+    
 
     /**
      * DATA DE PLANIFICACIÓN PARA ENVIAR A BASE DE DATOS
@@ -41,6 +46,62 @@ export default function Tableplanification() {
     const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
 
 
+    /**
+     * 
+     * @param {*} error 
+     */
+    function handleError(error) {
+        if (error.response) {
+          console.log('La solicitud no se pudo completar:', error.response);
+          alert(`La solicitud no se pudo completar: ${error.response.data}`);
+        } else if (error.request) {
+          console.log('No se recibió respuesta del servidor:', error.request);
+          alert('No se recibió respuesta del servidor. Por favor, inténtelo de nuevo más tarde.');
+        } else {
+          console.log('Ocurrió un error al procesar la solicitud:', error.message);
+          alert(`Ocurrió un error al procesar la solicitud: ${error.message}`);
+        }
+      }
+
+      /**
+       * CREAR PLANIFICACIÓN
+       */
+    async function handleCreatePlaning(){
+
+        let planificationData = {
+            classroom : id,
+            startDate: startDate ? startDate.toISOString() : "",
+            endDate: endDate ? endDate.toISOString() : null,
+            duration: duration ? duration : 0,
+            schoolBlock: schoolBlock ? schoolBlock : 0,
+            content: content,
+            classObjectives: classObjectives,
+            evaluationIndicators:indicatorsForEvaluateClass,
+            evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
+            learningObjectives: learningObjetives,
+            activities: activities,
+            materials: materials,
+            evaluationType:evaluationType
+
+        }
+        axios.post('http://localhost:4000/planing/create', planificationData)
+        .then(response => {
+          console.log('La solicitud POST se realizó con éxito:', response);
+          dispatch(reload())
+
+          if (response.data) {
+            swal.fire({
+                text: response.data.message,
+                icon: "success",
+              });
+          }
+
+          // Aquí puedes realizar cualquier otra acción que desees realizar después de una respuesta exitosa
+        })
+        .catch(handleError);
+
+        
+    }
 
     /**
      * ESTADOS DE INFORMACION Y COMPONENTES
@@ -54,28 +115,22 @@ export default function Tableplanification() {
     const [skills, setSkills] = useState("")
     const [userClassroom, setUserClassroom] = useState({})
     const [selectedIndicators, setSelectedIndicators] = useState([]);
-    
-    const idPlanner = "643db8323130e8bfaac6baee"
-    // const idPlanner = "6436efc2dfa4f4062385fa6c"
+
+
     const evaluationArrayType = [
         {
-            id:"formativa",
-            label:"Formativa",
-            value:"Formativa"
+            id: "formativa",
+            label: "Formativa",
+            value: "Formativa"
         },
         {
-            id:"sumativa",
+            id: "sumativa",
             label: "Sumativa",
             value: "Sumativa"
         }
     ]
 
-    /**
-     * ACCIONES
-     */
-    const dispatch = useDispatch()
 
-    
     /**
      * FUNCIONES PARA ORDENAR DATA
      */
@@ -97,7 +152,7 @@ export default function Tableplanification() {
      */
     const fetchData = async () => {
         try {
-            const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/classroom/find/${idPlanner}`);
+            const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/classroom/find/${id}`);
             setUserClassroom(response.data.response)
             dispatch(reload())
         } catch (error) {
@@ -160,12 +215,12 @@ export default function Tableplanification() {
         } else {
             setIndicatorsForEvaluateClass(
                 indicatorsForEvaluateClass.filter((value) => value !== indicator)
-          );
-          setSelectedIndicators(
-            selectedIndicators.filter((value) => value !== indicator)
-      )
+            );
+            setSelectedIndicators(
+                selectedIndicators.filter((value) => value !== indicator)
+            )
         }
-      };
+    };
 
     useEffect(() => {
         const filteredEvaluationIndicators = filterEvaluationIndicatorsByClassObjectives(evaluationIndicators, classObjectives);
@@ -175,13 +230,20 @@ export default function Tableplanification() {
         if (classObjectives.length === 0) {
             setFilteredIndicators([])
         }
-
+ // eslint-disable-next-line
     }, [classObjectives])
 
     useEffect(() => {
         fetchData();
+        
+         // eslint-disable-next-line
+    }, [reload]);
+
+    useEffect(() => {
         handleUserData();
-    }, [userClassroom]);
+        console.log(ojbTransversalesActitudes)
+    }, [userClassroom])
+    
 
 
     /**
@@ -193,7 +255,8 @@ export default function Tableplanification() {
             ...provided,
             whiteSpace: "nowrap",
             overflow: "hidden",
-            textOverflow: "ellipsis"
+            textOverflow: "ellipsis",
+            cursor: "pointer"
         })
     };
 
@@ -243,13 +306,13 @@ export default function Tableplanification() {
     ];
 
 
-   /**
-    * RENDERIZADO WEB
-    */
+    /**
+     * RENDERIZADO WEB
+     */
     return (
 
-        <div className="  overflow-x-auto min-h-[100vh] pt-5  ">
-            <GoBackToButton />
+        <div className="  overflow-x-auto min-h-[75vh] pt-5  ">
+            {/* <GoBackToButton /> */}
             <table className="min-w-max w-full rounded-lg border my-4 ">
                 <caption className="py-3 text-gray-600 border-t">Planificación: {`${userClassroom.grade}° ${userClassroom.level === 'basico' ? 'Básico' : 'Medio'} - Sección: "${userClassroom.section}"`}</caption>
                 <thead className='border'>
@@ -336,6 +399,8 @@ export default function Tableplanification() {
                                         <div className='rounded-lg' >
                                             <p>Minutos</p>
                                             <input
+                                                type="number"
+
                                                 value={duration}
                                                 onChange={(e) => setDuration(e.target.value)}
                                                 className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
@@ -344,6 +409,7 @@ export default function Tableplanification() {
                                         <div className='rounded-lg' >
                                             <p>Bloque/s</p>
                                             <input
+                                                type="number"
                                                 value={schoolBlock}
                                                 onChange={(e) => setSchoolBlock(e.target.value)}
                                                 className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
@@ -361,7 +427,7 @@ export default function Tableplanification() {
                             </div>
                         </td>
                         <td className=" px-2 border text-center ">
-                            <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[12rem]">
+                            <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[11rem]">
                                 <Select
                                     closeMenuOnSelect={false}
                                     components={animatedComponents}
@@ -382,45 +448,45 @@ export default function Tableplanification() {
                         <td className="border text-center">
                             <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[10rem] gap-2 ">
                                 {
-                                     filteredIndicators?.length > 0 ? (
+                                    filteredIndicators?.length > 0 ? (
                                         <Modalindicators title={"Ver Indicadores"} >
-                                        <div>    
-                                            {
-                                                filteredIndicators.map((item, index) => {
-                                                    return (
-                                                        <div className=' overflow-y-auto flex gap-2 p-5 border-lg my-5 bg-gray-100'>
-                                                            <p className='w-[5rem] ' >Indicadores: {item.id} </p>
-                                                            <ul className='flex flex-wrap p-10 gap-2 overflow-y-auto max-h-[20vh]'>
-                                                                {
-                                                                    item.indicators.map((indicator, indx)=>{
-                                                                        const isChecked = selectedIndicators.includes(indicator);
-                                                                        return (
-                                                                            <li key={index} className='w-[15rem] font-thin'>
-                                                                            <label className='flex  text-justify gap-3 my-2 border rounded-lg p-2 text-xs' >
-                                                                                <input 
-                                                                                type="checkbox" 
-                                                                                onChange={(event) =>
-                                                                                    handleCheckboxChangeIndicators(event, indx, indicator)
-                                                                                  }
-                                                                                  checked={isChecked}
-                                                                                />
-                                                                                {indicator}
-                                                                            </label>
-                                                                        </li>
-                                                                        )
-                                                                    })
-                                                                }
-    
-                                                            </ul>                                                            
-                                                        </div>
-                                                    )
-                                                })
-                                            }
-                                        </div>
-                                    </Modalindicators>
-                                     ) : (
+                                            <div>
+                                                {
+                                                    filteredIndicators.map((item, index) => {
+                                                        return (
+                                                            <div className=' overflow-y-auto flex items-center  gap-2 px-4 border-lg my-4 bg-gray-200 shadow rounded-lg'>
+                                                                <p className='w-[5rem] text-sm text-center font-thin ' >Indicadores: {item.id} </p>
+                                                                <ul className='flex flex-wrap p-4 gap-2 overflow-y-auto max-h-[20vh] w-full'>
+                                                                    {
+                                                                        item.indicators.map((indicator, indx) => {
+                                                                            const isChecked = selectedIndicators.includes(indicator);
+                                                                            return (
+                                                                                <li key={index} className='w-[16rem] font-thin '>
+                                                                                    <label className='flex text-justify gap-3 border rounded-lg p-2 text-xs bg-white  min-h-[3rem]' >
+                                                                                        <input
+                                                                                            type="checkbox"
+                                                                                            onChange={(event) =>
+                                                                                                handleCheckboxChangeIndicators(event, indx, indicator)
+                                                                                            }
+                                                                                            checked={isChecked}
+                                                                                        />
+                                                                                        {indicator}
+                                                                                    </label>
+                                                                                </li>
+                                                                            )
+                                                                        })
+                                                                    }
+
+                                                                </ul>
+                                                            </div>
+                                                        )
+                                                    })
+                                                }
+                                            </div>
+                                        </Modalindicators>
+                                    ) : (
                                         null
-                                     )
+                                    )
                                 }
                                 <div className='rounded-lg' >
                                     <p>Otros indicadores</p>
@@ -442,10 +508,9 @@ export default function Tableplanification() {
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona un objetivo'
-                                    onChange={(selected) => {
-                                        const selectedValues = selected.map(option => ({ id: option.id, value: option.value }));
-                                        setLearningObjetives([...selectedValues]);
-                                        dispatch(reload())
+                                    onChange={(selectedTA) => {
+                                        const selectedTransversalActitud = selectedTA.map(option => ({ id: option.id, value: option.value }));
+                                        setLearningObjetives([...selectedTransversalActitud]);
                                     }}
                                 />
                             </div>
@@ -468,7 +533,7 @@ export default function Tableplanification() {
                                         if (a.label < b.label) return -1;
                                         if (a.label > b.label) return 1;
                                         return 0;
-                                      })}
+                                    })}
                                     className='w-full font-thin'
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
@@ -512,7 +577,7 @@ export default function Tableplanification() {
                                     ) : (
                                         null
                                     )
-                                } 
+                                }
                             </div>
                         </td>
                     </tr>
@@ -522,10 +587,11 @@ export default function Tableplanification() {
                 <button className="btn-cancelar">
                     Cancelar
                 </button>
-                <button className="btn-guardar">
+                <button className="btn-guardar" onClick={handleCreatePlaning}>
                     Guardar
                 </button>
             </div>
         </div>
     )
 }
+

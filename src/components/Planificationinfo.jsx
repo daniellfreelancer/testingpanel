@@ -19,8 +19,10 @@ export default function PlanificationInfo({ userPlanner }) {
                         {sortedPlanner?.map((item, _id) => (
                             <PlanificationItem
                                 key={_id}
-                                date={item.date}
+                                startDate={item.startDate}
+                                endDate={item.endDate}
                                 duration={item.duration}
+                                schoolBlock={item.schoolBlock}
                                 content={item.content}
                                 evaluationType={item.evaluationType}
                                 idPlanner={item._id}
@@ -37,7 +39,7 @@ export default function PlanificationInfo({ userPlanner }) {
 
 
 
-function PlanificationItem({ date, duration, content, evaluationType, idPlanner }) {
+function PlanificationItem({ startDate, endDate, duration, schoolBlock, content, evaluationType, idPlanner }) {
 
     const dispatch = useDispatch();
     const { id } = useParams()
@@ -82,21 +84,36 @@ function PlanificationItem({ date, duration, content, evaluationType, idPlanner 
         return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
     }
 
+    function getLocalTimeFromUTC(utcDateString) {
+        const utcDate = new Date(utcDateString);
+        const localTime = utcDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
+        return localTime;
+      }
+
     return (
         <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex justify-between items-center cursor-pointer text-start'>
             <div className='flex items-center w-full'>
-                <div className='flex items-center lg:w-[20%]'>
+                <div className='flex items-center gap-2 lg:w-[30%]'>
                     <AiOutlineFilePpt size={20} />
-                    <p className='text-gray-700 pl-4'>Fecha: {formatDate(date)}</p>
+                    {
+                        endDate !== null ? (
+                            <p className='text-gray-700'>Desde: {formatDate(startDate)} <br/> Hasta: {formatDate(endDate)}</p>
+
+                        ) : (
+                            <p className='text-gray-700'>Fecha: {formatDate(startDate)}</p>
+                        )
+                    }
+                    
                 </div>
-                <p className='text-gray-700 pl-4 w-[20%]'>Duración: {duration} min</p>
+                <p className='text-gray-700 pl-4 w-[20%]'>Inicio: {getLocalTimeFromUTC(startDate)}</p>
+                <p className='text-gray-700 pl-4 w-[20%]'>Duración: {duration !== 0 ? `${duration} minutos `  : `${schoolBlock} bloques `}</p>
                 <p className='text-gray-700 pl-4 w-[30%]'>Contenido: {content}</p>
-                <p className='text-gray-700 pl-4 w-[20%]'>Tipo de evaluación: {evaluationType}</p>
+                <p className='text-gray-700 pl-4 w-[20%]'>Evaluación: {evaluationType}</p>
                 <div className='flex justify-end w-[10%] gap-1'>
                     <AiOutlineEye size={20} className='text-gray-400 cursor-pointer hover:text-blue-500 mr-2' />
                     <Modaleditplaning idPlanner={idPlanner}  />
                     <AiOutlineDelete onClick={() => handleDelete(idPlanner)} size={20} className='text-gray-400 cursor-pointer hover:text-red-500' />
-
+                    <Modaleditplaning idPlanner={idPlanner}  />
                 </div>
             </div>
         </li>

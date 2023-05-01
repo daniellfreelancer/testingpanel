@@ -1,3 +1,6 @@
+/**
+ * OBJETIVOS DE APRENDIZAJE BASALES/COMPLEMENTARIOS PRIMERO BÁSICO
+ */
 const primeroBasicoABC = [
     {
         id:"EF01OA01",

@@ -13,6 +13,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { reloadValueState } from '../features/reloadSlice';
 // import { reload } from '../features/reloadSlice';
 import Modalcreateplaning from '../components/modal/Modalcreateplaning';
+import PlanificationNewTable from '../components/forms/PlanificationNewTable';
 
 export default function ClassroomDetail() {
     const { id } = useParams();
@@ -51,9 +52,12 @@ export default function ClassroomDetail() {
 
                 <div className='w-full m-auto p-4 border rounded-lg overflow-y-auto' >
                     <div className='flex justify-between flex-wrap gap-2' >
-                        <div className=' bg-white flex flex-col justify-between rounded-lg w-[100%] border p-4 '>
+                        <div className=' bg-white flex gap-4 rounded-lg w-[100%] border p-4 '>
                             <Modalcreateplaning title={"Crear planificación"} >
                                 <PlanificationForm />
+                            </Modalcreateplaning>
+                            <Modalcreateplaning title={"Crear nueva planificación"} >
+                               <PlanificationNewTable/>
                             </Modalcreateplaning>
                         </div>
                         <Clasroominfo userClassroom={userClassroom} />

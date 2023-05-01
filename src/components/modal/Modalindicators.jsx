@@ -15,22 +15,49 @@ export default function Modalindicators({children, title}) {
         dispatch(reload())
     }
 
+    // const customStyles = {
+    //     content: {
+    //         top: '50%',
+    //         left: '50%',
+    //         right: 'auto',
+    //         bottom: 'auto',
+    //         marginRight: '-50%',
+    //         transform: 'translate(-50%, -50%)',
+    //         width: '100%',
+    //     },
+    //     overlay: {
+    //         backgroundColor: "rgba(0, 0, 0, 0.5)"
+    //     }
+    // };
+
     const customStyles = {
         content: {
-            top: '50%',
-            left: '50%',
-            right: 'auto',
-            bottom: 'auto',
-            marginRight: '-50%',
-            transform: 'translate(-50%, -50%)',
-            width: '100%',
+          position: 'absolute',
+          top: '0',
+          left: '0',
+          right: '0',
+          bottom: '0',
+          margin: 'auto',
+          width: '90%',
+          height: '90%',
+          overflow: 'auto',
+          WebkitOverflowScrolling: 'touch',
+          outline: 'none',
+          padding: '20px',
+          background: '#fff',
+          boxShadow: '0 0 20px rgba(0,0,0,0.2)'
         },
         overlay: {
-            backgroundColor: "rgba(0, 0, 0, 0.5)"
+          position: 'fixed',
+          top: '0',
+          left: '0',
+          right: '0',
+          bottom: '0',
+          backgroundColor: 'rgba(0, 0, 0, 0.5)'
         }
+      };
 
 
-    };
   return (
       <div>
           <button className='flex bg-indigo-700 rounded hover:bg-indigo-600 transform duration-300 ease-in-out text-xs items-center px-4 py-1 text-white  text-center gap-2' onClick={openModal}>

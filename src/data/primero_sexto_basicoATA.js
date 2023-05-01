@@ -19,21 +19,6 @@ const primero_sexto_basicoATA = [
     label:"OAT 04",
     value:"Comprender y apreciar la importancia que tienen las dimensiones afectiva, espiritual, ética y social para un sano desarrollo sexual."
 },
-// {
-//     id:"OAT05",
-//     label:"OAT 05",
-//     value:""
-// },
-// {
-//     id:"OAT06",
-//     label:"OAT 06",
-//     value:""
-// },
-// {
-//     id:"OAT07",
-//     label:"OAT 07",
-//     value:""
-// },
 {
     id:"OAT08",
     label:"OAT 08",
@@ -44,11 +29,6 @@ const primero_sexto_basicoATA = [
     label:"OAT 09",
     value:"Resolver problemas de manera reflexiva en el ámbito escolar, familiar y social, tanto utilizando modelos y rutinas como aplicando de manera creativa conceptos y criterios."
 },
-// {
-//     id:"OAT10",
-//     label:"OAT 10",
-//     value:""
-// },
 {
     id:"OAT11",
     label:"OAT 11",
@@ -99,21 +79,6 @@ const primero_sexto_basicoATA = [
     label:"OAT 20",
     value:"Reconocer y respetar la diversidad cultural, religiosa y étnica y las ideas y creencias distintas de las propias en los espacios escolares, familiares y comunitarios, reconociendo el diálogo como fuente de crecimiento, superación de diferencias y acercamiento a la verdad."
 },
-// {
-//     id:"OAT21",
-//     label:"OAT 21",
-//     value:""
-// },
-// {
-//     id:"OAT22",
-//     label:"OAT 22",
-//     value:""
-// },
-// {
-//     id:"OAT23",
-//     label:"OAT 23",
-//     value:""
-// },
 {
     id:"OAT24",
     label:"OAT 24",
@@ -134,11 +99,6 @@ const primero_sexto_basicoATA = [
     label:"OAT 27",
     value:"Reconocer la importancia del trabajo, manual e intelectual como forma de desarrollo personal, familiar, social y de contribución al bien común, valorando la dignidad esencial de todo trabajo y el valor eminente de la persona que lo realiza."
 },
-// {
-//     id:"OAT28",
-//     label:"OAT 28",
-//     value:""
-// },
 {
     id:"OAT29",
     label:"OAT 29",
