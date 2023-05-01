@@ -6,7 +6,13 @@ import ReactSwitch from 'react-switch';
 import axios from 'axios';
 import materialsSchool from '../../data/materialsSchool';
 import { reload } from '../../features/reloadSlice';
-import Select from 'react-select';
+import Select , {
+    components,
+    MultiValueGenericProps,
+    MultiValueProps,
+    OnChangeValue,
+    Props,
+  } from 'react-select';
 import makeAnimated from 'react-select/animated';
 import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'
@@ -18,10 +24,11 @@ import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
 import Modalindicators from '../../components/modal/Modalindicators';
-import {AiOutlineFileText} from 'react-icons/ai'
+import {AiOutlineFileText, AiOutlineDelete} from 'react-icons/ai'
 import { useParams } from 'react-router';
 import swal from 'sweetalert2'
-export default function PlanificationNewTable() {
+import { animated } from '@react-spring/web'
+export default function PlanificationeditTable({idPlanner}) {
     /**
      * HOOKS / PARAMS
      */
@@ -34,8 +41,8 @@ export default function PlanificationNewTable() {
      */
     const [startDate, setStartDate] = useState(new Date());                                     //FECHA Y HORA DE INICIO
     const [endDate, setEndDate] = useState(null);                                               //FECHA DE FIN
-    const [duration, setDuration] = useState(null)                                              //DURACIÓN EN MINUTOS
-    const [schoolBlock, setSchoolBlock] = useState(null)                                        //BLOQUES
+    const [duration, setDuration] = useState()                                              //DURACIÓN EN MINUTOS
+    const [schoolBlock, setSchoolBlock] = useState()                                        //BLOQUES
     const [content, setContent] = useState()                                                    //CONTENIDO
     const [classObjectives, setClassObjectives] = useState([])                                  //OBJ BASALES Y COMPLEMENTARIOS
     const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])            //INDICADORES DEPENDIENTES DE OBJ BASALES/COMPLEMENTARIOS
@@ -44,6 +51,7 @@ export default function PlanificationNewTable() {
     const [activities, setActivities] = useState([])                                            //ACTIVIDADES
     const [materials, setMaterials] = useState([])                                              //MATERIALES
     const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
+
 
 
     /**
@@ -84,7 +92,7 @@ export default function PlanificationNewTable() {
             evaluationType:evaluationType
 
         }
-        axios.post('https://whale-app-qsx89.ondigitalocean.app/planing/create', planificationData)
+        axios.post('http://localhost:4000/planing/create', planificationData)
         .then(response => {
           console.log('La solicitud POST se realizó con éxito:', response);
           dispatch(reload())
@@ -115,7 +123,8 @@ export default function PlanificationNewTable() {
     const [skills, setSkills] = useState("")
     const [userClassroom, setUserClassroom] = useState({})
     const [selectedIndicators, setSelectedIndicators] = useState([]);
-
+    const [classObjetivesSeleted, setClassObjetivesSeleted] = useState([])
+    const [defaultValues, setDefaultValues] = useState([]);
 
     const evaluationArrayType = [
         {
@@ -135,7 +144,7 @@ export default function PlanificationNewTable() {
      * FUNCIONES PARA ORDENAR DATA
      */
     const toggleDuration = () => {
-        setNormalTime((e) => (e === "normalTime" ? "schoolTime" : "normalTime"));
+        setNormalTime((e) => (e === "normalTime" ? "schoolTime" : "normalTime" ));
     };
     const toggleDate = () => {
         setDayWeek((e) => (e === "day" ? "week" : "day"));
@@ -152,9 +161,20 @@ export default function PlanificationNewTable() {
      */
     const fetchData = async () => {
         try {
-            const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/classroom/find/${id}`);
-            setUserClassroom(response.data.response)
-            dispatch(reload())
+            const  response  = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
+            console.log(response.data)
+
+            setUserClassroom(response.data.classroom)
+            setDuration(response.data.duration)
+            setSchoolBlock(response.data.schoolBlock)
+            response.data.duration > 8 ? setNormalTime("normalTime") :  setNormalTime("schoolTime")
+            setContent(response.data.content)
+            setClassObjectives(response.data.classObjectives)
+            setActivities(response.data.activities)
+            setEvaluationType(response.data.evaluationType)
+
+
+
         } catch (error) {
             console.log(error);
         }
@@ -241,15 +261,18 @@ export default function PlanificationNewTable() {
 
     useEffect(() => {
         handleUserData();
-        console.log(ojbTransversalesActitudes)
     }, [userClassroom])
-    
+
 
 
     /**
      * FORMATOS Y RENDERIZADOS
      */
+
     const animatedComponents = makeAnimated();
+
+
+
     const customStyles = {
         option: (provided, state) => ({
             ...provided,
@@ -260,9 +283,14 @@ export default function PlanificationNewTable() {
         })
     };
 
-    const formatOptionLabel = ({ value, label }) => (
-        <div title={value}>{label}</div>
-    );
+
+
+
+
+      const formatOptionLabel = ({ value, label }) => (
+        <div  title={value}>{label}</div>
+      );
+
 
     const switchDateProps = {
         onChange: toggleDate,
@@ -282,7 +310,7 @@ export default function PlanificationNewTable() {
 
     const switchDurationProps = {
         onChange: toggleDuration,
-        checked: normalTime === "schoolTime",
+        checked: normalTime,
         onColor: "#8bce75",
         onHandleColor: " rgb(67 56 202)",
         handleDiameter: 10,
@@ -304,6 +332,13 @@ export default function PlanificationNewTable() {
         "Materiales",
         "Tipo de Evaluación"
     ];
+
+    const handleDeleteClassObjective = (item) => {
+        setClassObjectives(classObjectives.filter(obj => obj.id !== item.id));
+      }
+
+      const classObjectivesIds = classObjectives.map(obj => obj.id);
+      
 
 
     /**
@@ -427,22 +462,37 @@ export default function PlanificationNewTable() {
                             </div>
                         </td>
                         <td className=" px-2 border text-center ">
-                            <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[11rem]">
+                            <h2>Objetivos seleccionados</h2>
+
+                            {
+                               classObjectives.map((item) => (
+                                <div className='flex justify-between items-center py-2'>
+                                  <p className='text-justify'>{item.id}: {item.value.substring(0, 85)}{item.value.length > 100 ? "..." : ""}</p>
+                                  <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteClassObjective(item)}> <AiOutlineDelete size={12}/> </button>
+                                </div>
+                              ))
+                            }
+
+
+                            <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[12rem]">
                                 <Select
                                     closeMenuOnSelect={false}
                                     components={animatedComponents}
                                     isMulti
-                                    options={objBasalesComplementarios}
+                                    options={objBasalesComplementarios.filter(obj => !classObjectivesIds.includes(obj.id)).map(obj => ({...obj, isDisabled: false}))}
                                     className='w-full font-thin'
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
-                                    placeholder='Selecciona un objetivo'
+                                    placeholder='agrega un objetivo'
                                     onChange={(selected) => {
-                                        const selectedValues = selected.map(option => ({ id: option.id, label:option.label, value: option.value }));
+                                        const selectedValues = selected.map(option => ({ id: option.id, value: option.value }));
                                         setClassObjectives([...selectedValues]);
-                                        dispatch(reload())
+                                        
                                     }}
-                                />
+                                /> 
+
+
+
                             </div>
                         </td>
                         <td className="border text-center">
@@ -526,7 +576,7 @@ export default function PlanificationNewTable() {
                         <td className="px-2 border text-center">
                             <div className="pt-1 flex flex-col items-center rounded-lg min-h-[8rem] w-[12rem] gap-2 ">
                                 <Select
-                                    closeMenuOnSelect={true}
+                                    closeMenuOnSelect={false}
                                     components={animatedComponents}
                                     isMulti
                                     options={materialsSchool.sort((a, b) => {
@@ -562,6 +612,7 @@ export default function PlanificationNewTable() {
                                     styles={customStyles}
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona...'
+                                    value={evaluationArrayType.find(element => element.value === evaluationType)}
                                     onChange={(selectedOption) => setEvaluationType(selectedOption.value)}
                                 />
                                 {
@@ -583,15 +634,14 @@ export default function PlanificationNewTable() {
                     </tr>
                 </tbody>
             </table>
-            <div className='flex bg-gray-50 hover:bg-gray-100 shadow-md border p-3 gap-2 justify-end'>
+            <div className='flex bg-gray-50 hover:bg-gray-100 shadow-md border p-3 gap-2 justify-end w-full'>
                 <button className="btn-cancelar">
                     Cancelar
                 </button>
                 <button className="btn-guardar" onClick={handleCreatePlaning}>
-                    Guardar
+                    Actualizar
                 </button>
             </div>
         </div>
     )
 }
-

@@ -4,7 +4,8 @@ import PlanificationeditForm from '../forms/PlanificationeditForm';
 import {AiOutlineEdit} from 'react-icons/ai'
 import { useDispatch } from 'react-redux';
 import { reload } from '../../features/reloadSlice';
-export default function Modaleditplaning({ idPlanner }) {
+import PlanificationeditTable from '../forms/PlanificationeditTable';
+export default function Modaleditplanification({ idPlanner }) {
     const [modalIsOpen, setIsOpen] = useState(false)
 
     const dispatch = useDispatch()
@@ -60,7 +61,7 @@ export default function Modaleditplaning({ idPlanner }) {
                 style={customStyles}
                 contentLabel="Actualizar planificación"
             >
-                <PlanificationeditForm idPlanner={idPlanner}/>                            
+                <PlanificationeditTable idPlanner={idPlanner}/>                            
                 <button className="bg-red-500 mt-5 rounded hover:bg-white-600 transform duration-300 ease-in-out text-sm font-medium px-6 py-2 text-white lg:max-w-[110px] w-full " onClick={closeModal}>Cerrar</button>
 
             </Modal>
