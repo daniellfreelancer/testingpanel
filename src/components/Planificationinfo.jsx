@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { reload } from '../features/reloadSlice';
 import Modaleditplaning from './modal/Modaleditplaning';
 import Modaleditplanification from './modal/Modaleditplanification';
+import Modalviewplaning from './modal/Modalviewplaning';
 export default function PlanificationInfo({ userPlanner }) {
     const sortedPlanner = [...userPlanner].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
@@ -109,7 +110,8 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
                 <p className='text-gray-700 pl-4 w-[30%]'>Contenido: {content}</p>
                 <p className='text-gray-700 pl-4 w-[20%]'>Evaluación: {evaluationType}</p>
                 <div className='flex justify-center w-[10%] gap-1'>
-                    <AiOutlineEye size={20} className='text-gray-400 cursor-pointer hover:text-blue-500 mr-2' />
+                    
+                   <Modalviewplaning idPlanner={idPlanner} />
                     <Modaleditplanification idPlanner={idPlanner}  />
                     <AiOutlineDelete onClick={() => handleDelete(idPlanner)} size={20} className='text-gray-400 cursor-pointer hover:text-red-500' />
                     

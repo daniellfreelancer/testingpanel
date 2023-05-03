@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal';
 import PlanificationeditForm from '../forms/PlanificationeditForm';
-import {AiOutlineEdit} from 'react-icons/ai'
+import {AiOutlineEye} from 'react-icons/ai'
 import { useDispatch } from 'react-redux';
 import { reload } from '../../features/reloadSlice';
-import PlanificationeditTable from '../forms/PlanificationeditTable';
-export default function Modaleditplanification({ idPlanner }) {
+import PlanificationViewTable from '../forms/PlanificationViewTable';
+export default function Modalviewplaning({ idPlanner }) {
     const [modalIsOpen, setIsOpen] = useState(false)
 
     const dispatch = useDispatch()
@@ -52,19 +52,20 @@ export default function Modaleditplanification({ idPlanner }) {
 
     return (
         <div>
-
-            <AiOutlineEdit onClick={openModal} size={20} className='text-gray-400 cursor-pointer mr-2 hover:text-purple-800'/> 
-
+            
+            <AiOutlineEye  onClick={openModal} size={20} className='text-gray-400 cursor-pointer mr-2 hover:text-purple-800'/> 
+           
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
                 style={customStyles}
-                contentLabel="Actualizar planificación"
+                contentLabel="ver planificación"
             >
-                <PlanificationeditTable idPlanner={idPlanner}/>                            
+                <PlanificationViewTable idPlanner={idPlanner} />
                 <button className="bg-red-500 mt-5 rounded hover:bg-white-600 transform duration-300 ease-in-out text-sm font-medium px-6 py-2 text-white lg:max-w-[110px] w-full " onClick={closeModal}>Cerrar</button>
 
             </Modal>
         </div>
     )
 }
+
