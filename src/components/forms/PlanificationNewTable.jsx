@@ -108,7 +108,7 @@ export default function PlanificationNewTable() {
             evaluationType:evaluationType
 
         }
-        axios.post(URLOCAL, planificationData)
+        axios.post(URL, planificationData)
         .then(response => {
           console.log('La solicitud POST se realizó con éxito:', response);
           dispatch(reload())
