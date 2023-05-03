@@ -6,13 +6,6 @@ import ReactSwitch from 'react-switch';
 import axios from 'axios';
 import materialsSchool from '../../data/materialsSchool';
 import { reload } from '../../features/reloadSlice';
-import Select, {
-    components,
-    MultiValueGenericProps,
-    MultiValueProps,
-    OnChangeValue,
-    Props,
-} from 'react-select';
 import makeAnimated from 'react-select/animated';
 import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'
@@ -74,49 +67,10 @@ export default function PlanificationViewTable({ idPlanner }) {
         }
     }
 
-    const URL = "https://whale-app-qsx89.ondigitalocean.app/planing/update/";
-    const URLOCAL = "http://localhost:4000/planing/update/"
 
     /**
      * ACTUALIZAR PLANIFICACIÓN
      */
-    async function handleEditPlaning() {
-
-        let planificationData = {
-            classroom : id,
-            startDate: startDate ? startDate.toISOString() : "",
-            endDate: endDate ? endDate.toISOString() : null,
-            duration: duration ? duration : 0,
-            schoolBlock: schoolBlock ? schoolBlock : 0,
-            content: content,
-            classObjectives: classObjectives,
-            evaluationIndicators:indicatorsForEvaluateClass,
-            evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
-            learningObjectives: learningObjetives,
-            activities: activities,
-            materials: materials,
-            otherMaterials: otherMaterials,
-            evaluationType:evaluationType
-
-        }
-        axios.patch(`https://whale-app-qsx89.ondigitalocean.app/planing/update/${idPlanner}`, planificationData)
-        .then(response => {
-          console.log('La solicitud PATCH se realizó con éxito:', response);
-          dispatch(reload())
-
-          if (response.data) {
-            swal.fire({
-                text: response.data.message,
-                icon: "success",
-              });
-          }
-
-          // Aquí puedes realizar cualquier otra acción que desees realizar después de una respuesta exitosa
-        })
-            .catch(handleError);
-
-
-    }
 
     /**
      * ESTADOS DE INFORMACION Y COMPONENTES
@@ -427,19 +381,11 @@ export default function PlanificationViewTable({ idPlanner }) {
                     <tr className="bg-gray-200 text-gray-500  text-xs">
                         <th className="text-center border w-16">
                             <p>Fecha</p>
-                            {/* <div className="flex items-center pl-4 ">
-                                <ReactSwitch {...switchDateProps} />
-                                <span className='mx-2' >{dayWeek === "day" ? (<p>Día</p>) : (<p>Semana</p>)}</span>
-                            </div> */}
                         </th>
                         <th className="py-1 px-3 text-center w-12 ">
                             <p>Duración</p>
-                            {/* <div className="flex items-center justify-start gap-2 ">
-                                <ReactSwitch {...switchDurationProps} />
-                                <label>{normalTime === "normalTime" ? (<p>Normal</p>) : (<p>Escolar</p>)}</label>
-                            </div> */}
                         </th>
-                        {tableHeaders.map((header) => (<th key={header} className="py-3 px-3 text-center w-20 ">{header}</th>))}
+                        {tableHeaders.map((header) => (<th key={header} className="py-3 px-3 text-center w-[13rem] ">{header}</th>))}
                     </tr>
                 </thead>
                 <tbody className="text-gray-600 text-xs">
@@ -453,56 +399,12 @@ export default function PlanificationViewTable({ idPlanner }) {
                                             <h3> {formatDate(startDate) }</h3>
                                             <p>al</p>
                                             <h3>{formatDate(endDate) }</h3>
-
                                             <h4>Hora: {getLocalTimeFromUTC(startDate)} </h4>
-                                            {/* <div className='rounded-lg' >
-                                                <p className='mb-1'>Inicio</p>
-                                                <DatePicker
-                                                    showTimeSelect
-                                                    showDisabledMonthNavigation
-                                                    locale={es}
-                                                    selected={startDate}
-                                                    onChange={(date) => setStartDate(date)}
-                                                    selectsStart
-                                                    startDate={startDate}
-                                                    endDate={endDate}
-                                                    className="cursor-pointer p-1 border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
-                                                    timeClassName={handleColor}
-                                                    dateFormat='dd/MM/yyyy'
-                                                />
-                                            </div>
-                                            <div className='border border-gray-50  p-1 rounded-lg' >
-                                                <p>Fin</p>
-                                                <DatePicker
-                                                    selected={endDate}
-                                                    onChange={(date) => setEndDate(date)}
-                                                    selectsEnd
-                                                    startDate={startDate}
-                                                    endDate={endDate}
-                                                    minDate={startDate}
-                                                    className="p-1 cursor-pointer border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
-                                                    dateFormat='dd/MM/yyyy'
-                                                    locale={es}
-                                                />
-                                            </div> */}
                                         </div>
                                     ) : (
                                         <div className='rounded-lg flex flex-col items-center justify-center  ' >
                                              <h3> {formatDate(startDate) }</h3>
                                              <h4>Hora: {getLocalTimeFromUTC(startDate)} </h4>
-                                            {/* <p className='mb-1' >Fecha</p>
-                                            <DatePicker
-                                                showTimeSelect
-                                                showDisabledMonthNavigation
-                                                locale={es}
-                                                selected={startDate}
-                                                onChange={(date) => setStartDate(date)}
-                                                selectsStart
-                                                startDate={startDate}
-                                                className="cursor-pointer p-1 border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
-                                                timeClassName={handleColor}
-                                                dateFormat='dd/MM/yyyy'
-                                            /> */}
                                         </div>
                                     )
                                 }
@@ -514,21 +416,10 @@ export default function PlanificationViewTable({ idPlanner }) {
                                     normalTime === "normalTime" ? (
                                         <div className='rounded-lg' >
                                             <p> {duration} Minutos</p>
-                                            {/* <input
-                                                type="number"
-
-                                                value={duration}
-                                                onChange={(e) => setDuration(e.target.value)}
-                                                className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" /> */}
                                         </div>
                                     ) : (
                                         <div className='rounded-lg' >
                                             <p> {schoolBlock} { schoolBlock === 1 ? 'Bloque' : 'Bloques' }</p>
-                                            {/* <input
-                                                type="number"
-                                                value={schoolBlock}
-                                                onChange={(e) => setSchoolBlock(e.target.value)}
-                                                className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" /> */}
                                         </div>
                                     )
                                 }
@@ -537,14 +428,9 @@ export default function PlanificationViewTable({ idPlanner }) {
                         <td className="py-3 px-2 border text-center">
                             <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[9rem]">
                                 <p> {content} </p>
-                                {/* <textarea
-                                    value={content}
-                                    onChange={(e) => setContent(e.target.value)}
-                                    className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7rem] " /> */}
                             </div>
                         </td>
                         <td className=" px-2 border text-center ">
-                            {/* <h2>Objetivos seleccionados</h2> */}
 
                             {
                                 classObjectives.map((item) => (
@@ -578,8 +464,8 @@ export default function PlanificationViewTable({ idPlanner }) {
 
                             </div> */}
                         </td>
-                        <td className="border text-center">
-                            <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[10rem] gap-2 ">
+                        <td className="text-center">
+                            <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-fit gap-2 px-2 ">
                                 {
                                     filteredIndicators?.length > 0 ? (
                                         <Modalindicators title={"Ver Indicadores"} >
@@ -589,28 +475,6 @@ export default function PlanificationViewTable({ idPlanner }) {
                                                         return (
                                                             <div className=' overflow-y-auto flex items-center  gap-2 px-4 border-lg my-4 bg-gray-200 shadow rounded-lg'>
                                                                 <p className='w-[5rem] text-sm text-center font-thin ' >Indicadores: {item.id} </p>
-                                                                {/* <ul className='flex flex-wrap p-4 gap-2 overflow-y-auto max-h-[20vh] w-full'>
-                                                                    {
-                                                                        item.indicators.map((indicator, indx) => {
-                                                                            const isChecked = selectedIndicators.includes(indicator);
-                                                                            return (
-                                                                                <li key={index} className='w-[16rem] font-thin '>
-                                                                                    <label className='flex text-justify gap-3 border rounded-lg p-2 text-xs bg-white  min-h-[3rem]' >
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            onChange={(event) =>
-                                                                                                handleCheckboxChangeIndicators(event, indx, indicator)
-                                                                                            }
-                                                                                            checked={isChecked}
-                                                                                        />
-                                                                                        {indicator}
-                                                                                    </label>
-                                                                                </li>
-                                                                            )
-                                                                        })
-                                                                    }
-
-                                                                </ul> */}
                                                                 <ul className='flex flex-wrap p-4 gap-2 overflow-y-auto max-h-[20vh] w-full'>
                                                                     {
                                                                         item.indicators.map((indicator) => {
@@ -644,14 +508,22 @@ export default function PlanificationViewTable({ idPlanner }) {
                                         null
                                     )
                                 }
-                                <div className='rounded bg-green-200 mx-1 p-1' >
-                                    <h2>Otros indicadores:</h2>
-                                    <p> {indicatorsForEvaluateClassManual}. </p>
-                                    {/* <textarea
-                                        value={indicatorsForEvaluateClassManual}
-                                        onChange={(e) => setIndicatorsForEvaluateClassManual(e.target.value)}
-                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[6rem] " /> */}
-                                </div>
+                                {
+                                    indicatorsForEvaluateClassManual.length > 0 ? (
+                                        <div className='rounded bg-green-200 mx-1 p-1' >
+                                    
+                                        <h2>Otros indicadores:</h2>
+                                        <p> {indicatorsForEvaluateClassManual}. </p>
+                                        {/* <textarea
+                                            value={indicatorsForEvaluateClassManual}
+                                            onChange={(e) => setIndicatorsForEvaluateClassManual(e.target.value)}
+                                            className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[6rem] " /> */}
+                                    </div>
+                                    ) : (
+                                        null
+                                    )
+                                }
+
                             </div>
                         </td>
                         <td className="px-2 border text-center">
@@ -668,26 +540,6 @@ export default function PlanificationViewTable({ idPlanner }) {
                                 ))
                             }
 
-                            {/* <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[10rem]">
-                                <Select
-
-                                
-                                    closeMenuOnSelect={false}
-                                    components={animatedComponents}
-                                    isMulti
-                                    options={ojbTransversalesActitudes.filter(obj => !learningObjectivesIds.includes(obj.id)).map(obj => ({ ...obj, isDisabled: false }))}
-                                    className='w-full font-thin'
-                                    styles={customStyles}
-                                    formatOptionLabel={formatOptionLabel}
-                                    placeholder='Selecciona un objetivo'
-                                    onChange={(selectedTA) => {
-                                        const selectedTransversalActitud = selectedTA.map(option => ({ id: option.id, label:option.label, value: option.value }));
-                                        setLearningObjetives([...selectedTransversalActitud]);
-                                    }}
-                                    value={learningObjetives}
-                                    backspaceRemovesValue={true}
-                                />
-                            </div> */}
                         </td>
                         <td className="py-3 px-2 border">
                             <div className="rounded-lg min-h-[8rem] w-[9rem] flex justify-center items-start">
