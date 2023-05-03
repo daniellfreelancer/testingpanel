@@ -10,6 +10,7 @@ import Schoolinfo from '../components/Schoolinfo';
 import Teachers from '../components/Teachers';
 import Classroomlist from '../components/Classroomlist';
 import Students from '../components/Students';
+import ScrollToTopOnRender from '../layout/ScrollToTopOnRender';
 
 
 export default function SchoolDetail() {
@@ -41,6 +42,7 @@ export default function SchoolDetail() {
 
   return (
       <Sidebar>
+        <ScrollToTopOnRender/>
           <main className='bg-gray-200 min-h-screen min-w-screen' >
               <Header />
               <GoBackToButton />

@@ -41,8 +41,9 @@ export default function PlanificationNewTable() {
     const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])            //INDICADORES DEPENDIENTES DE OBJ BASALES/COMPLEMENTARIOS
     const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState([])//INDICADORES CARGA MANUAL POR EL PROFESOR
     const [learningObjetives, setLearningObjetives] = useState([])                              //OBJ TRANSVERSALES Y ACTITUDES
-    const [activities, setActivities] = useState([])                                            //ACTIVIDADES
+    const [activities, setActivities] = useState("")                                            //ACTIVIDADES
     const [materials, setMaterials] = useState([])                                              //MATERIALES
+    const [otherMaterials, setOtherMaterials] = useState([])                                    //OTROS MATERIALES
     const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
 
 
@@ -63,6 +64,28 @@ export default function PlanificationNewTable() {
         }
       }
 
+      function handleClear(){
+        setStartDate(new Date())
+        setEndDate(null)
+        setDuration(null)
+        setSchoolBlock(null)
+        setContent("")
+        setClassObjectives([])
+        setIndicatorsForEvaluateClass([])
+        setIndicatorsForEvaluateClassManual([])
+        setLearningObjetives([])
+        setActivities("")
+        setMaterials([])
+        setOtherMaterials([])
+        setEvaluationType("")
+        dispatch(reload())
+       
+    }
+
+
+      const URL = "https://whale-app-qsx89.ondigitalocean.app/planing/create";
+      const URLOCAL = "http://localhost:4000/planing/create"
+
       /**
        * CREAR PLANIFICACIÓN
        */
@@ -81,10 +104,11 @@ export default function PlanificationNewTable() {
             learningObjectives: learningObjetives,
             activities: activities,
             materials: materials,
+            otherMaterials: otherMaterials,
             evaluationType:evaluationType
 
         }
-        axios.post('https://whale-app-qsx89.ondigitalocean.app/planing/create', planificationData)
+        axios.post(URLOCAL, planificationData)
         .then(response => {
           console.log('La solicitud POST se realizó con éxito:', response);
           dispatch(reload())
@@ -208,19 +232,40 @@ export default function PlanificationNewTable() {
         const selectedIds = classObjectives.map(obj => obj.id);
         return evaluationIndicators.filter(indicator => selectedIds.includes(indicator.id));
     }
-    const handleCheckboxChangeIndicators = (event, index, indicator) => {
+
+    // const handleCheckboxChangeIndicators = (event, index, indicator) => {
+    //     if (event.target.checked) {
+    //         setIndicatorsForEvaluateClass([...indicatorsForEvaluateClass, indicator]);
+    //         setSelectedIndicators([...indicatorsForEvaluateClass, indicator])
+    //     } else {
+    //         setIndicatorsForEvaluateClass(
+    //             indicatorsForEvaluateClass.filter((value) => value !== indicator)
+    //         );
+    //         setSelectedIndicators(
+    //             selectedIndicators.filter((value) => value !== indicator)
+    //         )
+    //     }
+    // };
+    function handleCheckboxChangeIndicators(event, id, value) {
         if (event.target.checked) {
-            setIndicatorsForEvaluateClass([...indicatorsForEvaluateClass, indicator]);
-            setSelectedIndicators([...indicatorsForEvaluateClass, indicator])
+          setIndicatorsForEvaluateClass(prevState => [...prevState, { id, value }]);
+          setSelectedIndicators(prevState => [...prevState, { id, value }])
         } else {
-            setIndicatorsForEvaluateClass(
-                indicatorsForEvaluateClass.filter((value) => value !== indicator)
-            );
-            setSelectedIndicators(
-                selectedIndicators.filter((value) => value !== indicator)
-            )
+          setIndicatorsForEvaluateClass(prevState =>
+            prevState.filter(indicator => indicator.id !== id)
+          );
+          setSelectedIndicators(prevState =>
+            prevState.filter(indicator => indicator.id !== id)
+          );
         }
-    };
+      }
+
+    useEffect(() => {
+
+          console.log(indicatorsForEvaluateClass)
+          
+    }, [indicatorsForEvaluateClass])
+
 
     useEffect(() => {
         const filteredEvaluationIndicators = filterEvaluationIndicatorsByClassObjectives(evaluationIndicators, classObjectives);
@@ -235,14 +280,16 @@ export default function PlanificationNewTable() {
 
     useEffect(() => {
         fetchData();
-        
          // eslint-disable-next-line
     }, [reload]);
 
     useEffect(() => {
         handleUserData();
-        console.log(ojbTransversalesActitudes)
+        
     }, [userClassroom])
+
+
+    
     
 
 
@@ -429,7 +476,7 @@ export default function PlanificationNewTable() {
                         <td className=" px-2 border text-center ">
                             <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[11rem]">
                                 <Select
-                                    closeMenuOnSelect={false}
+                                    closeMenuOnSelect={true}
                                     components={animatedComponents}
                                     isMulti
                                     options={objBasalesComplementarios}
@@ -442,6 +489,8 @@ export default function PlanificationNewTable() {
                                         setClassObjectives([...selectedValues]);
                                         dispatch(reload())
                                     }}
+                                    value={classObjectives}
+                                    backspaceRemovesValue={true}
                                 />
                             </div>
                         </td>
@@ -452,30 +501,32 @@ export default function PlanificationNewTable() {
                                         <Modalindicators title={"Ver Indicadores"} >
                                             <div>
                                                 {
-                                                    filteredIndicators.map((item, index) => {
+                                                    filteredIndicators.map((item) => {
                                                         return (
                                                             <div className=' overflow-y-auto flex items-center  gap-2 px-4 border-lg my-4 bg-gray-200 shadow rounded-lg'>
                                                                 <p className='w-[5rem] text-sm text-center font-thin ' >Indicadores: {item.id} </p>
                                                                 <ul className='flex flex-wrap p-4 gap-2 overflow-y-auto max-h-[20vh] w-full'>
                                                                     {
-                                                                        item.indicators.map((indicator, indx) => {
-                                                                            const isChecked = selectedIndicators.includes(indicator);
+                                                                        item.indicators.map((indicator) => {
+                                                                            // const isChecked = selectedIndicators.includes(indicator.value);
+                                                                            const isChecked = selectedIndicators.some(selected => selected.id === indicator.id);
                                                                             return (
-                                                                                <li key={index} className='w-[16rem] font-thin '>
+                                                                                <li key={indicator.id} className='w-[16rem] font-thin '>
                                                                                     <label className='flex text-justify gap-3 border rounded-lg p-2 text-xs bg-white  min-h-[3rem]' >
                                                                                         <input
                                                                                             type="checkbox"
                                                                                             onChange={(event) =>
-                                                                                                handleCheckboxChangeIndicators(event, indx, indicator)
+                                                                                                handleCheckboxChangeIndicators(event, indicator.id, indicator.value)
                                                                                             }
                                                                                             checked={isChecked}
                                                                                         />
-                                                                                        {indicator}
+                                                                                        {indicator.value}
                                                                                     </label>
                                                                                 </li>
                                                                             )
                                                                         })
                                                                     }
+
 
                                                                 </ul>
                                                             </div>
@@ -500,7 +551,7 @@ export default function PlanificationNewTable() {
                         <td className="px-2 border text-center">
                             <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[10rem]">
                                 <Select
-                                    closeMenuOnSelect={false}
+                                    closeMenuOnSelect={true}
                                     components={animatedComponents}
                                     isMulti
                                     options={ojbTransversalesActitudes}
@@ -509,9 +560,11 @@ export default function PlanificationNewTable() {
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona un objetivo'
                                     onChange={(selectedTA) => {
-                                        const selectedTransversalActitud = selectedTA.map(option => ({ id: option.id, value: option.value }));
+                                        const selectedTransversalActitud = selectedTA.map(option => ({ id: option.id, label:option.label, value: option.value }));
                                         setLearningObjetives([...selectedTransversalActitud]);
                                     }}
+                                    value={learningObjetives}
+                                    backspaceRemovesValue={true}
                                 />
                             </div>
                         </td>
@@ -539,15 +592,16 @@ export default function PlanificationNewTable() {
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona...'
                                     onChange={(selected) => {
-                                        const selectedValues = selected.map(option => option.value);
+                                        const selectedValues = selected.map(option => ({value: option.value, id: option.id, label: option.label}));
                                         setMaterials([...selectedValues]);
                                     }}
+                                    value={materials}
                                 />
                                 <div className="flex flex-col items-center rounded-lg h-[4rem] w-full">
                                     <p>Otros materiales</p>
                                     <textarea
-                                        value={materials}
-                                        onChange={(e) => setMaterials(e.target.value)}
+                                        value={otherMaterials}
+                                        onChange={(e) => setOtherMaterials(e.target.value)}
                                         className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7rem] " />
                                 </div>
                             </div>
@@ -563,6 +617,7 @@ export default function PlanificationNewTable() {
                                     formatOptionLabel={formatOptionLabel}
                                     placeholder='Selecciona...'
                                     onChange={(selectedOption) => setEvaluationType(selectedOption.value)}
+                                
                                 />
                                 {
                                     evaluationType === "Sumativa" ? (
@@ -584,8 +639,8 @@ export default function PlanificationNewTable() {
                 </tbody>
             </table>
             <div className='flex bg-gray-50 hover:bg-gray-100 shadow-md border p-3 gap-2 justify-end'>
-                <button className="btn-cancelar">
-                    Cancelar
+                <button className="btn-cancelar" onClick={handleClear}>
+                    Borrar
                 </button>
                 <button className="btn-guardar" onClick={handleCreatePlaning}>
                     Guardar

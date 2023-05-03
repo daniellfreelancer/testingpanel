@@ -1,6 +1,6 @@
 import axios from 'axios';
 import React from 'react'
-import { AiOutlineDelete, AiOutlineFilePpt, AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineSchedule, AiOutlineEye } from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import Swal from 'sweetalert2';
@@ -8,7 +8,7 @@ import { reload } from '../features/reloadSlice';
 import Modaleditplaning from './modal/Modaleditplaning';
 import Modaleditplanification from './modal/Modaleditplanification';
 export default function PlanificationInfo({ userPlanner }) {
-    const sortedPlanner = [...userPlanner].sort((a, b) => new Date(a.date) - new Date(b.date));
+    const sortedPlanner = [...userPlanner].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
 
     return (
@@ -94,26 +94,25 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
     return (
         <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex justify-between items-center cursor-pointer text-start'>
             <div className='flex items-center w-full'>
-                <div className='flex items-center gap-2 lg:w-[30%]'>
-                    <AiOutlineFilePpt size={20} />
+                <div className='flex items-center gap-2 lg:w-[14rem]'>
+                    <AiOutlineSchedule size={20} />
                     {
                         endDate !== null ? (
-                            <p className='text-gray-700'>Desde: {formatDate(startDate)} <br/> Hasta: {formatDate(endDate)}</p>
-
+                            <p className='text-gray-700 w-full text-justify'>Desde: {formatDate(startDate)} <br /> Hasta: {formatDate(endDate)}</p>
                         ) : (
-                            <p className='text-gray-700'>Fecha: {formatDate(startDate)}</p>
+                            <p className='text-gray-700 w-full text-justify  '>Fecha: {formatDate(startDate)}</p>
                         )
                     }
-                    
                 </div>
                 <p className='text-gray-700 pl-4 w-[20%]'>Inicio: {getLocalTimeFromUTC(startDate)}</p>
-                <p className='text-gray-700 pl-4 w-[20%]'>Duración: {duration !== 0 ? `${duration} minutos `  : `${schoolBlock} bloques `}</p>
+                <p className='text-gray-700 pl-4 w-[20%]'>Duración: {duration !== 0 ? `${duration} minutos `  : `${schoolBlock} ${schoolBlock !== 1 ? 'bloques' : 'bloque' }  `}</p>
                 <p className='text-gray-700 pl-4 w-[30%]'>Contenido: {content}</p>
                 <p className='text-gray-700 pl-4 w-[20%]'>Evaluación: {evaluationType}</p>
-                <div className='flex justify-end w-[10%] gap-1'>
+                <div className='flex justify-center w-[10%] gap-1'>
                     <AiOutlineEye size={20} className='text-gray-400 cursor-pointer hover:text-blue-500 mr-2' />
-                    <AiOutlineDelete onClick={() => handleDelete(idPlanner)} size={20} className='text-gray-400 cursor-pointer hover:text-red-500' />
                     <Modaleditplanification idPlanner={idPlanner}  />
+                    <AiOutlineDelete onClick={() => handleDelete(idPlanner)} size={20} className='text-gray-400 cursor-pointer hover:text-red-500' />
+                    
                 </div>
             </div>
         </li>

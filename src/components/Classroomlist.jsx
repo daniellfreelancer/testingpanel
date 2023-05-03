@@ -22,7 +22,7 @@ export default function Classroomlist({userClassroom}) {
                         <p className='text-gray-800 font-bold'> {`${item.grade}° ${item.level === 'basico' ? 'Básico' : 'Medio'}`}</p>
                         <p className='text-gray-800 '>Sección: {item.section}</p>
                         <Link to={`/classroom/${item._id}`}>
-                      <div className='flex items-center gap-2 bg-white border-indigo-700 rounded hover:bg-indigo-200 transform duration-300 ease-in-out text-sm font-medium px-6 py-2 text-indigo-700 border lg:max-w-full '>
+                      <div className='flex items-center gap-2 bg-white border-indigo-700 rounded hover:bg-indigo-200 transform duration-300 ease-in-out text-sm font-medium px-3 py-1 text-indigo-700 border lg:max-w-full '>
                         <h3 className='text-indigo-500'>ver mas</h3>
                       </div>
                     </Link>

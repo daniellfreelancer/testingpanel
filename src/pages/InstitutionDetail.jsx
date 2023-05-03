@@ -10,6 +10,7 @@ import InstitutionInfo from '../components/InstitutionInfo';
 import Schools from '../components/Schools';
 import GoBackToButton from '../components/GoBackButton';
 import UserPrograms from '../components/UserPrograms';
+import ScrollToTopOnRender from '../layout/ScrollToTopOnRender';
 
 export default function InstitutionDetail() {
     const { id } = useParams();
@@ -43,6 +44,7 @@ export default function InstitutionDetail() {
 
     return (
         <Sidebar>
+          <ScrollToTopOnRender/>
             <main className='bg-gray-200 min-h-screen min-w-screen' >
                 <Header />
                 <GoBackToButton/>

@@ -14,6 +14,7 @@ import { reloadValueState } from '../features/reloadSlice';
 // import { reload } from '../features/reloadSlice';
 import Modalcreateplaning from '../components/modal/Modalcreateplaning';
 import PlanificationNewTable from '../components/forms/PlanificationNewTable';
+import ScrollToTopOnRender from '../layout/ScrollToTopOnRender';
 
 export default function ClassroomDetail() {
     const { id } = useParams();
@@ -46,6 +47,7 @@ export default function ClassroomDetail() {
 
     return (
         <Sidebar>
+            <ScrollToTopOnRender/>
             <main className='bg-gray-200 min-h-screen min-w-screen' >
                 <Header />
                 <GoBackToButton />
@@ -54,9 +56,6 @@ export default function ClassroomDetail() {
                     <div className='flex justify-between flex-wrap gap-2' >
                         <div className=' bg-white flex gap-4 rounded-lg w-[100%] border p-4 '>
                             <Modalcreateplaning title={"Crear planificación"} >
-                                <PlanificationForm />
-                            </Modalcreateplaning>
-                            <Modalcreateplaning title={"Crear nueva planificación"} >
                                <PlanificationNewTable/>
                             </Modalcreateplaning>
                         </div>
