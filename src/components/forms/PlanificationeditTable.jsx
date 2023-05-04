@@ -43,7 +43,7 @@ export default function PlanificationeditTable({ idPlanner }) {
     const [learningObjetives, setLearningObjetives] = useState([])                              //OBJ TRANSVERSALES Y ACTITUDES
     const [activities, setActivities] = useState([])                                            //ACTIVIDADES
     const [materials, setMaterials] = useState([])                                              //MATERIALES
-    const [otherMaterials, setOtherMaterials] = useState([])                                    //OTROS MATERIALES
+    const [otherMaterials, setOtherMaterials] = useState("")                                    //OTROS MATERIALES
     const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
     
 
@@ -88,7 +88,8 @@ export default function PlanificationeditTable({ idPlanner }) {
             evaluationType:evaluationType
 
         }
-        axios.patch(`https://whale-app-qsx89.ondigitalocean.app/planing/update/${idPlanner}`, planificationData)
+       axios.patch(`https://whale-app-qsx89.ondigitalocean.app/planing/update/${idPlanner}`, planificationData)
+       // axios.patch(`http://localhost:4000/planing/update/${idPlanner}`, planificationData)
         .then(response => {
           console.log('La solicitud PATCH se realizó con éxito:', response);
           dispatch(reload())
@@ -161,7 +162,7 @@ export default function PlanificationeditTable({ idPlanner }) {
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)
             response.data.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
-            response.data.endDate !== null ? setDayWeek("week") : setDayWeek("day")
+            response.data.endDate !== null && response.data.endDate > response.data.startDate ? setDayWeek("week") : setDayWeek("day")
             setContent(response.data.content)
             setClassObjectives(response.data.classObjectives)
             setActivities(response.data.activities)
@@ -635,7 +636,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                                 <Select
 
                                 
-                                    closeMenuOnSelect={false}
+                                    closeMenuOnSelect={true}
                                     components={animatedComponents}
                                     isMulti
                                     options={ojbTransversalesActitudes.filter(obj => !learningObjectivesIds.includes(obj.id)).map(obj => ({ ...obj, isDisabled: false }))}
@@ -676,7 +677,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                             <div className="pt-1 flex flex-col flex-initial rounded-lg min-h-[8rem] w-[12rem] gap-2 ">
                             
                                 <Select
-                                    closeMenuOnSelect={false}
+                                    closeMenuOnSelect={true}
                                     components={animatedComponents}
                                     isMulti
                                     options={materialsSchool.sort((a, b) => {

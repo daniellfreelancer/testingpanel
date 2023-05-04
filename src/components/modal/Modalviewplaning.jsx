@@ -50,10 +50,8 @@ export default function Modalviewplaning({ idPlanner }) {
     Modal.setAppElement('#root');
 
     return (
-        <div>
-            
-            <AiOutlineEye  onClick={openModal} size={20} className='text-gray-400 cursor-pointer mr-2 hover:text-purple-800'/> 
-           
+        <>
+            <AiOutlineEye onClick={openModal} size={20} className='text-gray-400 cursor-pointer mr-2 hover:text-purple-800' />
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}
@@ -61,10 +59,10 @@ export default function Modalviewplaning({ idPlanner }) {
                 contentLabel="ver planificación"
             >
                 <PlanificationViewTable idPlanner={idPlanner} />
-                <button className="bg-red-500 mt-5 rounded hover:bg-white-600 transform duration-300 ease-in-out text-sm font-medium px-6 py-2 text-white lg:max-w-[110px] w-full " onClick={closeModal}>Cerrar</button>
+                <button className="bg-red-500 mt-5 rounded hover:bg-white-600 transform duration-300 ease-in-out text-sm font-medium p-2 text-white lg:max-w-[110px] w-full " onClick={closeModal}>Cerrar</button>
 
             </Modal>
-        </div>
+        </>
     )
 }
 

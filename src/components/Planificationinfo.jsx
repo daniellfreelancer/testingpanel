@@ -31,7 +31,7 @@ export default function PlanificationInfo({ userPlanner }) {
                         ))}
                     </ul>
                 ) : (
-                    <p className='text-gray-700 pl-4'>No tiene planificaciones asignadas</p>
+                    <p className='text-gray-700 pl-4'>No hay planificaciones asginadas</p>
                 )
             }
         </div>
@@ -97,7 +97,7 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
                 <div className='flex items-center gap-2 lg:w-[14rem]'>
                     <AiOutlineSchedule size={20} />
                     {
-                        endDate !== null ? (
+                        endDate !== null && endDate > startDate ? (
                             <p className='text-gray-700 w-full text-justify'>Desde: {formatDate(startDate)} <br /> Hasta: {formatDate(endDate)}</p>
                         ) : (
                             <p className='text-gray-700 w-full text-justify  '>Fecha: {formatDate(startDate)}</p>

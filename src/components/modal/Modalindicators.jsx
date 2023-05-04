@@ -59,7 +59,7 @@ export default function Modalindicators({children, title}) {
 
 
   return (
-      <div>
+      <div  >
           <button className='flex bg-indigo-700 rounded hover:bg-indigo-600 transform duration-300 ease-in-out text-xs items-center px-4 py-1 text-white  text-center gap-2' onClick={openModal}>
               <AiOutlineEye size={20} className='text-gray-200 cursor-pointer mr-2' />
               <h3>{title}</h3>
@@ -71,7 +71,10 @@ export default function Modalindicators({children, title}) {
               contentLabel="Detalle de Indicadores"
           >
               {children}
-              <button className="bg-red-500 mt-5 rounded hover:bg-white-600 transform duration-300 ease-in-out text-sm font-medium px-6 py-2 text-white lg:max-w-[110px] w-full " onClick={closeModal}>Cerrar</button>
+              <div className='flex justify-end' >
+              <button className="bg-green-500 rounded hover:bg-white-600 transform duration-300 ease-in-out text-sm font-medium px-3 py-1 text-white lg:max-w-[110px] w-full " onClick={closeModal}>Aceptar</button>
+              </div>
+
           </Modal>
       </div>
   )

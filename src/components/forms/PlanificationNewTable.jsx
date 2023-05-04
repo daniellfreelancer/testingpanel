@@ -105,6 +105,7 @@ export default function PlanificationNewTable() {
 
         }
         axios.post('https://whale-app-qsx89.ondigitalocean.app/planing/create', planificationData)
+        //axios.post('http://localhost:4000/planing/create', planificationData)
         .then(response => {
           console.log('La solicitud POST se realizó con éxito:', response);
           dispatch(reload())
@@ -397,6 +398,7 @@ export default function PlanificationNewTable() {
                                                     className="cursor-pointer p-1 border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
                                                     timeClassName={handleColor}
                                                     dateFormat='dd/MM/yyyy'
+                                                    required
                                                 />
                                             </div>
                                             <div className='border border-gray-50  p-1 rounded-lg' >
@@ -428,6 +430,7 @@ export default function PlanificationNewTable() {
                                                 className="cursor-pointer p-1 border border-gray-300 rounded outline-none focus:bg-gray-50 text-center w-[5rem]"
                                                 timeClassName={handleColor}
                                                 dateFormat='dd/MM/yyyy'
+                                                required
                                             />
                                         </div>
                                     )
@@ -593,7 +596,7 @@ export default function PlanificationNewTable() {
                                     value={materials}
                                 />
                                 <div className="flex flex-col items-center rounded-lg h-[4rem] w-full">
-                                    <p>Otros materiales</p>
+                                    <p>Ingresar materiales</p>
                                     <textarea
                                         value={otherMaterials}
                                         onChange={(e) => setOtherMaterials(e.target.value)}

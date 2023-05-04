@@ -71,7 +71,7 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)
             response.data.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
-            response.data.endDate !== null ? setDayWeek("week") : setDayWeek("day")
+            response.data.endDate !== null && response.data.endDate > response.data.startDate ? setDayWeek("week") : setDayWeek("day")
             setContent(response.data.content)
             setClassObjectives(response.data.classObjectives)
             setActivities(response.data.activities)
@@ -199,13 +199,10 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
 
 
     const tableHeaders = [
-        "Contenido",
         "Objetivos Basales/Complementarios",
         "Indicadores de evaluacion",
         "Objetivos Transversales/Actitudes",
         "Actividades",
-        "Materiales",
-        "Tipo de Evaluación"
     ];
 
 
@@ -268,7 +265,16 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
                         <th className="py-1 px-3 text-center w-12 ">
                             <p>Duración</p>
                         </th>
-                        {tableHeaders.map((header) => (<th key={header} className="py-3 px-3 text-center w-[13rem] ">{header}</th>))}
+                        <th className="py-1 px-3 text-center w-[10rem] ">
+                            <p>Contenido</p>
+                        </th>
+                        {tableHeaders.map((header) => (<th key={header} className="py-3 px-3 text-center w-[12rem] ">{header}</th>))}
+                        <th className="py-1 px-3 text-center w-[10rem] ">
+                            <p>Materiales</p>
+                        </th>
+                        <th className="py-1 px-3 text-center w-[7rem] ">
+                            <p>Tipo de Evaluación</p>
+                        </th>
                     </tr>
                 </thead>
                 <tbody className="text-gray-600 text-xs">
@@ -285,7 +291,7 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
                                             <h4>Hora: {getLocalTimeFromUTC(startDate)} </h4>
                                         </div>
                                     ) : (
-                                        <div className='rounded-lg flex flex-col items-center justify-center  ' >
+                                        <div className='rounded-lg flex flex-col items-center justify-center  gap-2 ' >
                                              <h3> {formatDate(startDate) }</h3>
                                              <h4>Hora: {getLocalTimeFromUTC(startDate)} </h4>
                                         </div>
@@ -327,20 +333,20 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
                             </div>
                         </td>
                         <td className="text-center p-2">
-                            <div className="flex flex-col items-center min-h-[15rem] gap-2 px-3">
+                            <div className="flex flex-col items-center min-h-[15rem] gap-2">
                                 {
                                     indicatorsForEvaluateClass.map((item) => (
-                                        <ul className='flex justify-between items-center list-disc w-fit'>
+                                        <ul className='flex justify-between items-center list-disc w-fit px-3'>
                                             <li className='text-justify border-b pb-1'>{item.value.substring(0, 50)}{item.value.length > 50 ? "..." : ""}</li>                                           
                                         </ul>
                                     ))
                                 }
                                 {
                                     indicatorsForEvaluateClassManual.length > 0 ? (
-                                        <div className='rounded bg-green-200 mx-1 p-1 text-justify flex flex-col gap-1' >
-                                        <h2>Otros indicadores:</h2>
-                                        <p> {indicatorsForEvaluateClassManual}. </p>
-                                    </div>
+                                        <div className='rounded bg-green-200 mx-1 p-2 text-justify flex flex-col gap-1' >
+                                            <h2>Otros indicadores:</h2>
+                                            <p> {indicatorsForEvaluateClassManual}. </p>
+                                        </div>
                                     ) : (
                                         null
                                     )
