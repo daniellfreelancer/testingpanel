@@ -609,7 +609,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                                     )
                                 }
                                 <div className='rounded-lg' >
-                                    <p>Otros indicadores</p>
+                                    <p>Ingresar indicadores</p>
                                     <textarea
                                         value={indicatorsForEvaluateClassManual}
                                         onChange={(e) => setIndicatorsForEvaluateClassManual(e.target.value)}

@@ -10,7 +10,6 @@ import dataTerceroBasico from '../../data/terceroBasicoABC'
 import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
-import Modalindicators from '../../components/modal/Modalindicators';
 
 
 export default function PlanificationViewTable({ idPlanner }) {
@@ -54,7 +53,7 @@ export default function PlanificationViewTable({ idPlanner }) {
     const [userClassroom, setUserClassroom] = useState({})
     const [selectedIndicators, setSelectedIndicators] = useState([]);
 
-console.log([ojbTransversalesActitudes, objBasalesComplementarios])
+console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndicators])
 
 
 
@@ -156,19 +155,19 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios])
     //     }
     // };
 
-    function handleCheckboxChangeIndicators(event, id, value) {
-        if (event.target.checked) {
-          setIndicatorsForEvaluateClass(prevState => [...prevState, { id, value }]);
-          setSelectedIndicators(prevState => [...prevState, { id, value }])
-        } else {
-          setIndicatorsForEvaluateClass(prevState =>
-            prevState.filter(indicator => indicator.id !== id)
-          );
-          setSelectedIndicators(prevState =>
-            prevState.filter(indicator => indicator.id !== id)
-          );
-        }
-      }
+    // function handleCheckboxChangeIndicators(event, id, value) {
+    //     if (event.target.checked) {
+    //       setIndicatorsForEvaluateClass(prevState => [...prevState, { id, value }]);
+    //       setSelectedIndicators(prevState => [...prevState, { id, value }])
+    //     } else {
+    //       setIndicatorsForEvaluateClass(prevState =>
+    //         prevState.filter(indicator => indicator.id !== id)
+    //       );
+    //       setSelectedIndicators(prevState =>
+    //         prevState.filter(indicator => indicator.id !== id)
+    //       );
+    //     }
+    //   }
 
 
     useEffect(() => {
@@ -257,7 +256,7 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios])
      */
     return (
 
-        <div className="  overflow-x-auto min-h-[75vh] pt-5  ">
+        <div className="  overflow-x-auto pt-5  ">
             {/* <GoBackToButton /> */}
             <table className="min-w-max w-full rounded-lg border my-4 ">
                 <caption className="py-3 text-gray-600 border-t">Planificación: {`${userClassroom.grade}° ${userClassroom.level === 'basico' ? 'Básico' : 'Medio'} - Sección: "${userClassroom.section}"`}</caption>
@@ -273,9 +272,9 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios])
                     </tr>
                 </thead>
                 <tbody className="text-gray-600 text-xs">
-                    <tr className="border-b border-gray-200 min-h-[55vh] ">
+                    <tr className="border-b border-gray-200 h-full">
                         <td className=" border py-3 px-2 text-center w-[7rem] ">
-                            <div className="flex flex-col items-center  rounded-lg min-h-[10rem]">
+                            <div className="flex flex-col items-center  rounded-lg min-h-[15rem]">
                                 {
                                     dayWeek === "week" ? (
                                         <div className='flex flex-col items-center justify-center gap-2' >
@@ -295,7 +294,7 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios])
                             </div>
                         </td>
                         <td className="py-3 px-1 border text-center">
-                            <div className="flex flex-col items-center rounded-lg min-h-[10rem]">
+                        <div className="flex flex-col items-center min-h-[15rem] ">
                                 {
                                     normalTime === "normalTime" ? (
                                         <div className='rounded-lg' >
@@ -309,207 +308,87 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios])
                                 }
                             </div>
                         </td>
-                        <td className="py-3 px-2 border text-center">
-                            <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[9rem]">
-                                <p> {content} </p>
+                        <td className="border text-center ">
+                            <div className="flex flex-col items-center min-h-[15rem] px-3">
+                                <ul className='flex justify-between list-disc w-fit'>
+                                    <li className='text-justify'>{content}</li>
+                                </ul>
                             </div>
                         </td>
-                        <td className=" px-2 border text-center ">
-
+                        <td className="text-center p-2 border ">
+                        <div className="flex flex-col items-center min-h-[15rem] gap-2 px-3">
                             {
                                 classObjectives.map((item) => (
-                                    <div className='flex justify-between items-center py-2'>
-                                        <p className='text-justify'>{item.label}: {item.value.substring(0, 85)}{item.value.length > 100 ? "..." : ""}</p>
-                                        {/* <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteClassObjective(item)}> <AiOutlineDelete size={12} /> </button> */}
-                                    </div>
+                                    <ul className='flex justify-between list-disc w-fit'>
+                                        <li className='text-justify border-b pb-1'>{item.label}: {item.value.substring(0, 85)}{item.value.length > 100 ? "..." : ""}</li>                                      
+                                    </ul>
                                 ))
                             }
-
-
-                            {/* <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[12rem]">
-                                <Select
-                                    closeMenuOnSelect={false}
-                                    components={animatedComponents}
-                                    isMulti
-                                    options={objBasalesComplementarios.filter(obj => !classObjectivesIds.includes(obj.id)).map(obj => ({ ...obj, isDisabled: false }))}
-                                    className='w-full font-thin'
-                                    styles={customStyles}
-                                    formatOptionLabel={formatOptionLabel}
-                                    placeholder='agrega un objetivo'
-                                    onChange={(selected) => {
-                                        const selectedValues = selected.map(option => ({ id: option.id, label:option.label, value: option.value }));
-                                        setClassObjectives([...selectedValues]);
-                                    }}
-                                    value={classObjectives}
-                                    backspaceRemovesValue={true}
-                                />
-
-
-
-                            </div> */}
+                            </div>
                         </td>
-                        <td className="text-center">
-                            <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-fit gap-2 px-2 ">
+                        <td className="text-center p-2">
+                            <div className="flex flex-col items-center min-h-[15rem] gap-2 px-3">
                                 {
-                                    filteredIndicators?.length > 0 ? (
-                                        <Modalindicators title={"Ver Indicadores"} >
-                                            <div>
-                                                {
-                                                    filteredIndicators.map((item, index) => {
-                                                        return (
-                                                            <div className=' overflow-y-auto flex items-center  gap-2 px-4 border-lg my-4 bg-gray-200 shadow rounded-lg'>
-                                                                <p className='w-[5rem] text-sm text-center font-thin ' >Indicadores: {item.id} </p>
-                                                                <ul className='flex flex-wrap p-4 gap-2 overflow-y-auto max-h-[20vh] w-full'>
-                                                                    {
-                                                                        item.indicators.map((indicator) => {
-                                                                            // const isChecked = selectedIndicators.includes(indicator.value);
-                                                                            const isChecked = selectedIndicators.some(selected => selected.id === indicator.id);
-                                                                            return (
-                                                                                <li key={indicator.id} className='w-[16rem] font-thin '>
-                                                                                    <label className='flex text-justify gap-3 border rounded-lg p-2 text-xs bg-white  min-h-[3rem]' >
-                                                                                        <input
-                                                                                            type="checkbox"
-                                                                                            onChange={(event) =>
-                                                                                                handleCheckboxChangeIndicators(event, indicator.id, indicator.value)
-                                                                                            }
-                                                                                            checked={isChecked}
-                                                                                            disabled
-                                                                                        />
-                                                                                        {indicator.value}
-                                                                                    </label>
-                                                                                </li>
-                                                                            )
-                                                                        })
-                                                                    }
-                                                                </ul>
-                                                            </div>
-                                                        )
-                                                    })
-                                                }
-                                            </div>
-                                        </Modalindicators>
-                                    ) : (
-                                        null
-                                    )
+                                    indicatorsForEvaluateClass.map((item) => (
+                                        <ul className='flex justify-between items-center list-disc w-fit'>
+                                            <li className='text-justify border-b pb-1'>{item.value.substring(0, 50)}{item.value.length > 50 ? "..." : ""}</li>                                           
+                                        </ul>
+                                    ))
                                 }
                                 {
                                     indicatorsForEvaluateClassManual.length > 0 ? (
-                                        <div className='rounded bg-green-200 mx-1 p-1' >
-                                    
+                                        <div className='rounded bg-green-200 mx-1 p-1 text-justify flex flex-col gap-1' >
                                         <h2>Otros indicadores:</h2>
                                         <p> {indicatorsForEvaluateClassManual}. </p>
-                                        {/* <textarea
-                                            value={indicatorsForEvaluateClassManual}
-                                            onChange={(e) => setIndicatorsForEvaluateClassManual(e.target.value)}
-                                            className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[6rem] " /> */}
                                     </div>
                                     ) : (
                                         null
                                     )
                                 }
-
                             </div>
                         </td>
-                        <td className="px-2 border text-center">
+                        <td className="border p-2">
+                            <div className="flex flex-col items-center min-h-[15rem] gap-2 px-3">
+                                {
+                                    learningObjetives.map((item) => (
+                                        <ul className='justify-between items-center  gap-1  list-disc'>
+                                            <li className='text-justify border-b pb-1'>{item.id}: {item.value.substring(0, 85)}{item.value.length > 85 ? "..." : ""}</li>
 
-
-                            {/* <h2>Objetivos de Aprendizaje</h2> */}
-
-                            {
-                                learningObjetives.map((item) => (
-                                    <div className='flex justify-between items-center py-2'>
-                                        <p className='text-justify'>{item.id}: {item.value.substring(0, 85)}{item.value.length > 100 ? "..." : ""}</p>
-                                        {/* <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteLearningObjectives(item)}> <AiOutlineDelete size={12} /> </button> */}
-                                    </div>
-                                ))
-                            }
+                                        </ul>
+                                    ))
+                                }
+                            </div>
 
                         </td>
-                        <td className="py-3 px-2 border">
-                            <div className="rounded-lg min-h-[8rem] w-[9rem] flex justify-center items-start">
-                                <p> {activities} </p>
-                                {/* <textarea
-                                    value={activities}
-                                    onChange={(e) => setActivities(e.target.value)}
-                                    className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7rem] "
-                                /> */}
+                        <td className=" border px-2">
+                        <div className="flex flex-col min-h-[15rem] px-3">
+                                <ul className='flex justify-between list-disc w-fit'>
+                                    <li className='text-justify'>{activities}</li>
+                                </ul>
                             </div>
                         </td>
 
-                        <td className="px-2 border text-justify w-[8rem] ">
-                            {/* <h2>Materiales seleccionados</h2> */}
-
+                        <td className="px-2 border ">
+                        <div className="flex flex-col min-h-[15rem] gap-2 px-3">
                             {
                                 materials.map((item) => (
-                                    <div key={item.id} className='py-2'>
-                                        <p className='text-center'>{item.value}</p>
-                                        {/* <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteMaterials(item)}> <AiOutlineDelete size={12} /> </button> */}
-                                    </div>
+                                    <ul  key={item.id} className='flex list-disc w-fit'>
+                                        <li className='text-justify border-b pb-1'>{item.value}</li>
+                                    </ul>
                                 ))
                             }
-                                                            <div className="flex flex-col items-center rounded-lg h-[4rem] w-full">
-                                    <h2>Otros materiales</h2>
-                                    <p> {otherMaterials} </p>
-                                    {/* <textarea
-                                        value={otherMaterials}
-                                        onChange={(e) => setOtherMaterials(e.target.value)}
-                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7rem] " /> */}
-                                </div>
-                            {/* <div className="pt-1 flex flex-col flex-initial rounded-lg min-h-[8rem] w-[12rem] gap-2 ">
-                            
-                               <Select
-                                    closeMenuOnSelect={false}
-                                    components={animatedComponents}
-                                    isMulti
-                                    options={materialsSchool.sort((a, b) => {
-                                        if (a.label < b.label) return -1;
-                                        if (a.label > b.label) return 1;
-                                        return 0;
-                                    }).filter(obj => !materialsIds.includes(obj.id)).map(obj => ({ ...obj, isDisabled: false }))}
-                                    className='w-full font-thin'
-                                    styles={customStyles}
-                                    formatOptionLabel={formatOptionLabel}
-                                    placeholder='Selecciona...'
-                                    onChange={(selected) => {
-                                        const selectedValues = selected.map(option => ({value: option.value, id: option.id, label: option.label}));
-                                        setMaterials([...selectedValues]);
-                                    }}
-                                    value={materials}
-                                    backspaceRemovesValue={true}
-                                /> 
-
-                            </div> */}
+                                <ul className='flex justify-between list-disc w-fit'>
+                                    {
+                                        otherMaterials ? (<li> {otherMaterials} </li> ):( null)
+                                    }
+                                    
+                                </ul>
+                            </div>
                         </td>
-                        <td className="py-3 px-2 text-justify border">
+                        <td className="px-2 border ">
+                        <div className="flex flex-col items-center min-h-[15rem] gap-2 px-3">
                             <p> {evaluationType} </p>
-
-                            {/* <div className="pt-1 flex flex-col items-center rounded-lg min-h-[8rem] w-[8rem] gap-2 ">
-                                <Select
-                                    closeMenuOnSelect={true}
-                                    components={animatedComponents}
-                                    options={evaluationArrayType}
-                                    className='w-full font-thin'
-                                    styles={customStyles}
-                                    formatOptionLabel={formatOptionLabel}
-                                    placeholder='Selecciona...'
-                                    value={evaluationArrayType.find(element => element.value === evaluationType)}
-                                    onChange={(selectedOption) => setEvaluationType(selectedOption.value)}
-                                />
-                                {
-                                    evaluationType === "Sumativa" ? (
-
-                                        <div className='flex gap-2 border bg-gray-200 px-2 py-1 rounded ' >
-                                            <AiOutlineFileText size={20} />
-                                            <input className='w-full font-thin cursor-pointer' type="file" onChange={(event) => {
-                                                const selectedFile = event.target.files[0];
-                                                console.log(selectedFile);
-                                            }} />
-                                        </div>
-                                    ) : (
-                                        null
-                                    )
-                                }
-                            </div> */}
+                        </div>
                         </td>
                     </tr>
                 </tbody>
