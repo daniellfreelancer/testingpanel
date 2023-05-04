@@ -51,7 +51,6 @@ export default function Tableplanification() {
     const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
     const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
-    const [skills, setSkills] = useState("")
     const [userClassroom, setUserClassroom] = useState({})
     const [selectedIndicators, setSelectedIndicators] = useState([]);
     
@@ -74,6 +73,7 @@ export default function Tableplanification() {
      * ACCIONES
      */
     const dispatch = useDispatch()
+    console.log(learningObjetives)
 
     
     /**
@@ -175,12 +175,13 @@ export default function Tableplanification() {
         if (classObjectives.length === 0) {
             setFilteredIndicators([])
         }
-
+// eslint-disable-next-line
     }, [classObjectives])
 
     useEffect(() => {
         fetchData();
         handleUserData();
+        // eslint-disable-next-line
     }, [userClassroom]);
 
 

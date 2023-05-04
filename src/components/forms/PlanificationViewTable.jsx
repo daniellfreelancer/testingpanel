@@ -1,33 +1,23 @@
 import React, { useState, useEffect } from 'react'
-import DatePicker from 'react-datepicker';
-import es from 'date-fns/locale/es';
 import "react-datepicker/dist/react-datepicker.css";
-import ReactSwitch from 'react-switch';
 import axios from 'axios';
-import materialsSchool from '../../data/materialsSchool';
 import { reload } from '../../features/reloadSlice';
-import makeAnimated from 'react-select/animated';
 import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'
 import dataPrimeroBasico from '../../data/primeroBasicoABC'
 import dataSegundoBasico from '../../data/segundoBasicoABC'
 import dataTerceroBasico from '../../data/terceroBasicoABC'
-import { useDispatch } from 'react-redux';
 import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
 import Modalindicators from '../../components/modal/Modalindicators';
-import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
-import { useParams } from 'react-router';
-import swal from 'sweetalert2'
-import { animated } from '@react-spring/web'
+
 
 export default function PlanificationViewTable({ idPlanner }) {
     /**
      * HOOKS / PARAMS
      */
-    const dispatch = useDispatch()
-    const { id } = useParams()
+
 
 
     /**
@@ -47,27 +37,6 @@ export default function PlanificationViewTable({ idPlanner }) {
     const [otherMaterials, setOtherMaterials] = useState([])                                    //OTROS MATERIALES
     const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
     
-
-
-
-    /**
-     * 
-     * @param {*} error 
-     */
-    function handleError(error) {
-        if (error.response) {
-            console.log('La solicitud no se pudo completar:', error.response);
-            alert(`La solicitud no se pudo completar: ${error.response.data}`);
-        } else if (error.request) {
-            console.log('No se recibió respuesta del servidor:', error.request);
-            alert('No se recibió respuesta del servidor. Por favor, inténtelo de nuevo más tarde.');
-        } else {
-            console.log('Ocurrió un error al procesar la solicitud:', error.message);
-            alert(`Ocurrió un error al procesar la solicitud: ${error.message}`);
-        }
-    }
-
-
     /**
      * ACTUALIZAR PLANIFICACIÓN
      */
@@ -81,38 +50,12 @@ export default function PlanificationViewTable({ idPlanner }) {
     const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
     const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
-    const [skills, setSkills] = useState("")
+
     const [userClassroom, setUserClassroom] = useState({})
     const [selectedIndicators, setSelectedIndicators] = useState([]);
-    const [classObjetivesSeleted, setClassObjetivesSeleted] = useState([])
-    const [defaultValues, setDefaultValues] = useState([]);
 
-    const evaluationArrayType = [
-        {
-            id: "formativa",
-            label: "Formativa",
-            value: "Formativa"
-        },
-        {
-            id: "sumativa",
-            label: "Sumativa",
-            value: "Sumativa"
-        }
-    ]
+console.log([ojbTransversalesActitudes, objBasalesComplementarios])
 
-
-    /**
-     * FUNCIONES PARA ORDENAR DATA
-     */
-    const toggleDuration = () => {
-        setNormalTime((e) => (e === "normalTime" ? "schoolTime" : "normalTime"));
-    };
-    const toggleDate = () => {
-        setDayWeek((e) => (e === "day" ? "week" : "day"));
-    };
-    let handleColor = (time) => {
-        return time.getHours() > 6 ? "text-green-800" : "text-red-800";
-    };
 
 
 
@@ -255,60 +198,7 @@ export default function PlanificationViewTable({ idPlanner }) {
      * FORMATOS Y RENDERIZADOS
      */
 
-    const animatedComponents = makeAnimated();
 
-
-
-    const customStyles = {
-        option: (provided, state) => ({
-            ...provided,
-            whiteSpace: "nowrap",
-            overflow: "hidden",
-            textOverflow: "ellipsis",
-            cursor: "pointer"
-        })
-    };
-
-
-
-
-
-    const formatOptionLabel = ({ value, label }) => (
-        <div title={value}>{label}</div>
-    );
-
-
-    const switchDateProps = {
-        onChange: toggleDate,
-        checked: dayWeek === "day",
-        onColor: "#8bce75",
-        onHandleColor: "rgb(67, 56, 202)",
-        handleDiameter: 10,
-        uncheckedIcon: false,
-        checkedIcon: false,
-        boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.6)",
-        activeBoxShadow: "0px 0px 1px 10px rgba(0, 0, 0, 0.2)",
-        height: 20,
-        width: 35,
-        className: "react-switch",
-        id: "small-radius-switch"
-    };
-
-    const switchDurationProps = {
-        onChange: toggleDuration,
-        checked: normalTime,
-        onColor: "#8bce75",
-        onHandleColor: " rgb(67 56 202)",
-        handleDiameter: 10,
-        uncheckedIcon: false,
-        checkedIcon: false,
-        boxShadow: "0px 1px 5px rgba(0, 0, 0, 0.6)",
-        activeBoxShadow: "0px 0px 1px 10px rgba(0, 0, 0, 0.2)",
-        height: 20,
-        width: 35,
-        className: "react-switch",
-        id: "small-radius-switch",
-    }
     const tableHeaders = [
         "Contenido",
         "Objetivos Basales/Complementarios",
@@ -319,36 +209,30 @@ export default function PlanificationViewTable({ idPlanner }) {
         "Tipo de Evaluación"
     ];
 
-    const handleDeleteClassObjective = (item) => {
-        setClassObjectives(classObjectives.filter(obj => obj.id !== item.id));
-    }
-
-    const handleDeleteLearningObjectives = (item) => {
-        setLearningObjetives(learningObjetives.filter(obj => obj.id !== item.id));
-    }
-    const handleDeleteMaterials = (item) => {
-        setMaterials(materials.filter(obj => obj.id !== item.id));
-    }
 
     /**
      * BUSCAR LOS ID DE LOS OBJETIVOS BASALES Y COMPLEMENTARIOS YA SELECCIONADOS
      */
+    // eslint-disable-next-line
     const classObjectivesIds = classObjectives.map(obj => obj.id);
 
     /**
      * BUSCAR LOS ID DE LOS OBJETIVOS TRANSVERSALES Y ACTITUDES YA SELECCIONADOS
      */
+    // eslint-disable-next-line
     const learningObjectivesIds = learningObjetives.map(obj => obj.id);
 
     /**
      * BUSCAR LOS ID DE LOS MATERIALES YA SELECCIONADOS
      */
+    // eslint-disable-next-line
     const materialsIds = materials.map(obj => obj.id);
 
 
     /**
      * VER
      */
+    // eslint-disable-next-line
     const filteredIndicatorsArray = filteredIndicators.filter(indicator => 
         indicatorsForEvaluateClass.includes(indicator.indicators[0])
     );

@@ -28,7 +28,6 @@ export default function SchoolDetail() {
         const fetchData = async () => {
           try {
             const { data } = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/school/find/${id}`);
-           console.log(data)
            setInfoSchool(data.response)
            setUserTeachersData(data.response.teachers);
            setUserClassroom(data.response.classrooms)

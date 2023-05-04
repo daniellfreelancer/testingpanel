@@ -82,10 +82,6 @@ export default function PlanificationNewTable() {
        
     }
 
-
-      const URL = "https://whale-app-qsx89.ondigitalocean.app/planing/create";
-      const URLOCAL = "http://localhost:4000/planing/create"
-
       /**
        * CREAR PLANIFICACIÓN
        */
@@ -108,7 +104,7 @@ export default function PlanificationNewTable() {
             evaluationType:evaluationType
 
         }
-        axios.post(URL, planificationData)
+        axios.post('https://whale-app-qsx89.ondigitalocean.app/planing/create', planificationData)
         .then(response => {
           console.log('La solicitud POST se realizó con éxito:', response);
           dispatch(reload())
@@ -136,7 +132,6 @@ export default function PlanificationNewTable() {
     const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
     const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
-    const [skills, setSkills] = useState("")
     const [userClassroom, setUserClassroom] = useState({})
     const [selectedIndicators, setSelectedIndicators] = useState([]);
 
@@ -540,7 +535,7 @@ export default function PlanificationNewTable() {
                                     )
                                 }
                                 <div className='rounded-lg' >
-                                    <p>Otros indicadores</p>
+                                    <p>Ingresar indicadores</p>
                                     <textarea
                                         value={indicatorsForEvaluateClassManual}
                                         onChange={(e) => setIndicatorsForEvaluateClassManual(e.target.value)}

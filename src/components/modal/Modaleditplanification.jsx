@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal';
-import PlanificationeditForm from '../forms/PlanificationeditForm';
 import {AiOutlineEdit} from 'react-icons/ai'
 import { useDispatch } from 'react-redux';
 import { reload } from '../../features/reloadSlice';

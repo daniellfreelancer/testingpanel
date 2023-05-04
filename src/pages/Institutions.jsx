@@ -16,9 +16,7 @@ export default function Institutions() {
 
   useEffect(() => {
       axios.get('https://whale-app-qsx89.ondigitalocean.app/insti/all').then((res) => {
-          console.log(res.data.response)
           setUsersData(res.data.response)
-
       }).catch((error) => {
           console.log(error)
       })

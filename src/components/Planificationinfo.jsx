@@ -1,11 +1,10 @@
 import axios from 'axios';
 import React from 'react'
-import { AiOutlineDelete, AiOutlineSchedule, AiOutlineEye } from 'react-icons/ai';
+import { AiOutlineDelete, AiOutlineSchedule} from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
 import Swal from 'sweetalert2';
 import { reload } from '../features/reloadSlice';
-import Modaleditplaning from './modal/Modaleditplaning';
 import Modaleditplanification from './modal/Modaleditplanification';
 import Modalviewplaning from './modal/Modalviewplaning';
 export default function PlanificationInfo({ userPlanner }) {

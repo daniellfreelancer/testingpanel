@@ -3,7 +3,6 @@ import Sidebar from '../components/Sidebar'
 import Header from '../components/Header'
 import GoBackToButton from '../components/GoBackButton'
 import { useParams } from 'react-router';
-import PlanificationForm from '../components/forms/PlanificationForm';
 import Clasroominfo from '../components/Clasroominfo';
 import axios from 'axios';
 import Teachers from '../components/Teachers';

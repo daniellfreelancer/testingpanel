@@ -6,13 +6,7 @@ import ReactSwitch from 'react-switch';
 import axios from 'axios';
 import materialsSchool from '../../data/materialsSchool';
 import { reload } from '../../features/reloadSlice';
-import Select, {
-    components,
-    MultiValueGenericProps,
-    MultiValueProps,
-    OnChangeValue,
-    Props,
-} from 'react-select';
+import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'
@@ -27,7 +21,6 @@ import Modalindicators from '../../components/modal/Modalindicators';
 import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
 import { useParams } from 'react-router';
 import swal from 'sweetalert2'
-import { animated } from '@react-spring/web'
 export default function PlanificationeditTable({ idPlanner }) {
     /**
      * HOOKS / PARAMS
@@ -72,9 +65,6 @@ export default function PlanificationeditTable({ idPlanner }) {
             alert(`Ocurrió un error al procesar la solicitud: ${error.message}`);
         }
     }
-
-    const URL = "https://whale-app-qsx89.ondigitalocean.app/planing/update/";
-    const URLOCAL = "http://localhost:4000/planing/update/"
 
     /**
      * ACTUALIZAR PLANIFICACIÓN
@@ -126,11 +116,9 @@ export default function PlanificationeditTable({ idPlanner }) {
     const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
     const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
-    const [skills, setSkills] = useState("")
     const [userClassroom, setUserClassroom] = useState({})
     const [selectedIndicators, setSelectedIndicators] = useState([]);
-    const [classObjetivesSeleted, setClassObjetivesSeleted] = useState([])
-    const [defaultValues, setDefaultValues] = useState([]);
+
 
     const evaluationArrayType = [
         {
@@ -168,7 +156,6 @@ export default function PlanificationeditTable({ idPlanner }) {
     const fetchData = async () => {
         try {
             const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
-            console.log(response.data)
 
             setUserClassroom(response.data.classroom)
             setDuration(response.data.duration)
@@ -187,14 +174,11 @@ export default function PlanificationeditTable({ idPlanner }) {
             setSelectedIndicators(response.data.evaluationIndicators)
             setOtherMaterials(response.data.otherMaterials)
             setIndicatorsForEvaluateClassManual(response.data.evaluationIndicatorsTeacher)
-
-
-
-
         } catch (error) {
             console.log(error);
         }
     };
+
     const handleUserData = () => {
         switch (userClassroom.grade) {
             case "1":
@@ -244,6 +228,7 @@ export default function PlanificationeditTable({ idPlanner }) {
         const selectedIds = classObjectives.map(obj => obj.id);
         return evaluationIndicators.filter(indicator => selectedIds.includes(indicator.id));
     }
+
     // const handleCheckboxChangeIndicators = (event, index, indicator) => {
     //     if (event.target.checked) {
     //         setIndicatorsForEvaluateClass([...indicatorsForEvaluateClass, indicator]);
@@ -281,14 +266,14 @@ export default function PlanificationeditTable({ idPlanner }) {
         if (classObjectives.length === 0) {
             setFilteredIndicators([])
         }
-        // eslint-disable-next-line
-    }, [classObjectives])
+        
+    }, [evaluationIndicators, classObjectives])
 
     useEffect(() => {
         fetchData();
 
-        // eslint-disable-next-line
-    }, [reload]);
+        
+    }, []);
 
     useEffect(() => {
         handleUserData();
@@ -397,11 +382,11 @@ export default function PlanificationeditTable({ idPlanner }) {
     /**
      * VER
      */
+    // eslint-disable-next-line
     const filteredIndicatorsArray = filteredIndicators.filter(indicator => 
         indicatorsForEvaluateClass.includes(indicator.indicators[0])
     );
     
-    console.log(filteredIndicatorsArray)
 
     /**
      * RENDERIZADO WEB
