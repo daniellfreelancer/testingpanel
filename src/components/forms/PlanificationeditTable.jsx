@@ -186,7 +186,7 @@ export default function PlanificationeditTable({ idPlanner }) {
             setUserClassroom(response.data.classroom)
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)
-            response.data.duration > 8 || response.data.schoolBlock < 10 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
+            response.data.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
             response.data.endDate !== null && response.data.endDate > response.data.startDate ? setDayWeek("week") : setDayWeek("day")
             setContent(response.data.content)
             setClassObjectives(response.data.classObjectives)
@@ -508,7 +508,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                                             <p>Minutos</p>
                                             <input
                                                 type="number"
-
+                                                min={10}
                                                 value={duration}
                                                 onChange={(e) => setDuration(e.target.value)}
                                                 className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
@@ -518,6 +518,8 @@ export default function PlanificationeditTable({ idPlanner }) {
                                             <p>Bloque/s</p>
                                             <input
                                                 type="number"
+                                                max={8}
+                                                min={0}
                                                 value={schoolBlock}
                                                 onChange={(e) => setSchoolBlock(e.target.value)}
                                                 className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />

@@ -476,7 +476,7 @@ export default function PlanificationNewTable() {
                                             <p>Minutos</p>
                                             <input
                                                 type="number"
-                                                min="10"
+                                                min={10}
                                                 value={duration}
                                                 onChange={(e) => setDuration(e.target.value)}
                                                 className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
@@ -485,8 +485,8 @@ export default function PlanificationNewTable() {
                                         <div className='rounded-lg' >
                                             <p>Bloque/s</p>
                                             <input
-                                            min="1"
-                                            max="8"
+                                                max={8}
+                                                min={0}
                                                 type="number"
                                                 value={schoolBlock}
                                                 onChange={(e) => setSchoolBlock(e.target.value)}
