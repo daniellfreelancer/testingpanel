@@ -1,5 +1,6 @@
 import { FaSchool } from 'react-icons/fa';
 import { Link} from 'react-router-dom'
+import {AiOutlineEye} from 'react-icons/ai'
 
 function Schools({ userSchools }) {
   return (
@@ -20,9 +21,11 @@ function Schools({ userSchools }) {
                   <div className='pl-4 w-full flex items-center justify-between gap-5'>
                     <p className='text-gray-800 font-bold'>{item.name}</p>
                     <Link to={`/school/${item._id}`}>
-                  <div className='flex items-center gap-2 bg-white border-indigo-700 rounded hover:bg-indigo-200 transform duration-300 ease-in-out text-sm font-medium px-3 py-1 text-indigo-700 border lg:max-w-full '>
-                    <h3 className='text-indigo-500'>ver mas</h3>
-                  </div>
+                  {/* <div className='flex items-center gap-2 bg-white border-indigo-700 rounded hover:bg-indigo-200 transform duration-300 ease-in-out text-sm font-medium px-3 py-1 text-indigo-700 border lg:max-w-full '>
+                    <h3 className='text-indigo-500'>ver mas</h3> 
+                   
+                  </div>*/}
+                  <AiOutlineEye size={20} className='text-indigo-500'/>
                 </Link>
 
 

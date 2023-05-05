@@ -42,7 +42,7 @@ function Teachers({ userTeachersData }) {
                 <p
                   className={`bg-${
                     user.role === 'SUPF' ? 'green' : 'yellow'
-                  }-300 p-2 rounded-lg w-[9rem] text-${
+                  }-300 p-2 rounded-lg w-[7rem] text-${
                     user.role === 'SUPF' ? 'green' : 'yellow'
                   }-900 text-start`}
                 >

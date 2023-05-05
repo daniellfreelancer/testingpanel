@@ -56,7 +56,10 @@ export default function Modalcreateplaning({ children, title }) {
 
     return (
         <div>
-            <button className="text-xs bg-white border-indigo-700 rounded hover:bg-gray-200 transform duration-300 ease-in-out font-medium px-6 py-2 text-indigo-700 border   w-max   text-center" onClick={openModal}>{title}</button>
+            <button
+            className='p-2 rounded-md bg-blue-500 text-white font-medium cursor-pointer hover:bg-indigo-500 transform duration-300 ease-in-out '
+            // className="text-xs bg-white border-indigo-500 rounded-md hover:bg-gray-200 transform duration-300 ease-in-out font-medium px-6 py-2 text-indigo-700 border   w-max   text-center" 
+            onClick={openModal}>{title}</button>
             <Modal
                 isOpen={modalIsOpen}
                 onRequestClose={closeModal}

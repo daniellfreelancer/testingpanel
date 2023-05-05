@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React from 'react'
+import React, { useState } from 'react'
 import { AiOutlineDelete, AiOutlineSchedule} from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
 import { useParams } from 'react-router';
@@ -10,32 +10,96 @@ import Modalviewplaning from './modal/Modalviewplaning';
 export default function PlanificationInfo({ userPlanner }) {
     const sortedPlanner = [...userPlanner].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 8;
+  
+    const totalPages = Math.ceil(sortedPlanner.length / itemsPerPage);
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+  
+    const handlePrevPageClick = () => {
+      if (currentPage > 1) {
+        setCurrentPage(currentPage - 1);
+      }
+    };
+  
+    const handleNextPageClick = () => {
+      if (currentPage < totalPages) {
+        setCurrentPage(currentPage + 1);
+      }
+    };
 
+
+    // return (
+    //     <div className='w-full md:col-span-1 relative lg:h-[70vh] h-[40vh] m-auto border rounded-lg bg-white overflow-scroll'>
+    //         <p className='p-4 text-2xl font-bold'>Planificación:</p>
+    //         {
+    //             sortedPlanner.length > 0 ? (
+    //                 <ul>
+    //                     {sortedPlanner?.map((item, _id) => (
+    //                         <PlanificationItem
+    //                             key={_id}
+    //                             startDate={item.startDate}
+    //                             endDate={item.endDate}
+    //                             duration={item.duration}
+    //                             schoolBlock={item.schoolBlock}
+    //                             content={item.content}
+    //                             evaluationType={item.evaluationType}
+    //                             idPlanner={item._id}
+    //                         />
+    //                     ))}
+    //                 </ul>
+    //             ) : (
+    //                 <p className='text-gray-700 pl-4'>No hay planificaciones asginadas</p>
+    //             )
+    //         }
+    //     </div>
+    // );
     return (
-        <div className='w-full md:col-span-1 relative lg:h-[70vh] h-[40vh] m-auto border rounded-lg bg-white overflow-scroll'>
-            <p className='p-4 text-2xl font-bold'>Planificación:</p>
-            {
-                sortedPlanner.length > 0 ? (
-                    <ul>
-                        {sortedPlanner?.map((item, _id) => (
-                            <PlanificationItem
-                                key={_id}
-                                startDate={item.startDate}
-                                endDate={item.endDate}
-                                duration={item.duration}
-                                schoolBlock={item.schoolBlock}
-                                content={item.content}
-                                evaluationType={item.evaluationType}
-                                idPlanner={item._id}
-                            />
-                        ))}
-                    </ul>
-                ) : (
-                    <p className='text-gray-700 pl-4'>No hay planificaciones asginadas</p>
-                )
-            }
+        <div className='w-full md:col-span-1 relative lg:h-[75vh] h-[45vh] m-auto border rounded-lg bg-white overflow-scroll'>
+          <p className='px-4 py-2 text-2xl font-bold'>Planificación:</p>
+          {sortedPlanner.length > 0 ? (
+            <>
+              <ul>
+                {sortedPlanner.slice(startIndex, endIndex).map((item, _id) => (
+                  <PlanificationItem
+                    key={_id}
+                    startDate={item.startDate}
+                    endDate={item.endDate}
+                    duration={item.duration}
+                    schoolBlock={item.schoolBlock}
+                    content={item.content}
+                    evaluationType={item.evaluationType}
+                    idPlanner={item._id}
+                  />
+                ))}
+              </ul>
+              <div className='flex justify-center space-x-2 mt-4'>
+                <button
+                  onClick={handlePrevPageClick}
+                  disabled={currentPage === 1}
+                  className='px-2 py-1 rounded-md bg-blue-500 text-white font-medium cursor-pointer hover:bg-indigo-500 transform duration-300 ease-in-out'
+                >
+                  Anterior
+                </button>
+                <button
+                  onClick={handleNextPageClick}
+                  disabled={currentPage === totalPages}
+                  className='px-2 py-1 rounded-md bg-blue-500 text-white font-medium cursor-pointer hover:bg-indigo-500 transform duration-300 ease-in-out'
+                >
+                  Siguiente
+                </button>
+              </div>
+              <p className='text-center mt-2 text-gray-400'>
+                Página {currentPage} de {totalPages}
+              </p>
+            </>
+          ) : (
+            <p className='text-gray-700 pl-4'>No hay planificaciones asignadas</p>
+          )}
+           
         </div>
-    );
+      );
 }
 
 
@@ -84,7 +148,7 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
         const formattedDate = new Date(date).toLocaleDateString('es-ES', options);
         return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
     }
-
+ // eslint-disable-next-line
     function getLocalTimeFromUTC(utcDateString) {
         const utcDate = new Date(utcDateString);
         const localTime = utcDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
@@ -104,7 +168,7 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
                         )
                     }
                 </div>
-                <p className='text-gray-700 pl-4 w-[20%]'>Inicio: {getLocalTimeFromUTC(startDate)}</p>
+                {/* <p className='text-gray-700 pl-4 w-[20%]'>Inicio: {getLocalTimeFromUTC(startDate)}</p> */}
                 <p className='text-gray-700 pl-4 w-[20%]'>Duración: {duration !== 0 ? `${duration} minutos `  : `${schoolBlock} ${schoolBlock !== 1 ? 'bloques' : 'bloque' }  `}</p>
                 <p className='text-gray-700 pl-4 w-[30%]'>Contenido: {content}</p>
                 <p className='text-gray-700 pl-4 w-[20%]'>Evaluación: {evaluationType}</p>

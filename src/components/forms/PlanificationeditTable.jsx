@@ -21,6 +21,7 @@ import Modalindicators from '../../components/modal/Modalindicators';
 import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
 import { useParams } from 'react-router';
 import swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 export default function PlanificationeditTable({ idPlanner }) {
     /**
      * HOOKS / PARAMS
@@ -39,7 +40,7 @@ export default function PlanificationeditTable({ idPlanner }) {
     const [content, setContent] = useState()                                                    //CONTENIDO
     const [classObjectives, setClassObjectives] = useState([])                                  //OBJ BASALES Y COMPLEMENTARIOS
     const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])            //INDICADORES DEPENDIENTES DE OBJ BASALES/COMPLEMENTARIOS
-    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState([])//INDICADORES CARGA MANUAL POR EL PROFESOR
+    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState("")//INDICADORES CARGA MANUAL POR EL PROFESOR
     const [learningObjetives, setLearningObjetives] = useState([])                              //OBJ TRANSVERSALES Y ACTITUDES
     const [activities, setActivities] = useState([])                                            //ACTIVIDADES
     const [materials, setMaterials] = useState([])                                              //MATERIALES
@@ -88,8 +89,25 @@ export default function PlanificationeditTable({ idPlanner }) {
             evaluationType:evaluationType
 
         }
+        Swal.fire({
+            title: '¿Deseas actualizar?',
+            showDenyButton: true,
+            showCancelButton: false,
+            confirmButtonText: 'Actualizar',
+            denyButtonText: `No`,
+            buttonsStyling: true,
+            showLoaderOnConfirm:true,
+            customClass: {
+              title: 'text-xs',
+              confirmButton: 'text-green-500',
+              denyButton: 'text-green-500',
+            },
+        }).then((result) => {
+            /* Read more about isConfirmed, isDenied below */
+
+            if (result.isConfirmed) {
        axios.patch(`https://whale-app-qsx89.ondigitalocean.app/planing/update/${idPlanner}`, planificationData)
-       // axios.patch(`http://localhost:4000/planing/update/${idPlanner}`, planificationData)
+      // axios.patch(`http://localhost:4000/planing/update/${idPlanner}`, planificationData)
         .then(response => {
           console.log('La solicitud PATCH se realizó con éxito:', response);
           dispatch(reload())
@@ -100,10 +118,17 @@ export default function PlanificationeditTable({ idPlanner }) {
                 icon: "success",
               });
           }
-
           // Aquí puedes realizar cualquier otra acción que desees realizar después de una respuesta exitosa
         })
             .catch(handleError);
+
+            } else if (result.isDenied) {
+                Swal.fire('No se ha creado la planificación', '', 'info')
+                
+                dispatch(reload())
+            }
+        })
+
 
 
     }
@@ -161,7 +186,7 @@ export default function PlanificationeditTable({ idPlanner }) {
             setUserClassroom(response.data.classroom)
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)
-            response.data.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
+            response.data.duration > 8 || response.data.schoolBlock < 10 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
             response.data.endDate !== null && response.data.endDate > response.data.startDate ? setDayWeek("week") : setDayWeek("day")
             setContent(response.data.content)
             setClassObjectives(response.data.classObjectives)
@@ -272,12 +297,12 @@ export default function PlanificationeditTable({ idPlanner }) {
 
     useEffect(() => {
         fetchData();
-
-        
+// eslint-disable-next-line 
     }, []);
 
     useEffect(() => {
         handleUserData();
+        // eslint-disable-next-line 
     }, [userClassroom])
 
 
@@ -427,7 +452,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                                             <div className='rounded-lg' >
                                                 <p className='mb-1'>Inicio</p>
                                                 <DatePicker
-                                                    showTimeSelect
+                                                    showTimeSelect={false}
                                                     showDisabledMonthNavigation
                                                     locale={es}
                                                     selected={startDate}
@@ -459,7 +484,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                                         <div className='rounded-lg flex flex-col items-center justify-center  ' >
                                             <p className='mb-1' >Fecha</p>
                                             <DatePicker
-                                                showTimeSelect
+                                                showTimeSelect={false}
                                                 showDisabledMonthNavigation
                                                 locale={es}
                                                 selected={startDate}

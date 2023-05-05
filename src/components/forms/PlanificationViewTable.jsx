@@ -29,7 +29,7 @@ export default function PlanificationViewTable({ idPlanner }) {
     const [content, setContent] = useState()                                                    //CONTENIDO
     const [classObjectives, setClassObjectives] = useState([])                                  //OBJ BASALES Y COMPLEMENTARIOS
     const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])            //INDICADORES DEPENDIENTES DE OBJ BASALES/COMPLEMENTARIOS
-    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState([])//INDICADORES CARGA MANUAL POR EL PROFESOR
+    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState("")//INDICADORES CARGA MANUAL POR EL PROFESOR
     const [learningObjetives, setLearningObjetives] = useState([])                              //OBJ TRANSVERSALES Y ACTITUDES
     const [activities, setActivities] = useState([])                                            //ACTIVIDADES
     const [materials, setMaterials] = useState([])                                              //MATERIALES
@@ -46,14 +46,15 @@ export default function PlanificationViewTable({ idPlanner }) {
     const [filteredIndicators, setFilteredIndicators] = useState([])
     const [dayWeek, setDayWeek] = useState("day")
     const [normalTime, setNormalTime] = useState("normalTime")
+    // eslint-disable-next-line
     const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
+    // eslint-disable-next-line
     const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
-
     const [userClassroom, setUserClassroom] = useState({})
+    // eslint-disable-next-line
     const [selectedIndicators, setSelectedIndicators] = useState([]);
 
-console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndicators])
 
 
 
@@ -189,6 +190,7 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
 
     useEffect(() => {
         handleUserData();
+        // eslint-disable-next-line
     }, [userClassroom])
 
 
@@ -238,7 +240,7 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
         const formattedDate = new Date(date).toLocaleDateString('es-ES', options);
         return formattedDate.charAt(0).toUpperCase() + formattedDate.slice(1);
     }
-
+    // eslint-disable-next-line
     function getLocalTimeFromUTC(utcDateString) {
         const utcDate = new Date(utcDateString);
         const localTime = utcDate.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', hour12: true});
@@ -288,12 +290,12 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
                                             <h3> {formatDate(startDate) }</h3>
                                             <p>al</p>
                                             <h3>{formatDate(endDate) }</h3>
-                                            <h4>Hora: {getLocalTimeFromUTC(startDate)} </h4>
+                                            {/* <h4>Hora: {getLocalTimeFromUTC(startDate)} </h4> */}
                                         </div>
                                     ) : (
                                         <div className='rounded-lg flex flex-col items-center justify-center  gap-2 ' >
                                              <h3> {formatDate(startDate) }</h3>
-                                             <h4>Hora: {getLocalTimeFromUTC(startDate)} </h4>
+                                             {/* <h4>Hora: {getLocalTimeFromUTC(startDate)} </h4> */}
                                         </div>
                                     )
                                 }
@@ -302,7 +304,7 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
                         <td className="py-3 px-1 border text-center">
                         <div className="flex flex-col items-center min-h-[15rem] ">
                                 {
-                                    normalTime === "normalTime" ? (
+                                    normalTime === "normalTime" && duration > 8 ? (
                                         <div className='rounded-lg' >
                                             <p> {duration} Minutos</p>
                                         </div>
@@ -342,8 +344,8 @@ console.log([ojbTransversalesActitudes, objBasalesComplementarios, selectedIndic
                                     ))
                                 }
                                 {
-                                    indicatorsForEvaluateClassManual.length > 0 ? (
-                                        <div className='rounded bg-green-200 mx-1 p-2 text-justify flex flex-col gap-1' >
+                                     indicatorsForEvaluateClassManual[0] !== ''  ? (
+                                        <div className='rounded bg-green-200 mx-1 p-2 text-justify flex flex-col gap-1 w-full' >
                                             <h2>Otros indicadores:</h2>
                                             <p> {indicatorsForEvaluateClassManual}. </p>
                                         </div>
