@@ -57,7 +57,7 @@ function App() {
               <Route path="/school/:id" element={<SchoolDetail />} />
               <Route path="/classroom/:id" element={<ClassroomDetail />} />
               <Route path="/notifications" element={<Notifications />} />
-              <Route path="/vmclass" element={<Vmclass />} />
+              <Route path="/vmclass/:id" element={<Vmclass />} />
               <Route path="/create-planification" element={<CreatePlanifications />} />
               <Route path="/planifications" element={<Planifications />} />
               <Route path="/*" element={<Error404 />} />

@@ -66,8 +66,6 @@ export default function PlanificationViewTable({ idPlanner }) {
     const fetchData = async () => {
         try {
             const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
-            console.log(response.data)
-
             setUserClassroom(response.data.classroom)
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)

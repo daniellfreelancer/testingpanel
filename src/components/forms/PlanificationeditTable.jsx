@@ -183,7 +183,10 @@ export default function PlanificationeditTable({ idPlanner }) {
         try {
             const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
 
+            console.log(response.data.classroom)
+
             setUserClassroom(response.data.classroom)
+            console.log(response.data.classroom)
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)
             response.data.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime")

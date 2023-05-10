@@ -14,6 +14,7 @@ import { reloadValueState } from '../features/reloadSlice';
 import Modalcreateplaning from '../components/modal/Modalcreateplaning';
 import PlanificationNewTable from '../components/forms/PlanificationNewTable';
 import ScrollToTopOnRender from '../layout/ScrollToTopOnRender';
+import { Link } from 'react-router-dom';
 
 export default function ClassroomDetail() {
     const { id } = useParams();
@@ -57,6 +58,7 @@ export default function ClassroomDetail() {
                             <Modalcreateplaning title={"Crear planificación"} >
                                <PlanificationNewTable/>
                             </Modalcreateplaning>
+                            <Link className='p-2 rounded-md bg-blue-500 text-white font-medium cursor-pointer hover:bg-indigo-500 transform duration-300 ease-in-out ' to={`/vmclass/${id}`} >Iniciar Clase</Link>
                         </div>
                         <Clasroominfo userClassroom={userClassroom} />
                         <Teachers userTeachersData={userTeachersData} />
