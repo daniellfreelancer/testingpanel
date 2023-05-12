@@ -60,8 +60,8 @@ function StudentItem({ item }) {
       <p className='text-gray-400 text-sm  flex gap-1 items-center w-14 '>{age} años</p>
       <p className='text-gray-400 text-sm  flex gap-1 items-center w-16 '><TbWeight size={20} /> {weight} kg</p>
       <p className='text-gray-400 text-sm  flex gap-1 items-center w-26 '><GiBodyHeight size={20} />{size} cm</p>
-      <p className='text-gray-400 text-sm flex gap-1 items-center'><HiOutlineIdentification size={20} /> {formatRut(rut)}</p>
-      <p className='text-gray-400 text-sm flex gap-1 items-center min-w-[15rem]'><MdOutlineMailOutline size={20} />  {email}</p>
+      <p className='text-gray-400 text-sm flex gap-1 items-center w-18'><HiOutlineIdentification size={20} /> {formatRut(rut)}</p>
+      <p className='text-gray-400 text-sm flex gap-1 items-center min-w-[14rem]'><MdOutlineMailOutline size={20} />  {email}</p>
       <p className='text-gray-400 text-sm flex gap-1 items-center'><BsTelephone size={20} /> {phone}</p>
 
 {
@@ -75,7 +75,7 @@ function StudentItem({ item }) {
  
   ) :
   (
-    <p className='text-gray-400  w-10' >No tiene Salon asignado </p>
+    <p className='text-gray-400 ' >No tiene Salon asignado </p>
   )
 }
 
