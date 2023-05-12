@@ -29,32 +29,6 @@ export default function PlanificationInfo({ userPlanner }) {
       }
     };
 
-
-    // return (
-    //     <div className='w-full md:col-span-1 relative lg:h-[70vh] h-[40vh] m-auto border rounded-lg bg-white overflow-scroll'>
-    //         <p className='p-4 text-2xl font-bold'>Planificación:</p>
-    //         {
-    //             sortedPlanner.length > 0 ? (
-    //                 <ul>
-    //                     {sortedPlanner?.map((item, _id) => (
-    //                         <PlanificationItem
-    //                             key={_id}
-    //                             startDate={item.startDate}
-    //                             endDate={item.endDate}
-    //                             duration={item.duration}
-    //                             schoolBlock={item.schoolBlock}
-    //                             content={item.content}
-    //                             evaluationType={item.evaluationType}
-    //                             idPlanner={item._id}
-    //                         />
-    //                     ))}
-    //                 </ul>
-    //             ) : (
-    //                 <p className='text-gray-700 pl-4'>No hay planificaciones asginadas</p>
-    //             )
-    //         }
-    //     </div>
-    // );
     return (
         <div className='w-full md:col-span-1 relative lg:h-[75vh] h-[45vh] m-auto border rounded-lg bg-white overflow-scroll'>
           <p className='px-4 py-2 text-2xl font-bold'>Planificación:</p>

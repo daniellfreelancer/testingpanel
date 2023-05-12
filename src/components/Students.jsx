@@ -1,4 +1,9 @@
 import { SlUser, SlUserFemale } from 'react-icons/sl';
+import {MdOutlineMeetingRoom, MdOutlineMailOutline} from 'react-icons/md'
+import {TbWeight} from 'react-icons/tb'
+import {GiGhostAlly, GiBodyHeight} from 'react-icons/gi'
+import {HiOutlineIdentification} from 'react-icons/hi'
+import {BsTelephone} from 'react-icons/bs'
 
 export default function Students({ userStudents }) {
   return (
@@ -22,7 +27,7 @@ export default function Students({ userStudents }) {
 
 function StudentItem({ item }) {
   
-  const { name, lastName, age, weight, size, rut, email, phone, gender } = item;
+  const { name, lastName, age, weight, size, rut, email, phone, gender, classroom } = item;
   const fullName = `${lastName.charAt(0).toUpperCase() + lastName.slice(1)}, ${name.charAt(0).toUpperCase() + name.slice(1)}`;
   function formatRut(rut) {
     // Eliminar cualquier caracter que no sea un número ni la letra K
@@ -41,8 +46,8 @@ function StudentItem({ item }) {
     return `${block1}.${block2}.${block3}-${verifier}`;
   }
   return (
-    <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex justify-between items-center cursor-pointer text-start'>
-      <div className='flex items-center lg:w-[25%]'>
+    <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex items-center cursor-pointer gap-4 w-full'>
+      <div className='flex items-center min-w-[10rem] gap-2'>
         <div className='bg-purple-100 p-3 rounded-lg'>
           {gender === 'male' ? (
             <SlUser className='text-purple-800' />
@@ -50,14 +55,30 @@ function StudentItem({ item }) {
             <SlUserFemale className='text-purple-800' />
           )}
         </div>
-        <p className='text-gray-700 pl-4'>{fullName}</p>
+        <p className='text-gray-700'>{fullName}</p>
       </div>
-      <p className='text-gray-400 text-sm lg:w-[10%]'>Edad: {age}</p>
-      <p className='text-gray-400 text-sm lg:w-[10%]'>Peso: {weight} kg</p>
-      <p className='text-gray-400 text-sm lg:w-[15%]'>Estatura: {size} cm</p>
-      <p className='text-gray-400 text-sm lg:w-[15%]'>Rut: {formatRut(rut)}</p>
-      <p className='text-gray-400 text-sm lg:w-[20%]'>Email: {email}</p>
-      <p className='text-gray-400 text-sm lg:w-[15%]'>Tel: +56 {phone}</p>
+      <p className='text-gray-400 text-sm  flex gap-1 items-center w-14 '>{age} años</p>
+      <p className='text-gray-400 text-sm  flex gap-1 items-center w-16 '><TbWeight size={20} /> {weight} kg</p>
+      <p className='text-gray-400 text-sm  flex gap-1 items-center w-26 '><GiBodyHeight size={20} />{size} cm</p>
+      <p className='text-gray-400 text-sm flex gap-1 items-center'><HiOutlineIdentification size={20} /> {formatRut(rut)}</p>
+      <p className='text-gray-400 text-sm flex gap-1 items-center min-w-[15rem]'><MdOutlineMailOutline size={20} />  {email}</p>
+      <p className='text-gray-400 text-sm flex gap-1 items-center'><BsTelephone size={20} /> {phone}</p>
+
+{
+  classroom?.length > 0 ? (
+    <div className='text-gray-400 flex gap-1 items-center '>
+      
+        
+    <MdOutlineMeetingRoom size={20}/>
+    <p>{ `${classroom[0].grade}° ${classroom[0].level === 'basico' ? 'Básico': 'Medio'} "${classroom[0].section}" ` } </p>
+  </div>
+ 
+  ) :
+  (
+    <p className='text-gray-400  w-10' >No tiene Salon asignado </p>
+  )
+}
+
     </li>
   );
 }
