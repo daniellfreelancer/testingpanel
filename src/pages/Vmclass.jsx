@@ -4,7 +4,7 @@ import Header from '../components/Header'
 import GoBackToButton from '../components/GoBackButton'
 import { useParams } from 'react-router'
 import { GiTeacher } from 'react-icons/gi'
-import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock } from 'react-icons/bs'
+import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock,BsCloudUpload } from 'react-icons/bs'
 import axios from 'axios'
 import Topcards from '../components/Topcards'
 import Select from 'react-select'
@@ -22,6 +22,7 @@ import dataTerceroBasico from '../data/terceroBasicoABC'
 import primeroBasicoIndicadores from '../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
+import Countdown from '../components/TimeVMClass'
 
 const steps = [
   { label: 'Iniciar Clase', completed: true, img: GiTeacher },
@@ -66,6 +67,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
   const [materials, setMaterials] = useState([])                                              //MATERIALES
   const [otherMaterials, setOtherMaterials] = useState("")                                    //OTROS MATERIALES
   const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
+  const [addObservations, setAddObservations] = useState("")
   /**
    * ESTADOS DE INFORMACION Y COMPONENTES
    */
@@ -919,16 +921,37 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
                 </div>
               )}
               {currentStep === 2 && (
-                <div className="mt-4">
-                  <label htmlFor="message" className="block text-gray-700 font-bold">
-                    paso 3
-                  </label>
-                  <textarea
-                    name="message"
-                    id="message"
-                    rows="3"
-                    className="mt-1 px-3 py-2 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
-                  ></textarea>
+                <div className="px-4 flex flex-wrap justify-evenly gap-4 ">
+                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md '>
+                    <h2 className='underline text-gray-600 ' >Actividades:</h2>
+                    <textarea
+                      value={activities}
+                      onChange={(e) => setActivities(e.target.value)}
+                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem] "
+                    />
+                  </div>
+                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md '>
+                    <h2 className='underline text-gray-600 ' >Agregar Observaciones:</h2>
+                    <textarea
+                      value={addObservations}
+                      onChange={(e) => setAddObservations(e.target.value)}
+                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem] "
+                    />
+                  </div>
+
+                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md '>
+                    <label for="doc" className="flex items-center p-4 gap-3 rounded-md border border-gray-300 border-dashed  cursor-pointer h-full">
+                      <BsCloudUpload className="h-16 w-16 text-gray-700 "/>.
+                      <div className="space-y-2">
+                        <h4 className="text-base font-semibold text-gray-700">Agregar Fotos</h4>
+                        <span className="text-xs text-gray-300">png/jpg</span>
+                      </div>
+                      <input type="file" id="doc" name="doc" accept="png, jpg" hidden />
+                    </label>
+                  </div>
+
+                  <Countdown timeInMinutes={duration > 8 ? duration : schoolBlock * 45} />
+
                 </div>
               )}
               {currentStep === 3 && (
