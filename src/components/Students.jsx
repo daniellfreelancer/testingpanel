@@ -1,7 +1,7 @@
 import { SlUser, SlUserFemale } from 'react-icons/sl';
 import {MdOutlineMeetingRoom, MdOutlineMailOutline} from 'react-icons/md'
 import {TbWeight} from 'react-icons/tb'
-import {GiGhostAlly, GiBodyHeight} from 'react-icons/gi'
+import { GiBodyHeight} from 'react-icons/gi'
 import {HiOutlineIdentification} from 'react-icons/hi'
 import {BsTelephone} from 'react-icons/bs'
 

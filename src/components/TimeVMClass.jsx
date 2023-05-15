@@ -82,6 +82,20 @@ const Countdown = ({ timeInMinutes }) => {
     const [progress, setProgress] = useState(100);
     const [intervalId, setIntervalId] = useState(null);
     const [isTimeUp, setIsTimeUp] = useState(false);
+    
+    // eslint-disable-next-line
+    const [isActive, setIsActive] = useState(true);
+    console.log(isActive)
+
+    useEffect(() => {
+        const handleVisibilityChange = () => {
+          setIsActive(!document.hidden);
+        };
+        document.addEventListener('visibilitychange', handleVisibilityChange);
+        return () => {
+          document.removeEventListener('visibilitychange', handleVisibilityChange);
+        };
+      }, []);
 
     useEffect(() => {
         if (intervalId && secondsLeft === 0) {
@@ -94,6 +108,7 @@ const Countdown = ({ timeInMinutes }) => {
     useEffect(() => {
         const newProgress = (secondsLeft / (timeInMinutes * 60)) * 100;
         setProgress(newProgress);
+        // eslint-disable-next-line
     }, [secondsLeft]);
 
     const handleStart = () => {

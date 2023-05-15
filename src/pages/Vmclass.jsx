@@ -4,13 +4,13 @@ import Header from '../components/Header'
 import GoBackToButton from '../components/GoBackButton'
 import { useParams } from 'react-router'
 import { GiTeacher } from 'react-icons/gi'
-import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock,BsCloudUpload } from 'react-icons/bs'
+import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock, BsCloudUpload, BsStopCircle } from 'react-icons/bs'
 import axios from 'axios'
 import Topcards from '../components/Topcards'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
 import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
-import { AiOutlineCheckCircle, AiOutlineCloseCircle } from "react-icons/ai";
+import { AiOutlineCheckCircle, AiOutlineCloseCircle, AiOutlinePlayCircle, AiOutlinePauseCircle } from "react-icons/ai";
 import { RiRestartLine } from "react-icons/ri";
 import primero_sexto_basicoACT from '../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../data/primero_sexto_basicoATA'
@@ -22,7 +22,8 @@ import dataTerceroBasico from '../data/terceroBasicoABC'
 import primeroBasicoIndicadores from '../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
-import Countdown from '../components/TimeVMClass'
+import { MdSettingsBackupRestore } from 'react-icons/md'
+
 
 const steps = [
   { label: 'Iniciar Clase', completed: true, img: GiTeacher },
@@ -46,7 +47,7 @@ export default function Vmclass() {
   const [planner, setPlanner] = useState([]);                                                 // SELECCIONAR LA FECHA DE PLANIFICACION, FILTRA Y RETORNA PLANIFICACION DEL DIA
   const [students, setStudents] = useState([])
   const [studentsOnClass, setStudentsOnClass] = useState(0);
-const [studentsOutClass, setStudentsOutClass] = useState(0);
+  const [studentsOutClass, setStudentsOutClass] = useState(0);
 
 
   /**
@@ -321,6 +322,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
   //   setNoPresentStudents([...noPresentStudents, student]);
   // };
 
+  // eslint-disable-next-line
   function handleToggleAttendance(student) {
     if (isPresent(student)) {
       return;
@@ -330,7 +332,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
       noPresentStudents.filter((noPresentStudent) => noPresentStudent._id !== student._id)
     );
   }
-
+// eslint-disable-next-line
   function handleRemoveAttendance(student) {
     if (!isPresent(student)) {
       return; // Si el estudiante no está presente, no hacemos nada
@@ -421,7 +423,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
   const countAttendances = () => {
     let attended = 0;
     let notAttended = 0;
-  
+
     presentStudents.forEach((student) => {
       if (student.attendance === true) {
         attended++;
@@ -429,7 +431,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
         notAttended++;
       }
     });
-  
+
     return { attended, notAttended };
   }
 
@@ -445,6 +447,55 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
     addFieldsToPresentStudents(students);
   }
 
+
+  /**
+   * TIEMPO DE ACTIVIDAD EN CLASE
+   */
+  const [timer, setTimer] = useState(0);
+  const [isActive, setIsActive] = useState(false);
+  const [elapsedTime, setElapsedTime] = useState(0);
+  let interval = null;
+
+
+  useEffect(() => {
+
+
+    if (isActive) {
+      interval = setInterval(() => {
+        setTimer(timer => timer + 1);
+      }, 1000);
+    } else if (!isActive && timer !== 0) {
+      clearInterval(interval);
+    }
+
+    return () => clearInterval(interval);
+  }, [isActive, timer]);
+
+  const handleStart = () => {
+    setIsActive(true);
+  };
+
+  const handlePause = () => {
+    setIsActive(false);
+  };
+
+  const handleReset = () => {
+    setIsActive(false);
+    setElapsedTime(timer);
+    setTimer(0);
+  };
+  const handleResetTimer = () => {
+    setTimer(0)
+    setElapsedTime(0)
+    setIsActive(false);
+  }
+
+  const minutes = Math.floor(timer / 60);
+  const seconds = timer - minutes * 60;
+  const elapsedMinutes = Math.floor(elapsedTime / 60);
+  const elapsedSeconds = elapsedTime - elapsedMinutes * 60;
+  const progress = Math.min((elapsedTime / (90 * 60)) * 100, 100);
+  const progressRounded = Math.round(progress);
 
 
   return (
@@ -821,7 +872,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
                         >
                           <div className="flex justify-between items-center gap-2 min-w-[10rem]">
                             <h2 className="text-md font-medium min-w-[7rem] ">{`${student.lastName}, ${student.name}`}</h2>
-                            <p> {student.attendance ? 'Asistente' : student.attendance === false ? 'No asistente' : null} </p>
+                            {/* <p> {student.attendance ? 'Asistente' : student.attendance === false ? 'No asistente' : null} </p> */}
 
                             <div
                               className={`rounded-full flex items-center justify-center px-3 py-1 gap-2 shadow ${student.attendance ? 'bg-green-200' : student.attendance === false ? 'bg-red-200' : 'bg-white'
@@ -846,7 +897,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
                               className={`rounded-full flex items-center justify-center px-3 py-1 gap-2 shadow ${student.toiletMaterials ? 'bg-green-200' : student.toiletMaterials === false ? 'bg-red-200' : 'bg-white'
                                 }`}
                             >
-                              <p> {student.toiletMaterials ? 'si' : student.toiletMaterials === false ? 'No' : null} </p>
+                              {/* <p> {student.toiletMaterials ? 'si' : student.toiletMaterials === false ? 'No' : null} </p> */}
                               <p>Materiales de aseo:</p>
                               <AiOutlineCheckCircle
                                 size={20}
@@ -865,7 +916,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
                               className={`rounded-full flex items-center justify-center px-3 py-1 gap-2 shadow ${student.attendanceJustification ? 'bg-green-200' : student.attendanceJustification === false ? 'bg-red-200' : 'bg-white'
                                 }`}
                             >
-                              <p> {student.attendanceJustification ? 'si' : student.attendanceJustification === false ? 'No' : null} </p>
+                              {/* <p> {student.attendanceJustification ? 'si' : student.attendanceJustification === false ? 'No' : null} </p> */}
                               <p>Justificacion:</p>
                               <AiOutlineCheckCircle
                                 size={20}
@@ -941,7 +992,7 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
 
                   <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md '>
                     <label for="doc" className="flex items-center p-4 gap-3 rounded-md border border-gray-300 border-dashed  cursor-pointer h-full">
-                      <BsCloudUpload className="h-16 w-16 text-gray-700 "/>.
+                      <BsCloudUpload className="h-16 w-16 text-teal-700 " />.
                       <div className="space-y-2">
                         <h4 className="text-base font-semibold text-gray-700">Agregar Fotos</h4>
                         <span className="text-xs text-gray-300">png/jpg</span>
@@ -950,7 +1001,47 @@ const [studentsOutClass, setStudentsOutClass] = useState(0);
                     </label>
                   </div>
 
-                  <Countdown timeInMinutes={duration > 8 ? duration : schoolBlock * 45} />
+
+                  <div className=' flex flex-col items-center justify-center   w-[25rem] p-2 rounded-md shadow-md'>
+                    <div className='flex justify-center gap-2 items-center'>
+                      <h2 className="text-lg text-gray-700 text-center"> Tiempo efectivo de clase: </h2>
+                      {elapsedTime > 0 && timer === 0 && (
+                        <div className="text-lg font-bold text-gray-400 text-center ">
+                          {elapsedMinutes.toString().padStart(2, '0')}:
+                          {elapsedSeconds.toString().padStart(2, '0')}
+                        </div>
+                      )}
+                    </div>
+
+
+
+                    <div className="text-5xl font-bold text-gray-400 mb-2">
+                      {minutes.toString().padStart(2, '0')}:
+                      {seconds.toString().padStart(2, '0')}
+                    </div>
+                    <div className="flex items-center gap-4">
+                      <AiOutlinePlayCircle size={30} className='bg-green-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100' onClick={handleStart}
+                      />
+                      <AiOutlinePauseCircle size={30} className='bg-blue-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100' onClick={handlePause}
+                        disabled={interval === null} />
+
+                      {
+                        timer !== 0 ? (
+                          <BsStopCircle size={30} className='bg-red-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100' onClick={handleReset}
+                          />
+                        ) : null
+                      }
+                      {
+                        timer >= 0 || interval !== null ? (
+                          <MdSettingsBackupRestore size={30} className='bg-blue-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100' onClick={handleResetTimer}
+                          />
+                        ) : null
+                      }
+
+                    </div>
+
+
+                  </div>
 
                 </div>
               )}
