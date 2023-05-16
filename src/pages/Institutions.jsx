@@ -30,11 +30,11 @@ export default function Institutions() {
         <Header />
         <div className='p-4'>
             <div className='w-full m-auto border rounded-lg bg-white overflow-y-auto' >
-                <div className='m-3 p-2 grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 items-center justify-between cursor-pointer'>
-                    <span >Institución</span>
-                    <span className='sm:text-left text-right' >RUN</span>
-                    <span className='hidden md:grid' >Email</span>
-                    <span className='hidden sm:grid'>Telefono</span>
+                <div className='m-3 p-2 flex  gap-1 '>
+                    <h4 className=' w-[25%]' >Institución</h4>
+                    <h4 className=' w-[15%]' >RUN</h4>
+                    <h4 className=' w-[30%]' >Email</h4>
+                    <h4 className=' w-[20%]'>Telefono</h4>
                 </div>
                 <InstitutionsList usersData={usersData} />
 

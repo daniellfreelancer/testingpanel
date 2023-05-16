@@ -23,20 +23,14 @@ export default function InstitutionsList({ usersData }) {
     return (
         <ul>
           {usersData.map((user, _id) => (
-            <li key={_id} className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 grid md:grid-cols-4 sm:grid-cols-3 grid-cols-2 items-center justify-between cursor-pointer'>
-              <div className='flex items-center'>
-                <p className=''>{`${user.name}`}</p>
-              </div>
-              <p className='text-gray-600 sm:text-left text-right'>{formatRut(user.rut)}</p>
-              <p className='text-gray-600 sm:text-left text-right'>{user.email}</p>
-              <div className='sm:flex hidden justify-between items-center'>
-                <p>+56 {user.phone}</p>
-                <Link to={`/institutions/${user._id}`}>
-                <AiOutlineEye size={20} className='text-indigo-500' aria-label="Ver mas"
-                        title="Ver mas" />
-
+            <li key={_id} className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex gap-1 items-center cursor-pointer' aria-label={user.name} title={user.name}>
+              <p className=' text-gray-600 lg:text-left md:text-start w-[25%]'>{`${user.name}`}</p>
+              <p className='text-gray-600 w-[15%]'>{formatRut(user.rut)}</p>
+              <p className='text-gray-600 w-[30%]'>{user.email}</p>
+              <p className='text-gray-600 w-[20%]'>+56 {user.phone}</p>
+                <Link to={`/institutions/${user._id}`} className='flex items-center md:w-12 lg:w-[10%] justify-end'>
+                <AiOutlineEye size={20} className='text-indigo-400' aria-label="Ver mas" title="Ver mas" />
                 </Link>
-              </div>
             </li>
           ))}
         </ul>

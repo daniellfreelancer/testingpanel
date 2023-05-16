@@ -14,6 +14,7 @@ import { adminValue } from './features/userApi';
 import SchoolDetail from './pages/SchoolDetail';
 import ClassroomDetail from './pages/ClassroomDetail';
 import Tableplanification from './pages/Tableplanification';
+import SideBarTest from './pages/SideBarTest';
 
 // function App() {
 
@@ -62,6 +63,7 @@ function App() {
               <Route path="/planifications" element={<Planifications />} />
               <Route path="/*" element={<Error404 />} />
               <Route path="/table" element={<Tableplanification />} />
+              <Route path="/testsidebar" element={<SideBarTest />} />
         </Routes>
       </BrowserRouter>
     </>

@@ -18,7 +18,7 @@ function Teachers({ userTeachersData }) {
     return `${block1}.${block2}.${block3}-${verifier}`;
   }
   return (
-    <div className='lg:col-span-2 col-span-1 bg-white flex justify-between rounded-lg w-full border p-4'>
+    <div className='lg:col-span-2 col-span-1 bg-white flex justify-between rounded-lg w-full border p-4 '>
       <div className='flex flex-col w-full pb-2 gap-2'>
         <h2 className='text-2xl font-bold'>Profesores:</h2>
         {
@@ -27,18 +27,18 @@ function Teachers({ userTeachersData }) {
             {userTeachersData?.map((user, index) => (
               <li
                 key={index}
-                className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex justify-between items-center cursor-pointer'
+                className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 md:m-2 p-2 flex justify-start items-center gap-2 cursor-pointer'
               >
-                <div className='flex items-center lg:w-[20%]'>
+                <div className='flex items-center lg:w-[20%] md:w-[10rem]'>
                   <div className='bg-purple-100 p-3 rounded-lg'>
                     <FaChalkboardTeacher className='text-purple-800' />
                   </div>
                   <p className='pl-4'>{`${user.name} ${user.lastName}`}</p>
                 </div>
-                <p className='text-gray-600 lg:w-[40%]'>
+                <p className='text-gray-600 lg:w-[40%] md:w-[17rem]'>
                   Email: {user.email}
                 </p>
-                <p className='text-gray-600 lg:w-[20%]'>Rut: {formatRut(user.rut)}</p>
+                <p className='text-gray-600 lg:w-[20%] md:w-[7rem]'>Rut: {formatRut(user.rut)}</p>
                 <p
                   className={`bg-${
                     user.role === 'SUPF' ? 'green' : 'yellow'

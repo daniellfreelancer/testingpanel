@@ -69,6 +69,10 @@ export default function Vmclass() {
   const [otherMaterials, setOtherMaterials] = useState("")                                    //OTROS MATERIALES
   const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
   const [addObservations, setAddObservations] = useState("")
+
+  const [startClassTime, setStartClassTime] = useState(null)
+  const [endClassTime, setendClassTime] = useState(null)
+
   /**
    * ESTADOS DE INFORMACION Y COMPONENTES
    */
@@ -332,7 +336,7 @@ export default function Vmclass() {
       noPresentStudents.filter((noPresentStudent) => noPresentStudent._id !== student._id)
     );
   }
-// eslint-disable-next-line
+  // eslint-disable-next-line
   function handleRemoveAttendance(student) {
     if (!isPresent(student)) {
       return; // Si el estudiante no está presente, no hacemos nada
@@ -464,6 +468,7 @@ export default function Vmclass() {
       interval = setInterval(() => {
         setTimer(timer => timer + 1);
       }, 1000);
+      setStartClassTime(new Date())
     } else if (!isActive && timer !== 0) {
       clearInterval(interval);
     }
@@ -483,11 +488,14 @@ export default function Vmclass() {
     setIsActive(false);
     setElapsedTime(timer);
     setTimer(0);
+    setendClassTime(new Date())
   };
   const handleResetTimer = () => {
     setTimer(0)
     setElapsedTime(0)
     setIsActive(false);
+    setendClassTime(null)
+    setStartClassTime(null)
   }
 
   const minutes = Math.floor(timer / 60);
@@ -496,6 +504,38 @@ export default function Vmclass() {
   const elapsedSeconds = elapsedTime - elapsedMinutes * 60;
   const progress = Math.min((elapsedTime / (90 * 60)) * 100, 100);
   const progressRounded = Math.round(progress);
+
+  // crear hora inicio/fin de clase => tiempo efectivo en clase
+  //  criterio de evaluacion:
+  // veificar un hover en vista tabla
+
+
+  const [image, setImage] = useState(null);
+  const [isUploading, setIsUploading] = useState(false);
+  const [progressIMG, setProgressIMG] = useState(0);
+
+  const handleImageChange = (event) => {
+    const selectedImage = event.target.files[0];
+    if (!selectedImage) {
+      alert("Debe seleccionar una imagen");
+      return;
+    }
+    setImage(selectedImage);
+    setIsUploading(true);
+    setProgressIMG(0);
+
+    // Simulate upload progress
+    const timer = setInterval(() => {
+      setProgressIMG((prevProgress) => prevProgress + 10);
+    }, 100);
+
+    // Simulate upload completion
+    setTimeout(() => {
+      setIsUploading(false);
+      clearInterval(timer);
+      setProgressIMG(100);
+    }, 1000);
+  };
 
 
   return (
@@ -800,7 +840,7 @@ export default function Vmclass() {
 
                         <div className='p-2 text-gray-700 w-fit ' >
                           <h3 className='w-max' >Relojes disponibles:</h3>
-                          <ul className='py-2 flex flex-col gap-2 w-fit' >
+                          <ul className='py-2 flex flex-col md:flex-row md:flex-wrap gap-2 w-fit' >
                             <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-001' > <BsSmartwatch /> <p className='px-1'>RV-001</p> </li>
                             <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-002' > <BsSmartwatch /> <p className='px-1'>RV-002</p> </li>
                             <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-003' > <BsSmartwatch /> <p className='px-1'>RV-003</p> </li>
@@ -972,8 +1012,8 @@ export default function Vmclass() {
                 </div>
               )}
               {currentStep === 2 && (
-                <div className="px-4 flex flex-wrap justify-evenly gap-4 ">
-                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md '>
+                <div className="px-4 flex flex-wrap justify-evenly gap-4 md:justify-around md:gap-2 md:px-1 ">
+                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
                     <h2 className='underline text-gray-600 ' >Actividades:</h2>
                     <textarea
                       value={activities}
@@ -981,7 +1021,7 @@ export default function Vmclass() {
                       className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem] "
                     />
                   </div>
-                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md '>
+                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
                     <h2 className='underline text-gray-600 ' >Agregar Observaciones:</h2>
                     <textarea
                       value={addObservations}
@@ -990,19 +1030,28 @@ export default function Vmclass() {
                     />
                   </div>
 
-                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md '>
+                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
                     <label for="doc" className="flex items-center p-4 gap-3 rounded-md border border-gray-300 border-dashed  cursor-pointer h-full">
                       <BsCloudUpload className="h-16 w-16 text-teal-700 " />.
                       <div className="space-y-2">
                         <h4 className="text-base font-semibold text-gray-700">Agregar Fotos</h4>
                         <span className="text-xs text-gray-300">png/jpg</span>
+                        {progressIMG === 100 && (
+                          <div className="mt-2 text-sm text-green-500">Imagen cargada con éxito</div>
+                        )}
                       </div>
-                      <input type="file" id="doc" name="doc" accept="png, jpg" hidden />
+                      <input type="file" id="doc" name="doc" accept="png, jpg" hidden onChange={handleImageChange} />
                     </label>
+                    {isUploading && (
+                      <div className="relative w-full h-2 mt-4 bg-gray-200 rounded-full">
+                        <div className="absolute top-0 left-0 h-full bg-teal-500 rounded-full" style={{ width: `${progressIMG}%` }} />
+                      </div>
+                    )}
+
                   </div>
 
 
-                  <div className=' flex flex-col items-center justify-center   w-[25rem] p-2 rounded-md shadow-md'>
+                  <div className=' flex flex-col items-center justify-center   w-[25rem] p-2 rounded-md shadow-md md:w-[45%]'>
                     <div className='flex justify-center gap-2 items-center'>
                       <h2 className="text-lg text-gray-700 text-center"> Tiempo efectivo de clase: </h2>
                       {elapsedTime > 0 && timer === 0 && (
@@ -1050,6 +1099,11 @@ export default function Vmclass() {
                   <label htmlFor="message" className="block text-gray-700 font-bold">
                     ultimo paso
                   </label>
+                  {image && (
+                    <div className='w-[20rem]'>
+                      <img src={URL.createObjectURL(image)} alt="uploaded image" />
+                    </div>
+                  )}
                   <textarea
                     name="message"
                     id="message"

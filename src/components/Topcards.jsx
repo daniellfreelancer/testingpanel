@@ -9,7 +9,7 @@ export default function Topcards({classroom,teacher,students}) {
                     <p className='text-gray-600' >{ classroom?.level === 'basico' ? 'Básico' : 'Medio' }</p>
                 </div>
             </div>
-            <div className='lg:col-span-2 col-span-1 bg-white flex justify-between w-full border px-4 rounded items-center' >            
+            <div className='lg:col-span-2 col-span-1 bg-white flex justify-between w-full border px-4 md:p-3 rounded items-center' >            
             <div className='flex flex-col w-full pb-2 ' >
                 {
                     teacher?.name ? (
