@@ -14,33 +14,6 @@ import { adminValue } from './features/userApi';
 import SchoolDetail from './pages/SchoolDetail';
 import ClassroomDetail from './pages/ClassroomDetail';
 import Tableplanification from './pages/Tableplanification';
-import SideBarTest from './pages/SideBarTest';
-
-// function App() {
-
-
-//   return (
-//     <>
-//       <BrowserRouter>
-//         <Routes>
-//           <Route path="/" element={<Loginpage />} />
-//           <Route path="/dashboard" element={<Homepage />} />
-//           <Route path="/users" element={<Users />} />
-//           <Route path="/institutions" element={<Institutions />} />
-//           <Route path="/institutions/:id" element={<InstitutionDetail />} />
-//           <Route path="/notifications" element={<Notifications />} />
-//           <Route path="/vmclass" element={<Vmclass />} />
-//           <Route path="/create-planification" element={<CreatePlanifications />} />
-//           <Route path="/planifications" element={<Planifications />} />
-//         </Routes>
-//       </BrowserRouter>
-//     </>
-
-//   );
-// }
-
-// export default App;
-
 
 function App() {
 
@@ -50,7 +23,7 @@ function App() {
     <>
       <BrowserRouter>
         <Routes>
-          <Route path="/" index={true} element={<Loginpage />} /> 
+          <Route path="/" index={true} element={<Loginpage />} />
               <Route path="/dashboard" element={userActive && localStorage.getItem('token')  ? < Homepage /> : <Loginpage />} />
               <Route path="/users" element={<Users />} />
               <Route path="/institutions" element={<Institutions />} />
@@ -63,7 +36,6 @@ function App() {
               <Route path="/planifications" element={<Planifications />} />
               <Route path="/*" element={<Error404 />} />
               <Route path="/table" element={<Tableplanification />} />
-              <Route path="/testsidebar" element={<SideBarTest />} />
         </Routes>
       </BrowserRouter>
     </>

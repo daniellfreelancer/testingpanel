@@ -4,7 +4,7 @@ import Header from '../components/Header'
 import GoBackToButton from '../components/GoBackButton'
 import { useParams } from 'react-router'
 import { GiTeacher } from 'react-icons/gi'
-import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock, BsCloudUpload, BsStopCircle } from 'react-icons/bs'
+import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock, BsCloudUpload, BsStopCircle, BsClockHistory } from 'react-icons/bs'
 import axios from 'axios'
 import Topcards from '../components/Topcards'
 import Select from 'react-select'
@@ -22,7 +22,9 @@ import dataTerceroBasico from '../data/terceroBasicoABC'
 import primeroBasicoIndicadores from '../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
-import { MdSettingsBackupRestore } from 'react-icons/md'
+import { MdSettingsBackupRestore, MdPostAdd } from 'react-icons/md'
+import { RiDeleteBin6Line } from 'react-icons/ri';
+
 
 
 const steps = [
@@ -68,9 +70,12 @@ export default function Vmclass() {
   const [materials, setMaterials] = useState([])                                              //MATERIALES
   const [otherMaterials, setOtherMaterials] = useState("")                                    //OTROS MATERIALES
   const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
-  const [addObservations, setAddObservations] = useState("")
+  const [addObservations, setAddObservations] = useState('');
+  const [observationsList, setObservationsList] = useState([]);
 
+  // eslint-disable-next-line
   const [startClassTime, setStartClassTime] = useState(null)
+  // eslint-disable-next-line
   const [endClassTime, setendClassTime] = useState(null)
 
   /**
@@ -504,6 +509,7 @@ export default function Vmclass() {
   const elapsedSeconds = elapsedTime - elapsedMinutes * 60;
   const progress = Math.min((elapsedTime / (90 * 60)) * 100, 100);
   const progressRounded = Math.round(progress);
+  console.log(progressRounded)
 
   // crear hora inicio/fin de clase => tiempo efectivo en clase
   //  criterio de evaluacion:
@@ -535,6 +541,19 @@ export default function Vmclass() {
       clearInterval(timer);
       setProgressIMG(100);
     }, 1000);
+  };
+
+  const handleAddObservation = () => {
+    if (addObservations !== '') {
+      setObservationsList([...observationsList, addObservations]);
+      setAddObservations('');
+    }
+  };
+
+  const handleDeleteObservation = (index) => {
+    const updatedList = [...observationsList];
+    updatedList.splice(index, 1);
+    setObservationsList(updatedList);
   };
 
 
@@ -1019,22 +1038,45 @@ export default function Vmclass() {
                       value={activities}
                       onChange={(e) => setActivities(e.target.value)}
                       className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem] "
+
                     />
                   </div>
-                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
-                    <h2 className='underline text-gray-600 ' >Agregar Observaciones:</h2>
-                    <textarea
-                      value={addObservations}
-                      onChange={(e) => setAddObservations(e.target.value)}
-                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem] "
-                    />
+
+                  <div className='min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]'>
+                    <h2 className='underline text-gray-600'>Agregar Observaciones:</h2>
+                    <div className="flex items-center border border-gray-300 rounded px-1 mt-1 ">
+                      <input
+                        placeholder='ingresar observacion'
+                        type="text"
+                        value={addObservations}
+                        onChange={(e) => setAddObservations(e.target.value)}
+                        className="w-full p-1 mt-1  outline-none focus:bg-gray-100"
+                      />
+                      <MdPostAdd
+                        onClick={handleAddObservation} size={30}
+                        className="text-white cursor-pointer bg-teal-500 rounded-md m-1"
+                        aria-label='Agregar'
+                        title='Agregar'
+                      />
+                    </div>
+                    <ul className="mt-2 flex flex-col gap-2 ">
+                      {observationsList.map((observation, index) => (
+                        <li key={index} className="flex items-center justify-between border-b text-gray-700">
+                          <span className="mr-2">{observation}</span>
+                          <RiDeleteBin6Line
+                            className="text-red-500 cursor-pointer" size={15}
+                            onClick={() => handleDeleteObservation(index)}
+                          />
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
                   <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
                     <label for="doc" className="flex items-center p-4 gap-3 rounded-md border border-gray-300 border-dashed  cursor-pointer h-full">
-                      <BsCloudUpload className="h-16 w-16 text-teal-700 " />.
+                      <BsCloudUpload className="h-16 w-16 text-teal-700 " />
                       <div className="space-y-2">
-                        <h4 className="text-base font-semibold text-gray-700">Agregar Fotos</h4>
+                        <h4 className="text-base font-semibold text-gray-700">Agregar Foto</h4>
                         <span className="text-xs text-gray-300">png/jpg</span>
                         {progressIMG === 100 && (
                           <div className="mt-2 text-sm text-green-500">Imagen cargada con éxito</div>
@@ -1095,22 +1137,83 @@ export default function Vmclass() {
                 </div>
               )}
               {currentStep === 3 && (
-                <div className="mt-4">
-                  <label htmlFor="message" className="block text-gray-700 font-bold">
-                    ultimo paso
-                  </label>
-                  {image && (
-                    <div className='w-[20rem]'>
-                      <img src={URL.createObjectURL(image)} alt="uploaded image" />
-                    </div>
-                  )}
-                  <textarea
-                    name="message"
-                    id="message"
-                    rows="3"
-                    className="mt-1 px-3 py-2 block w-full rounded-md bg-gray-100 border-transparent focus:border-gray-500 focus:bg-white focus:ring-0"
-                  ></textarea>
+                <div className="px-4 flex flex-wrap justify-evenly gap-4 md:justify-around md:gap-2 md:px-1 ">
+                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
+                    <h2 className='underline text-gray-600 ' >Actividades:</h2>
+                    <textarea
+                      value={activities}
+                      onChange={(e) => setActivities(e.target.value)}
+                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem] "
+                      disabled
+
+                    />
+                  </div>
+
+                  <div className='min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]'>
+                    <h2 className='underline text-gray-600'> Observaciones:</h2>
+                    {
+                      observationsList.length === 0 && (
+                        <h3 className='text-gray-500'>No hay observaciones</h3>
+                      )
+                    }
+
+                    <ul className="mt-2 flex flex-col gap-2 ">
+                      {observationsList.map((observation, index) => (
+                        <li key={index} className="flex items-center justify-between border-b text-gray-700">
+                          <span className="mr-2">{observation}</span>
+
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  <div className='min-h-[10rem] w-[25rem] p-3 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]'>
+                    {
+                      !image && (
+                        <h3 className='text-gray-500'>No hay imagen adjunta</h3>
+                      )
+                    }
+                    {image && (
+                      <div className='flex items-center justify-center'>
+                        <img
+                          src={URL.createObjectURL(image)}
+                          alt="Foto de actividades"
+                          className="w-[13rem] md:h-fit  rounded-md"
+
+                        />
+                      </div>
+                    )}
+                  </div>
+
+
+                  <div className=' flex flex-col items-center justify-center   w-[25rem] p-2 rounded-md shadow-md md:w-[45%]'>
+                    <BsClockHistory size={40} className='text-teal-700' />
+                    {
+                      elapsedTime === 0 ? (
+                        <div className='flex justify-center gap-2 items-center'>
+
+                          <h2 className="text-lg text-gray-700 text-center"> No hay tiempo de clase </h2>
+                        </div>
+                      ) : (
+                        <div className='flex justify-center gap-2 items-center'>
+
+
+                          <h2 className="text-lg text-gray-700 text-center"> Tiempo efectivo de clase: </h2>
+                          {elapsedTime > 0 && timer === 0 && (
+                            <div className="text-lg font-bold text-gray-400 text-center ">
+                              {elapsedMinutes.toString().padStart(2, '0')}:
+                              {elapsedSeconds.toString().padStart(2, '0')}
+                            </div>
+                          )}
+                        </div>
+                      )
+                    }
+
+
+                  </div>
+
                 </div>
+
               )}
 
 
