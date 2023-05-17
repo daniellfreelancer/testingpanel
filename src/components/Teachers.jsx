@@ -27,7 +27,7 @@ function Teachers({ userTeachersData }) {
             {userTeachersData?.map((user, index) => (
               <li
                 key={index}
-                className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 md:m-2 p-2 flex justify-start items-center gap-2 cursor-pointer'
+                className='bg-gray-50 hover:bg-gray-100 rounded-lg my-2 p-2 flex justify-start items-center gap-2 cursor-pointer lg:justify-between'
               >
                 <div className='flex items-center lg:w-[20%] md:w-[10rem]'>
                   <div className='bg-purple-100 p-3 rounded-lg'>
@@ -38,11 +38,11 @@ function Teachers({ userTeachersData }) {
                 <p className='text-gray-600 lg:w-[40%] md:w-[17rem]'>
                   Email: {user.email}
                 </p>
-                <p className='text-gray-600 lg:w-[20%] md:w-[7rem]'>Rut: {formatRut(user.rut)}</p>
+                <p className='text-gray-600 lg:w-[20%] md:w-[7rem] md:mr-4 '>Rut: {formatRut(user.rut)}</p>
                 <p
-                  className={`bg-${
+                  className={`md:text-[10px] bg-${
                     user.role === 'SUPF' ? 'green' : 'yellow'
-                  }-300 p-2 rounded-lg w-[7rem] text-${
+                  }-300 p-2 rounded-lg w-[6.2rem] text-${
                     user.role === 'SUPF' ? 'green' : 'yellow'
                   }-900 text-start`}
                 >

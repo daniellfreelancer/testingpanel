@@ -28,7 +28,7 @@ const Sidebar = ({ children }) => {
                     <BiFilter className="px-2 bg-indigo-800 rounded-md" />
                 </span>
                 <div
-                    className={`sidebar fixed top-0 bottom-0 lg:left-0 p-2 w-fit overflow-y-auto text-center bg-white border-r-[1px]  ${isSidebarOpen ? "" : "hidden"
+                    className={`sidebar fixed top-0 bottom-0 lg:left-0  w-fit overflow-y-auto text-center bg-white border-r-[1px]  ${isSidebarOpen ? "" : "hidden"
                         }`}
                 >
                     <div className="text-gray-100 text-xs">
@@ -54,7 +54,7 @@ const Sidebar = ({ children }) => {
                     </div>
                 </div>
             </div>
-            <main className='md:ml-[16rem] z-0 w-full min-w-screen' > {children} </main>
+            <main className='md:ml-[15rem] z-0 w-full min-w-screen' > {children} </main>
         </div>
     );
 };

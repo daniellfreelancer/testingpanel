@@ -7,7 +7,7 @@ import {BsTelephone} from 'react-icons/bs'
 
 export default function Students({ userStudents }) {
   return (
-    <div className='w-full md:col-span-1 relative lg:h-[70vh] h-[40vh] m-auto border rounded-lg bg-white overflow-scroll'>
+    <div className='w-full md:col-span-1 relative  m-auto border rounded-lg bg-white overflow-scroll'>
       <p className='p-4 text-2xl font-bold'>Estudiantes:</p>
       {
         userStudents.length > 0 ? (
@@ -46,7 +46,7 @@ function StudentItem({ item }) {
     return `${block1}.${block2}.${block3}-${verifier}`;
   }
   return (
-    <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex items-center cursor-pointer gap-4 w-full'>
+    <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex items-center cursor-pointer gap-4 w-full justify-start'>
       <div className='flex items-center min-w-[10rem] gap-2'>
         <div className='bg-purple-100 p-3 rounded-lg'>
           {gender === 'male' ? (
@@ -60,8 +60,8 @@ function StudentItem({ item }) {
       <p className='text-gray-400 text-sm  flex gap-1 items-center w-14 '>{age} años</p>
       <p className='text-gray-400 text-sm  flex gap-1 items-center w-16 '><TbWeight size={20} /> {weight} kg</p>
       <p className='text-gray-400 text-sm  flex gap-1 items-center w-26 '><GiBodyHeight size={20} />{size} cm</p>
-      <p className='text-gray-400 text-sm flex gap-1 items-center w-18'><HiOutlineIdentification size={20} /> {formatRut(rut)}</p>
-      <p className='text-gray-400 text-sm flex gap-1 items-center min-w-[14rem]'><MdOutlineMailOutline size={20} />  {email}</p>
+      <p className='text-gray-400 text-sm flex gap-1 items-center w-18 lg:flex md:hidden '><HiOutlineIdentification size={20} /> {formatRut(rut)}</p>
+      <p className='text-gray-400 text-sm flex gap-1 items-center min-w-[14rem] lg:flex md:hidden'><MdOutlineMailOutline size={20} />  {email}</p>
       <p className='text-gray-400 text-sm flex gap-1 items-center'><BsTelephone size={20} /> {phone}</p>
 
 {

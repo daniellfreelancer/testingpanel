@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { reloadValueState } from '../features/reloadSlice'
 import axios from 'axios'
 import InstitutionsList from '../components/InstitutionsList'
+import GoBackToButton from '../components/GoBackButton'
 
 
 
@@ -28,7 +29,8 @@ export default function Institutions() {
     <Sidebar>
     <main className='bg-gray-200 min-h-screen min-w-screen' >
         <Header />
-        <div className='p-4'>
+        <GoBackToButton/>
+        <div className='p-2'>
             <div className='w-full m-auto border rounded-lg bg-white overflow-y-auto' >
                 <div className='m-3 p-2 flex  gap-1 '>
                     <h4 className=' w-[25%]' >Institución</h4>

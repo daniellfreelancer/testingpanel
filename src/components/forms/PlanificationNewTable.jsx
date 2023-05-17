@@ -18,7 +18,7 @@ import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
 import Modalindicators from '../../components/modal/Modalindicators';
-import {AiOutlineFileText} from 'react-icons/ai'
+import {AiOutlineFileText, AiOutlineDelete} from 'react-icons/ai'
 import { useParams } from 'react-router';
 import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
@@ -379,6 +379,11 @@ export default function PlanificationNewTable() {
         "Materiales",
         "Tipo de Evaluación"
     ];
+    
+    const handleDeleteClassObjective = (item) => {
+        setClassObjectives(classObjectives.filter(obj => obj.id !== item.id));
+    }
+
 
 
     /**
@@ -505,6 +510,19 @@ export default function PlanificationNewTable() {
                             </div>
                         </td>
                         <td className=" px-2 border text-center ">
+                            {
+                                classObjectives.length > 0 ? (<h2>Objetivos seleccionados</h2>) : (<h2>No hay objetivos seleccionados</h2>)
+                            }
+                        
+
+{
+    classObjectives.map((item) => (
+        <div className='flex justify-between items-center py-2'>
+            <p className='text-justify'>{item.label}: {item.value.substring(0, 85)}{item.value.length > 100 ? "..." : ""}</p>
+            <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteClassObjective(item)}> <AiOutlineDelete size={12} /> </button>
+        </div>
+    ))
+}
                             <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[11rem]">
                                 <Select
                                     closeMenuOnSelect={true}

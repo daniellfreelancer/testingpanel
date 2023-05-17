@@ -37,8 +37,6 @@ const steps = [
 export default function Vmclass() {
   const { id } = useParams()
 
-
-
   /**
    * DATA Y STATES
    */
@@ -155,8 +153,6 @@ export default function Vmclass() {
 
         console.log(data.response)
         setStudents(data.response.students)
-
-
         setuserClassroom(data.response)       // TENGO LA DATA DEL GRADO Y NIVEL 
         setTeacher(data.response.teacher[0])  // PROFESOR DEL SALON DE CLASE
         setPlanner(data.response.planner)     // PLANIFICACIONES
@@ -167,32 +163,37 @@ export default function Vmclass() {
     fetchData();
   }, [id]);
 
-
   useEffect(() => {
-
     const today = new Date();
-    const todayISO = today.toISOString().slice(0, 10);
-    const current = planner.find((activity) => activity.startDate.slice(0, 10) === todayISO);
-    setCurrentActivity(current || null);                 // SETEAMOS LA PLANIFICACION DEL DIA
-    if (currentActivity) {
-      setContent(currentActivity.content)
-      setClassObjectives(currentActivity.classObjectives)
-      setIndicatorsForEvaluateClass(currentActivity.evaluationIndicators)
-      setIndicatorsForEvaluateClassManual(currentActivity.evaluationIndicatorsTeacher)
-      setActivities(currentActivity.activities)
-      setLearningObjetives(currentActivity.learningObjectives)
-      setMaterials(currentActivity.materials)
-      setDuration(currentActivity.duration)
-      currentActivity.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
-      setSchoolBlock(currentActivity.schoolBlock)
-      setEvaluationType(currentActivity.evaluationType)
-      setEvaluationIndicators(currentActivity.evaluationIndicators)
-      setSelectedIndicators(currentActivity.evaluationIndicators)
+    const todayLocalDateString = today.toLocaleDateString();
+    const current = planner.find(
+      (activity) => {
+        const startDate = new Date(activity.startDate);
+        return startDate.toLocaleDateString() === todayLocalDateString;
+      }
+    );
+    setCurrentActivity(current || null);
+  
+    if (current) {
+      setContent(current.content);
+      setClassObjectives(current.classObjectives);
+      setIndicatorsForEvaluateClass(current.evaluationIndicators);
+      setIndicatorsForEvaluateClassManual(current.evaluationIndicatorsTeacher);
+      setActivities(current.activities);
+      setLearningObjetives(current.learningObjectives);
+      setMaterials(current.materials);
+      setDuration(current.duration);
+      current.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime");
+      setSchoolBlock(current.schoolBlock);
+      setEvaluationType(current.evaluationType);
+      setEvaluationIndicators(current.evaluationIndicators);
+      setSelectedIndicators(current.evaluationIndicators);
       handleUserData();
     }
-    console.log(currentActivity)
+    console.log(current);
     // eslint-disable-next-line
-  }, [planner, currentActivity]);
+  }, [planner]);
+  
 
 
 
@@ -206,10 +207,6 @@ export default function Vmclass() {
     }
 
   }, [evaluationIndicators, classObjectives])
-
-
-
-
 
   /**
 * FORMATOS Y RENDERIZADOS
@@ -230,10 +227,6 @@ export default function Vmclass() {
   const formatOptionLabel = ({ value, label }) => (
     <div title={value}>{label}</div>
   );
-
-
-
-
 
   const handleDeleteClassObjective = (item) => {
     setClassObjectives(classObjectives.filter(obj => obj.id !== item.id));
@@ -313,23 +306,6 @@ export default function Vmclass() {
 
   const [noPresentStudents, setNoPresentStudents] = useState([])
 
-  // const handleToggleAttendance = (student) => {
-  //   const isPresent = presentStudents.some((s) => s._id === student._id);
-  //   if (isPresent) {
-  //     setPresentStudents(presentStudents.filter((s) => s._id !== student._id));
-  //     setNoPresentStudents([...noPresentStudents, student]);
-  //   } else {
-  //     setPresentStudents([...presentStudents, student]);
-  //     setNoPresentStudents(noPresentStudents.filter((s) => s._id !== student._id));
-  //   }
-  // };
-
-
-
-  // const handleRemoveAttendance = (student) => {
-  //   setPresentStudents(presentStudents.filter((s) => s._id !== student._id));
-  //   setNoPresentStudents([...noPresentStudents, student]);
-  // };
 
   // eslint-disable-next-line
   function handleToggleAttendance(student) {
@@ -511,12 +487,9 @@ export default function Vmclass() {
   const progressRounded = Math.round(progress);
   console.log(progressRounded)
 
-  // crear hora inicio/fin de clase => tiempo efectivo en clase
-  //  criterio de evaluacion:
-  // veificar un hover en vista tabla
 
-
-  const [image, setImage] = useState(null);
+  const [activityImage, setActivityImage] = useState(null);
+  const [activityImageError, setActivityImageError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
   const [progressIMG, setProgressIMG] = useState(0);
 
@@ -526,7 +499,7 @@ export default function Vmclass() {
       alert("Debe seleccionar una imagen");
       return;
     }
-    setImage(selectedImage);
+    setActivityImage(selectedImage);
     setIsUploading(true);
     setProgressIMG(0);
 
@@ -542,6 +515,14 @@ export default function Vmclass() {
       setProgressIMG(100);
     }, 1000);
   };
+
+  useEffect(() => {
+    if (activityImage && activityImage.size > 5000000) {
+      setActivityImageError("La imagen no debe exceder 5MB");
+    } else {
+      setActivityImageError(null);
+    }
+  }, [activityImage]);
 
   const handleAddObservation = () => {
     if (addObservations !== '') {
@@ -902,27 +883,7 @@ export default function Vmclass() {
 
                   <div className="">
                     <h2 className="text-lg font-medium mt-4">Lista de Asistentes</h2>
-                    {/* <div className="flex  gap-2">
-                      {students.map((student) => (
-                        <div
-                          key={student._id}
-                          className={`p-2 flex flex-col rounded-md shadow-md `}
-                        
-                        >
-                          <div className="flex justify-between items-center gap-2 min-w-[8rem] ">
-                            <h2 className="text-md font-medium">{`${student.lastName}, ${student.name}`}</h2>
-                            <div   className={`rounded-full flex items-center justify-center  px-3 py-1 gap-2 shadow ${isPresent(student) ? "bg-green-200"  : "bg-white"} `}>
-                              <p>Asistencia: </p>
 
-                                <AiOutlineCheckCircle size={20} className="bg-green-500 rounded-full text-white  cursor-pointer" onClick={() => handleToggleAttendance(student)} />
-
-                                  <AiOutlineCloseCircle size={20} className="bg-red-500 rounded-full text-white cursor-pointer" onClick={() => handleRemoveAttendance(student)} />
-
-                            </div>
-                          </div>
-                        </div>
-                      ))}
-                    </div> */}
                     <div className="flex gap-2 flex-wrap">
                       {presentStudents.map((student) => (
                         <div
@@ -995,34 +956,6 @@ export default function Vmclass() {
                         </div>
                       ))}
                     </div>
-
-
-
-
-                    {/* {
-                      presentStudents ? (
-                        <ul>
-
-                          {presentStudents.map((student) => (
-                            <li key={student._id} className="flex items-center justify-between w-[20%] rounded-md shadow-md my-1 px-2">
-                               <AiOutlineCheckCircle size={20} className="text-green-500" />
-                               {`${student.lastName}, ${student.name}`}
-                              <button
-                                className="rounded-full h-6 w-6 m-1 flex items-center justify-center bg-red-500 text-white"
-                                onClick={() => handleRemoveAttendance(student)}
-                              >
-                                <AiOutlineDelete />
-
-                              </button>
-                            </li>
-                          ))}
-                        </ul>
-                      ) : (
-                        null
-                      )
-                    } */}
-
-
                   </div>
 
 
@@ -1031,20 +964,20 @@ export default function Vmclass() {
                 </div>
               )}
               {currentStep === 2 && (
-                <div className="px-4 flex flex-wrap justify-evenly gap-4 md:justify-around md:gap-2 md:px-1 ">
-                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
-                    <h2 className='underline text-gray-600 ' >Actividades:</h2>
+                <div className="flex flex-wrap justify-evenly gap-4 md:justify-around md:gap-2 md:px-1">
+                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                    <h2 className="underline text-gray-600">Actividades</h2>
                     <textarea
                       value={activities}
                       onChange={(e) => setActivities(e.target.value)}
-                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem] "
+                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem]"
 
                     />
                   </div>
 
-                  <div className='min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]'>
-                    <h2 className='underline text-gray-600'>Agregar Observaciones:</h2>
-                    <div className="flex items-center border border-gray-300 rounded px-1 mt-1 ">
+                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                    <h2 className="underline text-gray-600">Agregar Observaciones</h2>
+                    <div className="flex items-center border border-gray-300 rounded px-1 mt-1">
                       <input
                         placeholder='ingresar observacion'
                         type="text"
@@ -1053,13 +986,13 @@ export default function Vmclass() {
                         className="w-full p-1 mt-1  outline-none focus:bg-gray-100"
                       />
                       <MdPostAdd
-                        onClick={handleAddObservation} size={30}
+                        onClick={handleAddObservation}
+                        size={30}
                         className="text-white cursor-pointer bg-teal-500 rounded-md m-1"
-                        aria-label='Agregar'
-                        title='Agregar'
+                        aria-label='Agregar' title='Agregar'
                       />
                     </div>
-                    <ul className="mt-2 flex flex-col gap-2 ">
+                    <ul className="mt-2 flex flex-col gap-2">
                       {observationsList.map((observation, index) => (
                         <li key={index} className="flex items-center justify-between border-b text-gray-700">
                           <span className="mr-2">{observation}</span>
@@ -1072,7 +1005,7 @@ export default function Vmclass() {
                     </ul>
                   </div>
 
-                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
+                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
                     <label for="doc" className="flex items-center p-4 gap-3 rounded-md border border-gray-300 border-dashed  cursor-pointer h-full">
                       <BsCloudUpload className="h-16 w-16 text-teal-700 " />
                       <div className="space-y-2">
@@ -1081,6 +1014,7 @@ export default function Vmclass() {
                         {progressIMG === 100 && (
                           <div className="mt-2 text-sm text-green-500">Imagen cargada con éxito</div>
                         )}
+                        {activityImageError && <span className="text-red-400">{activityImageError}</span>}
                       </div>
                       <input type="file" id="doc" name="doc" accept="png, jpg" hidden onChange={handleImageChange} />
                     </label>
@@ -1089,134 +1023,118 @@ export default function Vmclass() {
                         <div className="absolute top-0 left-0 h-full bg-teal-500 rounded-full" style={{ width: `${progressIMG}%` }} />
                       </div>
                     )}
-
                   </div>
 
-
-                  <div className=' flex flex-col items-center justify-center   w-[25rem] p-2 rounded-md shadow-md md:w-[45%]'>
+                  <div className="flex flex-col items-center justify-center   w-[25rem] p-2 rounded-md shadow-md md:w-[45%]">
                     <div className='flex justify-center gap-2 items-center'>
-                      <h2 className="text-lg text-gray-700 text-center"> Tiempo efectivo de clase: </h2>
+                      <h2 className="text-lg text-gray-700 text-center">Tiempo efectivo de clase:</h2>
                       {elapsedTime > 0 && timer === 0 && (
-                        <div className="text-lg font-bold text-gray-400 text-center ">
-                          {elapsedMinutes.toString().padStart(2, '0')}:
-                          {elapsedSeconds.toString().padStart(2, '0')}
+                        <div className="text-lg font-bold text-gray-400 text-center">
+                          {elapsedMinutes.toString().padStart(2, '0')}:{elapsedSeconds.toString().padStart(2, '0')}
                         </div>
                       )}
                     </div>
 
-
-
                     <div className="text-5xl font-bold text-gray-400 mb-2">
-                      {minutes.toString().padStart(2, '0')}:
-                      {seconds.toString().padStart(2, '0')}
+                      {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
                     </div>
                     <div className="flex items-center gap-4">
-                      <AiOutlinePlayCircle size={30} className='bg-green-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100' onClick={handleStart}
+                      <AiOutlinePlayCircle
+                        size={30}
+                        className='bg-green-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
+                        onClick={handleStart}
                       />
-                      <AiOutlinePauseCircle size={30} className='bg-blue-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100' onClick={handlePause}
-                        disabled={interval === null} />
-
+                      <AiOutlinePauseCircle
+                        size={30}
+                        className='bg-blue-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
+                        onClick={handlePause}
+                        disabled={interval === null}
+                      />
                       {
                         timer !== 0 ? (
-                          <BsStopCircle size={30} className='bg-red-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100' onClick={handleReset}
+                          <BsStopCircle
+                            size={30}
+                            className='bg-red-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-10
+                            active:scale-100'
+                            onClick={handleReset}
                           />
                         ) : null
                       }
                       {
                         timer >= 0 || interval !== null ? (
-                          <MdSettingsBackupRestore size={30} className='bg-blue-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100' onClick={handleResetTimer}
+                          <MdSettingsBackupRestore
+                            size={30}
+                            className='bg-blue-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
+                            onClick={handleResetTimer}
                           />
                         ) : null
                       }
-
                     </div>
-
-
                   </div>
-
                 </div>
               )}
               {currentStep === 3 && (
-                <div className="px-4 flex flex-wrap justify-evenly gap-4 md:justify-around md:gap-2 md:px-1 ">
-                  <div className=' h-[10rem] w-[25rem] p-2 hover:bg-gray-100  rounded-md cursor-pointer shadow-md md:w-[45%] '>
-                    <h2 className='underline text-gray-600 ' >Actividades:</h2>
+                <div className="px-4 flex flex-wrap justify-evenly gap-4 md:justify-around md:gap-2 md:px-1">
+                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                    <h2 className="underline text-gray-600">Actividades</h2>
                     <textarea
                       value={activities}
                       onChange={(e) => setActivities(e.target.value)}
-                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem] "
+                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem]"
                       disabled
-
                     />
                   </div>
 
-                  <div className='min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]'>
-                    <h2 className='underline text-gray-600'> Observaciones:</h2>
-                    {
-                      observationsList.length === 0 && (
-                        <h3 className='text-gray-500'>No hay observaciones</h3>
-                      )
-                    }
-
-                    <ul className="mt-2 flex flex-col gap-2 ">
-                      {observationsList.map((observation, index) => (
-                        <li key={index} className="flex items-center justify-between border-b text-gray-700">
-                          <span className="mr-2">{observation}</span>
-
-                        </li>
-                      ))}
-                    </ul>
+                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                    <h2 className="underline text-gray-600">Observaciones</h2>
+                    {observationsList.length === 0 ? (
+                      <h3 className="text-gray-500">No hay observaciones</h3>
+                    ) : (
+                      <ul className="mt-2 flex flex-col gap-2">
+                        {observationsList.map((observation, index) => (
+                          <li key={index} className="flex items-center justify-between border-b text-gray-700">
+                            <span className="mr-2">{observation}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
 
-                  <div className='min-h-[10rem] w-[25rem] p-3 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]'>
-                    {
-                      !image && (
-                        <h3 className='text-gray-500'>No hay imagen adjunta</h3>
-                      )
-                    }
-                    {image && (
-                      <div className='flex items-center justify-center'>
+                  <div className="min-h-[10rem] w-[25rem] p-3 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                    {!activityImage ? (
+                      <h3 className="text-gray-500">No hay imagen adjunta</h3>
+                    ) : (
+                      <div className="flex items-center justify-center">
                         <img
-                          src={URL.createObjectURL(image)}
+                          src={URL.createObjectURL(activityImage)}
                           alt="Foto de actividades"
-                          className="w-[13rem] md:h-fit  rounded-md"
-
+                          className="w-[13rem] md:h-fit rounded-md"
                         />
                       </div>
                     )}
                   </div>
 
-
-                  <div className=' flex flex-col items-center justify-center   w-[25rem] p-2 rounded-md shadow-md md:w-[45%]'>
-                    <BsClockHistory size={40} className='text-teal-700' />
+                  <div className="flex flex-col items-center justify-center w-[25rem] p-2 rounded-md shadow-md md:w-[45%]">
+                    <BsClockHistory size={40} className="text-teal-700" />
                     {
                       elapsedTime === 0 ? (
-                        <div className='flex justify-center gap-2 items-center'>
-
-                          <h2 className="text-lg text-gray-700 text-center"> No hay tiempo de clase </h2>
+                        <div className="flex justify-center gap-2 items-center">
+                          <h2 className="text-lg text-gray-700 text-center">No hay tiempo de clase</h2>
                         </div>
                       ) : (
-                        <div className='flex justify-center gap-2 items-center'>
-
-
-                          <h2 className="text-lg text-gray-700 text-center"> Tiempo efectivo de clase: </h2>
-                          {elapsedTime > 0 && timer === 0 && (
-                            <div className="text-lg font-bold text-gray-400 text-center ">
-                              {elapsedMinutes.toString().padStart(2, '0')}:
-                              {elapsedSeconds.toString().padStart(2, '0')}
+                        <div className="flex justify-center gap-2 items-center">
+                          <h2 className="text-lg text-gray-700 text-center">Tiempo efectivo de clase:</h2>
+                          {elapsedTime > 0 && timer === 0 ? (
+                            <div className="text-lg font-bold text-gray-400 text-center">
+                              {elapsedMinutes.toString().padStart(2, '0')}:{elapsedSeconds.toString().padStart(2, '0')}
                             </div>
-                          )}
+                          ) : null}
                         </div>
                       )
                     }
-
-
                   </div>
-
                 </div>
-
               )}
-
-
               {
                 currentActivity ? (
                   <div className="mt-4 flex justify-end">

@@ -43,12 +43,12 @@ export default function SchoolDetail() {
   return (
       <Sidebar>
         <ScrollToTopOnRender/>
-          <main className='bg-gray-200 min-h-screen min-w-screen' >
+          <main className='bg-gray-200 min-h-screen w-fit pl-2 py-2' >
               <Header />
               <GoBackToButton />
 
-              <div className=''>
-                  <div className='w-full m-auto p-4 border rounded-lg overflow-y-auto' >
+
+                  <div className='w-full border rounded-md overflow-y-auto' >
                       <div className='flex justify-between flex-wrap gap-2' >
                         <Schoolinfo infoSchool={infoSchool} />
                         <Teachers userTeachersData={userTeachersData}  />
@@ -56,7 +56,7 @@ export default function SchoolDetail() {
                         <Students userStudents={userStudents} />
                       </div>
                   </div>
-              </div>
+
           </main>
       </Sidebar>
   )

@@ -45,11 +45,11 @@ export default function InstitutionDetail() {
     return (
         <Sidebar>
           <ScrollToTopOnRender/>
-            <main className='bg-gray-200 min-h-screen min-w-screen' >
+            <main className='bg-gray-200 min-h-screen w-fit pl-2 py-2' >
                 <Header />
                 <GoBackToButton/>
 
-                    <div className='w-full m-auto p-4 border rounded-lg overflow-y-auto' >
+                    <div className='w-full border rounded-lg overflow-y-auto' >
                         <div className='flex justify-between flex-wrap gap-2' >
                             <InstitutionInfo usersData={usersData} usersAdmin={usersAdmin} />
                             <Schools userSchools={userSchools} />

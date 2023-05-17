@@ -53,7 +53,7 @@ export default function Header() {
 
 
   return (
-    <div className='flex justify-between px-5 pt-5 items-center ' >
+    <div className='flex justify-between px-5 pt-5  items-center ' >
         <h2 className='font-semibold' > VitalMove Panel</h2>
         <div className='flex gap-3 mx-3 items-center' >
         <h2> Hola, {adminPanel ? adminPanel.name : ""} </h2>

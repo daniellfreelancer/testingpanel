@@ -5,7 +5,7 @@ import {AiOutlineEye} from 'react-icons/ai'
 
 export default function Classroomlist({userClassroom}) {
     return (
-        <div className='lg:col-span-2 col-span-1 bg-white flex justify-between rounded-lg lg:w-[100%] md:w-full  border p-4'>
+        <div className='lg:col-span-2 col-span-1 bg-white flex justify-between rounded-lg w-full border p-4 '>
           <div className='flex flex-col w-full pb-2 gap-2'>
             <p className='text-2xl font-bold'>Grados:</p>
             {userClassroom.length > 0 ? (
@@ -14,7 +14,7 @@ export default function Classroomlist({userClassroom}) {
                   return (
                     <li
                       key={_id}
-                      className='p-2 m-3 bg-gray-50 hover:bg-gray-100 rounded-lg flex items-center cursor-pointer'
+                      className='p-2 bg-gray-50 hover:bg-gray-100 rounded-lg flex items-center cursor-pointer mb-2 '
                     >
                       <div className='bg-blue-100 rounded-lg p-3'>
                         <SiGoogleclassroom className='text-purple-800' />
@@ -36,3 +36,4 @@ export default function Classroomlist({userClassroom}) {
         </div>
     )
 }
+

@@ -9,7 +9,7 @@ function GoBackToButton() {
     navigate(-1);
   }
   return (
-    <div className='div-go-back px-3 inline-flex'>
+    <div className='div-go-back p-3 inline-flex'>
       <button onClick={handleGoBack} >
         <div className='flex bg-indigo-700 rounded hover:bg-indigo-600 transform duration-300 ease-in-out text-sm items-center px-4 py-1 text-white w-[6rem] text-center gap-2'>
           <BiArrowBack size={20} />
