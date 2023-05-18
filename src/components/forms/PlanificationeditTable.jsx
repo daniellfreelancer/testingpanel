@@ -382,6 +382,12 @@ export default function PlanificationeditTable({ idPlanner }) {
         setClassObjectives(classObjectives.filter(obj => obj.id !== item.id));
     }
 
+    
+    const handleDeleteIndicatorsEvaluation = (item) => {
+        setIndicatorsForEvaluateClass(indicatorsForEvaluateClass.filter(obj => obj.id !== item.id))
+        setSelectedIndicators(selectedIndicators.filter(obj => obj.id !== item.id))
+
+    }
 
 
 
@@ -575,10 +581,21 @@ export default function PlanificationeditTable({ idPlanner }) {
                             </div>
                         </td>
                         <td className="border text-center">
-                            <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[10rem] gap-2 ">
+                       
+
+{
+    selectedIndicators.map((item) => (
+        <div className='flex justify-between items-center p-2'>
+            <p className='text-justify'>{item.value.substring(0, 50)}{item.value.length > 50 ? "..." : ""}</p>
+            <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteIndicatorsEvaluation(item)}> <AiOutlineDelete size={12} /> </button>
+        </div>
+    ))
+}
+
+                            <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[11rem] gap-2 ">
                                 {
                                     filteredIndicators?.length > 0 ? (
-                                        <Modalindicators title={"Ver Indicadores"} >
+                                        <Modalindicators title={"Editar Indicadores"} >
                                             <div>
                                                 {
                                                     filteredIndicators.map((item, index) => {

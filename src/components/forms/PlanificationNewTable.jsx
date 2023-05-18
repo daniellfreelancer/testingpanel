@@ -383,6 +383,15 @@ export default function PlanificationNewTable() {
     const handleDeleteClassObjective = (item) => {
         setClassObjectives(classObjectives.filter(obj => obj.id !== item.id));
     }
+    const handleDeleteIndicatorsEvaluation = (item) => {
+        setIndicatorsForEvaluateClass(indicatorsForEvaluateClass.filter(obj => obj.id !== item.id))
+        setSelectedIndicators(selectedIndicators.filter(obj => obj.id !== item.id))
+
+    }
+    
+    const handleDeleteLearningObjectives = (item) => {
+        setLearningObjetives(learningObjetives.filter(obj => obj.id !== item.id));
+    }
 
 
 
@@ -544,6 +553,14 @@ export default function PlanificationNewTable() {
                             </div>
                         </td>
                         <td className="border text-center">
+                        {
+    selectedIndicators.map((item) => (
+        <div className='flex justify-between items-center p-2'>
+            <p className='text-justify'>{item.value.substring(0, 50)}{item.value.length > 50 ? "..." : ""}</p>
+            <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteIndicatorsEvaluation(item)}> <AiOutlineDelete size={12} /> </button>
+        </div>
+    ))
+}
                             <div className="flex flex-col items-center rounded-lg min-h-[8rem] w-[10rem] gap-2 ">
                                 {
                                     filteredIndicators?.length > 0 ? (
@@ -598,6 +615,16 @@ export default function PlanificationNewTable() {
                             </div>
                         </td>
                         <td className="px-2 border text-center">
+                        <h2>Objetivos de Aprendizaje</h2>
+
+{
+    learningObjetives.map((item) => (
+        <div className='flex justify-between items-center py-2'>
+            <p className='text-justify'>{item.id}: {item.value.substring(0, 85)}{item.value.length > 100 ? "..." : ""}</p>
+            <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteLearningObjectives(item)}> <AiOutlineDelete size={12} /> </button>
+        </div>
+    ))
+}
                             <div className="flex mt-2 flex-col items-center rounded-lg min-h-[8rem] w-[10rem]">
                                 <Select
                                     closeMenuOnSelect={true}
@@ -687,14 +714,14 @@ export default function PlanificationNewTable() {
                     </tr>
                 </tbody>
             </table>
-            <div className='flex bg-gray-50 hover:bg-gray-100 shadow-md border p-3 gap-2 justify-end'>
-                <button className="btn-cancelar" onClick={handleClear}>
-                    Borrar
-                </button>
-                <button className="btn-guardar" onClick={handleCreatePlaning}>
-                    Guardar
-                </button>
-            </div>
+            <div className='flex bg-gray-50 hover:bg-gray-100 shadow-md border p-3 gap-2 justify-end w-[100%]'>
+    <button className="btn-cancelar" onClick={handleClear}>
+        Borrar
+    </button>
+    <button className="btn-guardar" onClick={handleCreatePlaning}>
+        Guardar
+    </button>
+</div>
         </div>
     )
 }

@@ -891,14 +891,17 @@ export default function Vmclass() {
                           className="p-2 flex flex-col rounded-md shadow-md"
                         >
                           <div className="flex justify-between items-center gap-2 min-w-[10rem]">
-                            <h2 className="text-md font-medium min-w-[7rem] ">{`${student.lastName}, ${student.name}`}</h2>
+                          <div className='shadow-md rounded-full w-8 h-8'>
+          <img src={`https://whale-app-qsx89.ondigitalocean.app/public/${student.imgUrl}`} alt='img' className='w-full h-full object-cover rounded-full' />
+        </div>
+                            <h2 className=" font-medium min-w-[7rem] ">{`${student.lastName}, ${student.name}`}</h2>
                             {/* <p> {student.attendance ? 'Asistente' : student.attendance === false ? 'No asistente' : null} </p> */}
 
                             <div
                               className={`rounded-full flex items-center justify-center px-3 py-1 gap-2 shadow ${student.attendance ? 'bg-green-200' : student.attendance === false ? 'bg-red-200' : 'bg-white'
                                 }`}
                             >
-                              <p>Asistencia:</p>
+                              <p className='font-thin' >Asistencia:</p>
                               <AiOutlineCheckCircle
                                 size={20}
                                 className={`bg-green-500 rounded-full text-white cursor-pointer ${student.attendance && 'bg-opacity-50'
@@ -918,7 +921,7 @@ export default function Vmclass() {
                                 }`}
                             >
                               {/* <p> {student.toiletMaterials ? 'si' : student.toiletMaterials === false ? 'No' : null} </p> */}
-                              <p>Materiales de aseo:</p>
+                              <p className='font-thin'>Materiales de aseo:</p>
                               <AiOutlineCheckCircle
                                 size={20}
                                 className={`bg-green-500 rounded-full text-white cursor-pointer ${student.toiletMaterials && 'bg-opacity-50'
@@ -937,7 +940,7 @@ export default function Vmclass() {
                                 }`}
                             >
                               {/* <p> {student.attendanceJustification ? 'si' : student.attendanceJustification === false ? 'No' : null} </p> */}
-                              <p>Justificacion:</p>
+                              <p className='font-thin' >Justificacion:</p>
                               <AiOutlineCheckCircle
                                 size={20}
                                 className={`bg-green-500 rounded-full text-white cursor-pointer ${student.attendanceJustification && 'bg-opacity-50'

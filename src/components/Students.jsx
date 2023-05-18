@@ -27,7 +27,7 @@ export default function Students({ userStudents }) {
 
 function StudentItem({ item }) {
   
-  const { name, lastName, age, weight, size, rut, email, phone, gender, classroom } = item;
+  const { name, lastName, age, weight, size, rut, email, phone, imgUrl, classroom } = item;
   const fullName = `${lastName.charAt(0).toUpperCase() + lastName.slice(1)}, ${name.charAt(0).toUpperCase() + name.slice(1)}`;
   function formatRut(rut) {
     // Eliminar cualquier caracter que no sea un número ni la letra K
@@ -48,12 +48,8 @@ function StudentItem({ item }) {
   return (
     <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex items-center cursor-pointer gap-4 w-full justify-start'>
       <div className='flex items-center min-w-[10rem] gap-2'>
-        <div className='bg-purple-100 p-3 rounded-lg'>
-          {gender === 'male' ? (
-            <SlUser className='text-purple-800' />
-          ) : (
-            <SlUserFemale className='text-purple-800' />
-          )}
+        <div className='shadow-md rounded-full w-14 h-14'>
+          <img src={`https://whale-app-qsx89.ondigitalocean.app/public/${imgUrl}`} alt='img' className='w-full h-full object-cover rounded-full' />
         </div>
         <p className='text-gray-700'>{fullName}</p>
       </div>
