@@ -22,12 +22,15 @@ import {AiOutlineFileText, AiOutlineDelete} from 'react-icons/ai'
 import { useParams } from 'react-router';
 import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
+import { useCreatePlanificationMutation } from '../../features/plannerAPI';
 export default function PlanificationNewTable() {
     /**
      * HOOKS / PARAMS
      */
         const dispatch = useDispatch()
         const {id} = useParams()
+
+        const [newPlanification] = useCreatePlanificationMutation()
     
 
     /**
@@ -71,40 +74,26 @@ export default function PlanificationNewTable() {
       /**
        * CREAR PLANIFICACIÓN
        */
-    async function handleCreatePlaning(){
-            /**
-     * 
-     * @param {*} error 
-     */
-    function handleError(error) {
-        if (error.response) {
-          console.log('La solicitud no se pudo completar:', error.response.data.message);
-          alert(`La solicitud no se pudo completar: ${error.response.data.message}`);
-        } else if (error.request) {
-          console.log('No se recibió respuesta del servidor:', error.response.data.message);
-          alert('No se recibió respuesta del servidor. Por favor, inténtelo de nuevo más tarde.');
-        } else {
-          console.log('Ocurrió un error al procesar la solicitud:', error.response.data.message);
-          alert(`Ocurrió un error al procesar la solicitud: ${error.response.data.message}`);
-        }
-      }
-      let planificationData = {
-        classroom : id,
-        startDate: startDate ? startDate.toISOString() : "",
-        endDate: endDate ? endDate.toISOString() : null,
-        duration: duration ? duration : 0,
-        schoolBlock: schoolBlock ? schoolBlock : 0,
-        content: content,
-        classObjectives: classObjectives,
-        evaluationIndicators:indicatorsForEvaluateClass,
-        evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
-        learningObjectives: learningObjetives,
-        activities: activities,
-        materials: materials,
-        otherMaterials: otherMaterials,
-        evaluationType:evaluationType
+    async function handleCreatePlaning() {
 
-    }
+
+        let planificationData = {
+            classroom: id,
+            startDate: startDate ? startDate.toISOString() : "",
+            endDate: endDate ? endDate.toISOString() : null,
+            duration: duration ? duration : 0,
+            schoolBlock: schoolBlock ? schoolBlock : 0,
+            content: content,
+            classObjectives: classObjectives,
+            evaluationIndicators: indicatorsForEvaluateClass,
+            evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
+            learningObjectives: learningObjetives,
+            activities: activities,
+            materials: materials,
+            otherMaterials: otherMaterials,
+            evaluationType: evaluationType
+
+        }
 
 
 
@@ -115,45 +104,43 @@ export default function PlanificationNewTable() {
             confirmButtonText: 'Crear',
             denyButtonText: `No`,
             buttonsStyling: true,
-            showLoaderOnConfirm:true,
+            showLoaderOnConfirm: true,
             customClass: {
-              title: 'text-xs',
-              confirmButton: 'text-green-500',
-              denyButton: 'text-green-500',
+                title: 'text-xs',
+                confirmButton: 'text-green-500',
+                denyButton: 'text-green-500',
             },
         }).then((result) => {
             /* Read more about isConfirmed, isDenied below */
 
             if (result.isConfirmed) {
 
-                axios.post('https://whale-app-qsx89.ondigitalocean.app/planing/create', planificationData)
-                //axios.post('http://localhost:4000/planing/create', planificationData)
-                .then(response => {
-                  console.log('La solicitud POST se realizó con éxito:', response);
-                 
-                  
-                  if (response.data) {
-                    swal.fire({
-                        text: response.data.message,
-                        icon: "success",
-                      });
-                      handleClear()
-                  }
-        
-                  // Aquí puedes realizar cualquier otra acción que desees realizar después de una respuesta exitosa
-                })
-                .catch(handleError);
+                newPlanification(planificationData)
+                    .then((response) => {
+
+                        if (response.data) {
+                            swal.fire({
+                                text: response.data.message,
+                                icon: "success",
+                            });
+                            handleClear()
+                        }
+
+                    })
+                    .catch((error) => {
+                        console.log(error)
+                    })
 
             } else if (result.isDenied) {
                 Swal.fire('No se ha creado la planificación', '', 'info')
-                
+
                 dispatch(reload())
             }
         })
 
 
 
-        
+
     }
 
     /**

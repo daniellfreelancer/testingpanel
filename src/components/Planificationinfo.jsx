@@ -7,6 +7,7 @@ import Swal from 'sweetalert2';
 import { reload } from '../features/reloadSlice';
 import Modaleditplanification from './modal/Modaleditplanification';
 import Modalviewplaning from './modal/Modalviewplaning';
+import { useDeletePlanificationMutation } from '../features/plannerAPI';
 export default function PlanificationInfo({ userPlanner }) {
     const sortedPlanner = [...userPlanner].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
@@ -83,6 +84,8 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
     const dispatch = useDispatch();
     const { id } = useParams()
 
+    const [deleteSelectedPlanification] = useDeletePlanificationMutation()
+
     async function requestDeletePlanification(idPlanificationForDelete, idClassroomForDelete) {
        await axios.delete(`https://whale-app-qsx89.ondigitalocean.app/planing/delete-planification/${idPlanificationForDelete}/classroom/${idClassroomForDelete}`).then((response) => {
             if (response.data) {
@@ -95,8 +98,28 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
 
     }
 
+    async function requestDeletePlanificationByquery(planificationID, idClassroom ){
+      let planificationInfo = {
+        idPlanification: planificationID,
+        idClassroom: idClassroom
+      }
+      try {
+        let res = await deleteSelectedPlanification(planificationInfo)
+        if (res.data){
+          dispatch(reload())
+          Swal.fire(res.data.message, '', 'success')
+        }
 
-    async function handleDelete(planificationID) {
+      } catch (error) {
+        console.log(error)
+      }
+
+    }
+
+
+    async function handleDelete(planificationID, idClassroom) {
+
+
 
         Swal.fire({
             title: '¿Deseas eliminar la planificacion?',
@@ -108,7 +131,9 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
             /* Read more about isConfirmed, isDenied below */
 
             if (result.isConfirmed) {
-                requestDeletePlanification(planificationID, id)
+                // requestDeletePlanification(planificationID, id)
+                requestDeletePlanificationByquery(planificationID, idClassroom )
+
             } else if (result.isDenied) {
                 Swal.fire('No se ha eliminado la planificación', '', 'info')
                 dispatch(reload())
@@ -150,7 +175,7 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
                     
                    <Modalviewplaning idPlanner={idPlanner} />
                     <Modaleditplanification idPlanner={idPlanner}  />
-                    <AiOutlineDelete onClick={() => handleDelete(idPlanner)} size={20} className='text-gray-400 cursor-pointer hover:text-red-500' />
+                    <AiOutlineDelete onClick={() => handleDelete(idPlanner, id)} size={20} className='text-gray-400 cursor-pointer hover:text-red-500' />
                     
                 </div>
             </div>

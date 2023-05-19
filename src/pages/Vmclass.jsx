@@ -25,6 +25,9 @@ import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
 import { MdSettingsBackupRestore, MdPostAdd } from 'react-icons/md'
 import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BiBookmarkAlt } from 'react-icons/bi';
+import { useUpdatePlanificationMutation } from '../features/plannerAPI'
+import { useDispatch } from 'react-redux'
+import { reload } from '../features/reloadSlice'
 
 
 
@@ -38,6 +41,8 @@ const steps = [
 
 export default function Vmclass() {
   const { id } = useParams()
+
+  const dispatch = useDispatch()
 
   /**
    * DATA Y STATES
@@ -170,14 +175,24 @@ export default function Vmclass() {
   }, [id]);
 
   useEffect(() => {
+    // const today = new Date();
+    // const todayLocalDateString = today.toLocaleDateString();
+    // const current = planner.find(
+    //   (activity) => {
+    //     const startDate = new Date(activity.startDate);
+    //     return startDate.toLocaleDateString() === todayLocalDateString;
+    //   }
+    // );
+
     const today = new Date();
     const todayLocalDateString = today.toLocaleDateString();
-    const current = planner.find(
-      (activity) => {
-        const startDate = new Date(activity.startDate);
-        return startDate.toLocaleDateString() === todayLocalDateString;
-      }
-    );
+    const current = planner.find((activity) => {
+      const startDate = new Date(activity.startDate);
+      const endDate = new Date(activity.endDate);
+      const isTodayOrLater = startDate <= today && endDate >= today;
+      return startDate.toLocaleDateString() === todayLocalDateString || isTodayOrLater;
+    });
+
     setCurrentActivity(current || null);
   
     if (current) {
@@ -544,7 +559,6 @@ export default function Vmclass() {
   const elapsedSeconds = elapsedTime - elapsedMinutes * 60;
   const progress = Math.min((elapsedTime / (90 * 60)) * 100, 100);
   const progressRounded = Math.round(progress);
-  console.log(progressRounded)
 
 
   const [activityImage, setActivityImage] = useState(null);
@@ -609,6 +623,61 @@ export default function Vmclass() {
     setExtraActivitiesList(updatedList);
     };
 
+    const [updatePlanification] = useUpdatePlanificationMutation()
+
+        /**
+     * ACTUALIZAR PLANIFICACIÓN
+     */
+  async function handleEditPlaning() {
+
+    let planificationData = {
+      classroom : id,
+      startDate: startDate ? startDate.toISOString() : "",
+      endDate: endDate ? endDate.toISOString() : null,
+      duration: duration ? duration : 0,
+      schoolBlock: schoolBlock ? schoolBlock : 0,
+      content: content,
+      classObjectives: classObjectives,
+      evaluationIndicators: indicatorsForEvaluateClass,
+      evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
+      learningObjectives: learningObjetives,
+      activities: activities,
+      materials: materials,
+      otherMaterials: otherMaterials,
+      evaluationType: evaluationType
+
+    }
+
+    const dataForUpdate = {
+      idPlanner: currentActivity._id,
+      ...planificationData
+    }
+
+    try {
+
+      let response = await updatePlanification(dataForUpdate)
+      console.log(response)
+      
+    } catch (error) {
+      console.log(error)
+    }
+
+    
+  }
+
+  useEffect(() => {
+
+    if (currentStep  === 1) {
+      handleEditPlaning()
+    }
+
+  
+  }, [currentStep])
+  
+  
+
+  
+
 
 
 
@@ -619,8 +688,8 @@ export default function Vmclass() {
         <GoBackToButton />
 
         <Topcards students={userClassroom.students ? userClassroom.students.length : null} teacher={teacher} classroom={userClassroom} />
-        <div className=" min-h full mx-4 bg-white shadow-lg rounded-lg overflow-hidden">
-          <div className="">
+        <div className=" min-h full mx-4 bg-white shadow-lg rounded-md overflow-hidden">
+          <div className=" mb-10">
             
             <div className="mx-4 p-2">
               <div className="flex items-center">

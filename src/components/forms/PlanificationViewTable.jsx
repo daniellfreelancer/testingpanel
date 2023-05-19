@@ -10,6 +10,7 @@ import dataTerceroBasico from '../../data/terceroBasicoABC'
 import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
+import { usePlanifitacionByIdMutation } from '../../features/plannerAPI';
 
 
 export default function PlanificationViewTable({ idPlanner }) {
@@ -55,7 +56,7 @@ export default function PlanificationViewTable({ idPlanner }) {
     // eslint-disable-next-line
     const [selectedIndicators, setSelectedIndicators] = useState([]);
 
-
+    const [getPlanificationById] = usePlanifitacionByIdMutation()
 
 
 
@@ -65,7 +66,8 @@ export default function PlanificationViewTable({ idPlanner }) {
      */
     const fetchData = async () => {
         try {
-            const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
+           // const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
+            const response = await getPlanificationById(idPlanner)
             setUserClassroom(response.data.classroom)
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)

@@ -22,6 +22,7 @@ import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
 import { useParams } from 'react-router';
 import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
+import { useUpdatePlanificationMutation } from '../../features/plannerAPI';
 export default function PlanificationeditTable({ idPlanner }) {
     /**
      * HOOKS / PARAMS
@@ -47,6 +48,7 @@ export default function PlanificationeditTable({ idPlanner }) {
     const [otherMaterials, setOtherMaterials] = useState("")                                    //OTROS MATERIALES
     const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
     
+    const [updatePlanification] = useUpdatePlanificationMutation()
 
 
 
@@ -89,6 +91,11 @@ export default function PlanificationeditTable({ idPlanner }) {
             evaluationType:evaluationType
 
         }
+
+        const dataForUpdate = {
+            idPlanner,
+            ...planificationData
+        }
         Swal.fire({
             title: '¿Deseas actualizar?',
             showDenyButton: true,
@@ -106,21 +113,22 @@ export default function PlanificationeditTable({ idPlanner }) {
             /* Read more about isConfirmed, isDenied below */
 
             if (result.isConfirmed) {
-       axios.patch(`https://whale-app-qsx89.ondigitalocean.app/planing/update/${idPlanner}`, planificationData)
-      // axios.patch(`http://localhost:4000/planing/update/${idPlanner}`, planificationData)
-        .then(response => {
-          console.log('La solicitud PATCH se realizó con éxito:', response);
-          dispatch(reload())
 
-          if (response.data) {
-            swal.fire({
-                text: response.data.message,
-                icon: "success",
-              });
-          }
-          // Aquí puedes realizar cualquier otra acción que desees realizar después de una respuesta exitosa
-        })
-            .catch(handleError);
+                updatePlanification(dataForUpdate)
+                .then((response)=>{
+                    dispatch(reload())
+                    console.log(response)
+                    if(response.data){
+                        Swal.fire(
+                            'Actualizado!',
+                            'La planificación se actualizó con éxito.',
+                            'success'
+                            )
+                        }
+                        
+
+                })
+                .catch(handleError);
 
             } else if (result.isDenied) {
                 Swal.fire('No se ha creado la planificación', '', 'info')
