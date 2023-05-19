@@ -632,8 +632,6 @@ export default function Vmclass() {
 
     let planificationData = {
       classroom : id,
-      startDate: startDate ? startDate.toISOString() : "",
-      endDate: endDate ? endDate.toISOString() : null,
       duration: duration ? duration : 0,
       schoolBlock: schoolBlock ? schoolBlock : 0,
       content: content,
