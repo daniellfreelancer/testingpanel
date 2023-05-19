@@ -24,6 +24,7 @@ import segundoBasicoIndicadores from '../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
 import { MdSettingsBackupRestore, MdPostAdd } from 'react-icons/md'
 import { RiDeleteBin6Line } from 'react-icons/ri';
+import { BiBookmarkAlt } from 'react-icons/bi';
 
 
 
@@ -32,6 +33,7 @@ const steps = [
   { label: 'Asistencia', completed: false, img: BsPeopleFill },
   { label: 'Actividades', completed: false, img: BsCalendarCheckFill },
   { label: 'Resumen', completed: false, img: BsSendFill },
+  { label: 'Fin Clase', completed: false, img: BsSendFill },
 ];
 
 export default function Vmclass() {
@@ -70,6 +72,10 @@ export default function Vmclass() {
   const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
   const [addObservations, setAddObservations] = useState('');
   const [observationsList, setObservationsList] = useState([]);
+  const [addExtraActivities, setAddExtraActivities] = useState('')
+  const [extraActivitiesList, setExtraActivitiesList] = useState([])
+
+
 
   // eslint-disable-next-line
   const [startClassTime, setStartClassTime] = useState(null)
@@ -301,6 +307,29 @@ export default function Vmclass() {
     }
   ]
 
+  const evaluationCriteriaArray = [
+    {
+      id:"destacado",
+      label: "Destacado (4 puntos)",
+      value:4
+    },
+    {
+      id:"competente",
+      label: "Competente (3 puntos)",
+      value:3
+    },
+    {
+      id:"basico",
+      label: "Basico (2 puntos)",
+      value:2
+    },
+    {
+      id:"necesita_mejorar",
+      label: "Necesita mejorar (1 punto)",
+      value:1
+    }
+  ]
+
 
 
 
@@ -358,6 +387,36 @@ export default function Vmclass() {
     addFieldsToPresentStudents(students);
     console.log(presentStudents)
   }, [currentActivity]);
+
+  const [evaluationNotation, setEvaluationNotation] = useState([{
+    id:null,
+    value:null,
+    evaluationCriteria:null
+  }])
+
+  const addFieldsToEvaluationNotation = (indicatorsForClass) => {
+
+    const updatedEvaluationNotation = indicatorsForClass.map((indicator) => ({
+      ...indicator,
+      id: indicator.id || '',
+      value: indicator.value || '',
+      evaluationCriteria: indicator.evaluationCriteria || ''
+      }));
+
+      setEvaluationNotation(updatedEvaluationNotation);
+
+
+  }
+
+  useEffect(() => {
+
+    addFieldsToEvaluationNotation(indicatorsForEvaluateClass)
+
+  }, [indicatorsForEvaluateClass])
+  
+
+
+
 
 
 
@@ -537,6 +596,21 @@ export default function Vmclass() {
     setObservationsList(updatedList);
   };
 
+  const handleAddExtraActivities = () => {
+    if (addExtraActivities !== '') {
+      setExtraActivitiesList([...extraActivitiesList, addExtraActivities]);
+      setAddExtraActivities('');
+    }
+  };
+
+  const handleDeleteExtraActivities = (index) => {
+    const updatedList = [...extraActivitiesList];
+    updatedList.splice(index, 1);
+    setExtraActivitiesList(updatedList);
+    };
+
+
+
 
   return (
     <Sidebar>
@@ -547,6 +621,7 @@ export default function Vmclass() {
         <Topcards students={userClassroom.students ? userClassroom.students.length : null} teacher={teacher} classroom={userClassroom} />
         <div className=" min-h full mx-4 bg-white shadow-lg rounded-lg overflow-hidden">
           <div className="">
+            
             <div className="mx-4 p-2">
               <div className="flex items-center">
                 <div className="flex items-center text-white relative">
@@ -574,9 +649,16 @@ export default function Vmclass() {
                 <div className={`flex-auto border-t-2 transition duration-500 ease-in-out ${currentStep >= 3 ? 'border-teal-600' : 'border-gray-300'}`}></div>
                 <div className="flex items-center text-gray-500 relative">
                   <div className={`flex items-center cursor-pointer justify-center rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 ${currentStep === 3 ? 'border-teal-600 bg-teal-600 text-white shadow-lg' : 'border-gray-300'}`}>
-                    <BsSendFill size={24} onClick={() => setCurrentStep(3)} />
+                    <BiBookmarkAlt size={24} onClick={() => setCurrentStep(3)} />
                   </div>
-                  <div className="absolute top-0 -ml-10 text-center mt-12 w-32 text-xs   text-gray-500">resumen</div>
+                  <div className="absolute top-0 -ml-10 text-center mt-12 w-32 text-xs   text-gray-500">Resumen</div>
+                </div>
+                <div className={`flex-auto border-t-2 transition duration-500 ease-in-out ${currentStep >= 4 ? 'border-teal-600' : 'border-gray-300'}`}></div>
+                <div className="flex items-center text-gray-500 relative">
+                  <div className={`flex items-center cursor-pointer justify-center rounded-full transition duration-500 ease-in-out h-12 w-12 py-3 border-2 ${currentStep === 4 ? 'border-teal-600 bg-teal-600 text-white shadow-lg' : 'border-gray-300'}`}>
+                    <BsSendFill size={24} onClick={() => setCurrentStep(4)} />
+                  </div>
+                  <div className="absolute top-0 -ml-10 text-center mt-12 w-32 text-xs   text-gray-500">Fin</div>
                 </div>
               </div>
             </div>
@@ -973,9 +1055,39 @@ export default function Vmclass() {
                     <textarea
                       value={activities}
                       onChange={(e) => setActivities(e.target.value)}
-                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem]"
-
+                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-fit"
+                      disabled
                     />
+
+                    <h2 className="underline text-gray-600 mt-1">Agregar Actividades Extra</h2>
+                    <div className="flex items-center border border-gray-300 rounded px-1 mt-1">
+                      <input
+                        placeholder='ingresar actividad'
+                        type="text"
+                        value={addExtraActivities}
+                        onChange={(e) => setAddExtraActivities(e.target.value)}
+                        className="w-full p-1 mt-1  outline-none focus:bg-gray-100"
+                      />
+                      <MdPostAdd
+                        onClick={handleAddExtraActivities}
+                        size={30}
+                        className="text-white cursor-pointer bg-teal-500 rounded-md m-1"
+                        aria-label='Agregar' title='Agregar'
+                      />
+                    </div>
+                    <ul className="mt-2 flex flex-col gap-2">
+                      {extraActivitiesList.map((activityExtra, index) => (
+                        <li key={index} className="flex items-center justify-between border-b text-gray-700">
+                          <span className="mr-2">{activityExtra}</span>
+                          <RiDeleteBin6Line
+                            className="text-red-500 cursor-pointer" size={15}
+                            onClick={() => handleDeleteExtraActivities(index)}
+                          />
+                        </li>
+                      ))}
+                    </ul>
+
+
                   </div>
 
                   <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
@@ -1083,9 +1195,23 @@ export default function Vmclass() {
                     <textarea
                       value={activities}
                       onChange={(e) => setActivities(e.target.value)}
-                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7.5rem]"
+                      className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-fit"
                       disabled
                     />
+
+<h2 className="underline text-gray-600">Actividades Extra</h2>
+                    {extraActivitiesList.length === 0 ? (
+                      <h3 className="text-gray-500">No hay actividades extra</h3>
+                    ) : (
+                      <ul className="mt-2 flex flex-col gap-2">
+                        {extraActivitiesList.map((activityExtra, index) => (
+                          <li key={index} className="flex items-center justify-between border-b text-gray-700">
+                            <span className="mr-2">{activityExtra}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
+
                   </div>
 
                   <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
@@ -1117,7 +1243,7 @@ export default function Vmclass() {
                     )}
                   </div>
 
-                  <div className="flex flex-col items-center justify-center w-[25rem] p-2 rounded-md shadow-md md:w-[45%]">
+                  <div className="flex flex-col items-center hover:bg-gray-100 cursor-pointer justify-center w-[25rem] p-2 rounded-md shadow-md md:w-[45%]">
                     <BsClockHistory size={40} className="text-teal-700" />
                     {
                       elapsedTime === 0 ? (
@@ -1136,6 +1262,147 @@ export default function Vmclass() {
                       )
                     }
                   </div>
+                </div>
+              )}
+                            {currentStep === 4 && (
+                <div className="px-4 flex flex-wrap justify-between md:justify-around md:gap-2 md:px-1">
+
+                  <div className=' flex flex-col p-4 gap-4 w-[48%]'>
+
+                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+
+                      <h2 className='underline pb-1'>Horario:</h2>
+                      <p className=''> 11 : 00 am a 1:00 pm  </p>
+                    </div>
+
+
+                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+                      <h2 className='underline pb-1'>Asistencia:</h2>
+                      <p className=''>Alumnos asistentes: {studentsOnClass} </p>
+                      <p className=''>Alumnos ausentes: {studentsOutClass} </p>
+                    </div>
+
+
+                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+                      <h2 className='underline pb-1'>Objetivos de Aprendizaje Basales y Complementarios:</h2>
+                      {
+                        classObjectives.map((item) => (
+                          <div className='flex justify-between items-center py-2'>
+                            <p className='text-justify'>{item.label}: {item.value.substring(0, 120)}{item.value.length > 100 ? "..." : ""}</p>
+
+                          </div>
+                        ))
+                      }
+                    </div>
+
+                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+                      <h2 className='underline pb-1'>Objetivos de la clase:</h2>
+                      {content}
+                    </div>
+
+                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+                      <h2 className='underline pb-1'>Materiales:</h2>
+                      {
+                        materials.map((item) => (
+                          <div key={item.id} className=''>
+                            <p className='text-justify'>{item.value}</p>
+
+                          </div>
+                        ))
+                      }
+                      {otherMaterials}
+                    </div>
+
+
+                    <div>
+                      {
+                        elapsedTime === 0 ? (
+
+                          <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+                            <h2 className='underline pb-1'>No hay tiempo de clase:</h2>
+                          </div>
+                        ) : (
+                          <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+                            <h2 className='underline pb-1'>Tiempo efectivo de clase:</h2>
+                            {elapsedMinutes.toString().padStart(2, '0')}:{elapsedSeconds.toString().padStart(2, '0')} Minutos
+                          </div>
+                        )
+                      }
+
+                    </div>
+
+                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+                      <h2 className='underline pb-1'>Tipo de evaluación:</h2>
+                      {evaluationType}
+                    </div>
+
+                  </div>
+
+                  <div className=' flex flex-col p-4 gap-4  w-[50%]'>
+
+                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+
+                      <h2 className='underline pb-1'>Actividades:</h2>
+                      {activities}
+                    </div>
+
+                    {
+                      extraActivitiesList.length > 0 ? (
+
+                        <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+
+                          <h2 className='underline pb-1'>Actividades Extra:</h2>
+                          <ul className="mt-2 flex flex-col gap-2">
+                            {extraActivitiesList.map((activityExtra, index) => (
+                              <li key={index} className="flex items-center justify-between border-b text-gray-700">
+                                <span className="mr-2">{activityExtra}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      ) : null
+                    }
+
+                    {
+                      evaluationNotation.map((item) => (
+
+                        <div key={item.id} className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+
+                          <h2 className='underline pb-1'>Indicador de evaluacion: {item.id} </h2>
+                         <p className='pb-1'>{item.value}</p>
+                          
+                         <Select
+                                closeMenuOnSelect={true}
+                                components={animatedComponents}
+                                options={evaluationCriteriaArray}
+                                className='w-full font-thin'
+                                styles={customStyles}
+                                formatOptionLabel={formatOptionLabel}
+                                placeholder='selecciona un criterio de evaluación'
+
+                                value={evaluationCriteriaArray.find((option) => option.value === item.evaluationCriteria)}
+                                onChange={(selectedOption) => {
+                                  const selectedCriteria = selectedOption ? selectedOption.value : null;
+                                  const updatedNotation = evaluationNotation.map((notationItem) =>
+                                    notationItem.id === item.id ? { ...notationItem, evaluationCriteria: selectedCriteria } : notationItem
+                                  );
+                                  setEvaluationNotation(updatedNotation);
+                                }}
+                                backspaceRemovesValue={true}
+                              />
+
+                         
+
+                          
+                        </div>
+                      ))
+                    }
+
+
+
+
+                  </div>
+
                 </div>
               )}
               {
