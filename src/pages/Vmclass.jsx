@@ -157,22 +157,23 @@ export default function Vmclass() {
         console.log("El valor no se encontró");
     }
   }
+  const fetchData = async () => {
+    try {
+      const { data } = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/classroom/find/${id}`);
+
+
+      console.log(data.response)
+      setStudents(data.response.students)
+      setuserClassroom(data.response)       // TENGO LA DATA DEL GRADO Y NIVEL 
+      setTeacher(data.response.teacher[0])  // PROFESOR DEL SALON DE CLASE
+      setPlanner(data.response.planner)     // PLANIFICACIONES
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const { data } = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/classroom/find/${id}`);
 
-
-        console.log(data.response)
-        setStudents(data.response.students)
-        setuserClassroom(data.response)       // TENGO LA DATA DEL GRADO Y NIVEL 
-        setTeacher(data.response.teacher[0])  // PROFESOR DEL SALON DE CLASE
-        setPlanner(data.response.planner)     // PLANIFICACIONES
-      } catch (error) {
-        console.log(error);
-      }
-    };
     fetchData();
   }, [id]);
 
@@ -218,7 +219,9 @@ export default function Vmclass() {
   }, [planner]);
   
   useEffect(() => {
+
     handleUserData();
+    addFieldsToPresentStudents(students);
   }, [userClassroom])
   
   
@@ -772,8 +775,9 @@ export default function Vmclass() {
 
     if (currentStep  === 1) {
       handleEditPlaning()
-    }
 
+    }
+    
   
   }, [currentStep])
   
