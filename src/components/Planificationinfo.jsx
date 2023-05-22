@@ -171,7 +171,7 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
                 <p className='text-gray-700 pl-4 w-[20%]'>Duración: {duration !== 0 ? `${duration} minutos `  : `${schoolBlock} ${schoolBlock !== 1 ? 'bloques' : 'bloque' }  `}</p>
                 <p className='text-gray-700 pl-4 w-[30%]'>Contenido: {content}</p>
                 <p className='text-gray-700 pl-4 w-[20%]'>Evaluación: {evaluationType}</p>
-                <div className='flex justify-center w-[10%] gap-1'>
+                <div className='flex justify-center w-[12%] gap-1'>
                     
                    <Modalviewplaning idPlanner={idPlanner} />
                     <Modaleditplanification idPlanner={idPlanner}  />

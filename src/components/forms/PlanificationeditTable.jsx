@@ -23,6 +23,8 @@ import { useParams } from 'react-router';
 import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
 import { useUpdatePlanificationMutation } from '../../features/plannerAPI';
+import { v4 as uuidv4 } from 'uuid';
+import { MdSettingsBackupRestore, MdPostAdd } from 'react-icons/md'
 export default function PlanificationeditTable({ idPlanner }) {
     /**
      * HOOKS / PARAMS
@@ -41,12 +43,13 @@ export default function PlanificationeditTable({ idPlanner }) {
     const [content, setContent] = useState()                                                    //CONTENIDO
     const [classObjectives, setClassObjectives] = useState([])                                  //OBJ BASALES Y COMPLEMENTARIOS
     const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])            //INDICADORES DEPENDIENTES DE OBJ BASALES/COMPLEMENTARIOS
-    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState("")//INDICADORES CARGA MANUAL POR EL PROFESOR
+    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState([])//INDICADORES CARGA MANUAL POR EL PROFESOR
     const [learningObjetives, setLearningObjetives] = useState([])                              //OBJ TRANSVERSALES Y ACTITUDES
     const [activities, setActivities] = useState([])                                            //ACTIVIDADES
     const [materials, setMaterials] = useState([])                                              //MATERIALES
     const [otherMaterials, setOtherMaterials] = useState("")                                    //OTROS MATERIALES
-    const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
+    const [evaluationType, setEvaluationType] = useState([])        
+    const [addExtraIndicator, setAddExtraIndicator] = useState([])                            //TIPO DE EVALUACION
     
     const [updatePlanification] = useUpdatePlanificationMutation()
 
@@ -429,6 +432,26 @@ export default function PlanificationeditTable({ idPlanner }) {
     const filteredIndicatorsArray = filteredIndicators.filter(indicator => 
         indicatorsForEvaluateClass.includes(indicator.indicators[0])
     );
+
+    
+    const addIndicatorsForEvaluateClassManual = () => {
+        if (addExtraIndicator.trim() !== '') {
+          const newIndicator = {
+            id: uuidv4(),
+            value: addExtraIndicator
+          };
+          setIndicatorsForEvaluateClassManual(prevState => [...prevState, newIndicator]);
+          setAddExtraIndicator('');
+        }
+      };
+      
+      const handleDeleteIndicatorsForEvaluateClassManual = (index) => {
+        setIndicatorsForEvaluateClassManual(prevState => {
+          const newState = [...prevState];
+          newState.splice(index, 1);
+          return newState;
+        });
+      };
     
 
     /**
@@ -664,12 +687,33 @@ export default function PlanificationeditTable({ idPlanner }) {
                                         null
                                     )
                                 }
-                                <div className='rounded-lg' >
-                                    <p>Ingresar indicadores</p>
-                                    <textarea
-                                        value={indicatorsForEvaluateClassManual}
-                                        onChange={(e) => setIndicatorsForEvaluateClassManual(e.target.value)}
-                                        className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[6rem] " />
+                                <div className='' >
+                                <h2 className=''>Ingresar indicadores de evaluación:</h2>
+                                <div className="flex items-center border border-gray-300 rounded px-1 mt-1">
+                                  <input
+                                    placeholder='ingresar indicador de evaluación'
+                                    type="text"
+                                    value={addExtraIndicator}
+                                    onChange={(e) => setAddExtraIndicator(e.target.value)}
+                                    className="w-full p-1 mt-1 outline-none focus:bg-gray-100"
+                                  />
+                                  <MdPostAdd
+                                    onClick={addIndicatorsForEvaluateClassManual}
+                                    size={30}
+                                    className="text-white cursor-pointer bg-teal-500 rounded-md m-1"
+                                    aria-label='Agregar'
+                                    title='Agregar'
+                                  />
+                                </div>
+                                <ul className="mt-2 flex flex-col gap-2">
+                                  {indicatorsForEvaluateClassManual?.map((indicator, index) => (
+                                    <li key={indicator.id} className="flex items-center justify-between border-b text-gray-700">
+                                      <span className="mr-2">{indicator.value}</span>
+                                      <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteIndicatorsForEvaluateClassManual(index)}> <AiOutlineDelete size={12} /> </button>
+
+                                    </li>
+                                  ))}
+                                </ul>
                                 </div>
                             </div>
                         </td>

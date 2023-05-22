@@ -28,6 +28,7 @@ import { BiBookmarkAlt } from 'react-icons/bi';
 import { useUpdatePlanificationMutation } from '../features/plannerAPI'
 import { useDispatch } from 'react-redux'
 import { reload } from '../features/reloadSlice'
+import { v4 as uuidv4 } from 'uuid';
 
 
 
@@ -69,7 +70,8 @@ export default function Vmclass() {
   const [content, setContent] = useState()                                                    //CONTENIDO
   const [classObjectives, setClassObjectives] = useState([])                                  //OBJ BASALES Y COMPLEMENTARIOS
   const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])            //INDICADORES DEPENDIENTES DE OBJ BASALES/COMPLEMENTARIOS
-  const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState("")//INDICADORES CARGA MANUAL POR EL PROFESOR
+  const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState([])//INDICADORES CARGA MANUAL POR EL PROFESOR
+ 
   const [learningObjetives, setLearningObjetives] = useState([])                              //OBJ TRANSVERSALES Y ACTITUDES
   const [activities, setActivities] = useState([])                                            //ACTIVIDADES
   const [materials, setMaterials] = useState([])                                              //MATERIALES
@@ -80,7 +82,7 @@ export default function Vmclass() {
   const [addExtraActivities, setAddExtraActivities] = useState('')
   const [extraActivitiesList, setExtraActivitiesList] = useState([])
 
-
+  const [addExtraIndicator, setAddExtraIndicator] = useState([])
 
   // eslint-disable-next-line
   const [startClassTime, setStartClassTime] = useState(null)
@@ -214,6 +216,11 @@ export default function Vmclass() {
     console.log(current);
     // eslint-disable-next-line
   }, [planner]);
+  
+  useEffect(() => {
+    handleUserData();
+  }, [userClassroom])
+  
   
 
 
@@ -409,9 +416,32 @@ export default function Vmclass() {
     evaluationCriteria:null
   }])
 
-  const addFieldsToEvaluationNotation = (indicatorsForClass) => {
+  const addIndicatorsForEvaluateClassManual = () => {
+    if (addExtraIndicator.trim() !== '') {
+      const newIndicator = {
+        id: uuidv4(),
+        value: addExtraIndicator
+      };
+      setIndicatorsForEvaluateClassManual(prevState => [...prevState, newIndicator]);
+      setAddExtraIndicator('');
+    }
+  };
+  
+  const handleDeleteIndicatorsForEvaluateClassManual = (index) => {
+    setIndicatorsForEvaluateClassManual(prevState => {
+      const newState = [...prevState];
+      newState.splice(index, 1);
+      return newState;
+    });
+  };
+  
 
-    const updatedEvaluationNotation = indicatorsForClass.map((indicator) => ({
+
+  const addFieldsToEvaluationNotation = (indicatorsForClass, indicatorsForClassManual ) => {
+
+    let indicatorsForEvaluation = [...indicatorsForClass, ...indicatorsForClassManual ]
+
+    const updatedEvaluationNotation = indicatorsForEvaluation.map((indicator) => ({
       ...indicator,
       id: indicator.id || '',
       value: indicator.value || '',
@@ -425,9 +455,9 @@ export default function Vmclass() {
 
   useEffect(() => {
 
-    addFieldsToEvaluationNotation(indicatorsForEvaluateClass)
+    addFieldsToEvaluationNotation(indicatorsForEvaluateClass, indicatorsForEvaluateClassManual )
 
-  }, [indicatorsForEvaluateClass])
+  }, [indicatorsForEvaluateClass, indicatorsForEvaluateClassManual])
   
 
 
@@ -561,18 +591,24 @@ export default function Vmclass() {
   const progressRounded = Math.round(progress);
 
 
-  const [activityImage, setActivityImage] = useState(null);
+  const [activityImageFirst, setActivityImageFirst] = useState(null);
+  const [activityImageSecond, setActivityImageSecond] = useState(null);
+  const [activityImageThird, setActivityImageThird] = useState(null);
   const [activityImageError, setActivityImageError] = useState(null);
   const [isUploading, setIsUploading] = useState(false);
+  const [isUploadingSecond, setIsUploadingSecond] = useState(false);
+  const [isUploadingThird, setIsUploadingThird] = useState(false);
   const [progressIMG, setProgressIMG] = useState(0);
+  const [progressIMGSecond, setProgressIMGSecond] = useState(0);
+  const [progressIMGThird, setProgressIMGThird] = useState(0);
 
-  const handleImageChange = (event) => {
+  const handleImageChangeFirst = (event) => {
     const selectedImage = event.target.files[0];
     if (!selectedImage) {
       alert("Debe seleccionar una imagen");
       return;
     }
-    setActivityImage(selectedImage);
+    setActivityImageFirst(selectedImage);
     setIsUploading(true);
     setProgressIMG(0);
 
@@ -589,13 +625,82 @@ export default function Vmclass() {
     }, 1000);
   };
 
+  const handleImageChangeSecond = (event) => {
+    const selectedImage = event.target.files[0];
+    if (!selectedImage) {
+      alert("Debe seleccionar una imagen");
+      return;
+    }
+    setActivityImageSecond(selectedImage);
+    setIsUploadingSecond(true);
+    setProgressIMGSecond(0);
+
+    // Simulate upload progress
+    const timer = setInterval(() => {
+      setProgressIMGSecond((prevProgress) => prevProgress + 10);
+    }, 100);
+
+    // Simulate upload completion
+    setTimeout(() => {
+      setIsUploadingSecond(false);
+      clearInterval(timer);
+      setProgressIMGSecond(100);
+    }, 1000);
+  };
+
+  const handleImageChangeThird = (event) => {
+    const selectedImage = event.target.files[0];
+    if (!selectedImage) {
+      alert("Debe seleccionar una imagen");
+      return;
+    }
+    setActivityImageThird(selectedImage);
+    setIsUploadingThird(true);
+    setProgressIMGThird(0);
+    // Simulate upload progress
+    const timer = setInterval(() => {
+      setProgressIMGThird((prevProgress) => prevProgress + 10);
+      }, 100);
+      // Simulate upload completion
+      setTimeout(() => {
+        setIsUploadingThird(false);
+        clearInterval(timer);
+        setProgressIMGThird(100);
+      }, 1000);
+  }
+
+
+
+
+
   useEffect(() => {
-    if (activityImage && activityImage.size > 5000000) {
+    if (activityImageFirst && activityImageFirst.size > 5000000) {
       setActivityImageError("La imagen no debe exceder 5MB");
     } else {
       setActivityImageError(null);
     }
-  }, [activityImage]);
+
+  }, [activityImageFirst]);
+
+  useEffect(() => {
+    if (activityImageSecond && activityImageSecond.size > 5000000) {
+      setActivityImageError("La imagen no debe exceder 5MB");
+    } else {
+      setActivityImageError(null);
+
+    }
+
+  }, [activityImageSecond]);
+
+  useEffect(() => {
+    if (activityImageThird && activityImageThird.size > 5000000) {
+      setActivityImageError("La imagen no debe exceder 5MB");
+    } else {
+      setActivityImageError(null);
+    }
+  }, [activityImageThird]);
+
+
 
   const handleAddObservation = () => {
     if (addObservations !== '') {
@@ -735,16 +840,16 @@ export default function Vmclass() {
                 <div className="">
                   <div >
                     {currentActivity ? (
-                      <div className='flex flex-wrap justify-between gap-1' >
+                      <div className='flex flex-wrap justify-between' >
                         <div className='w-[45%]'>
-                          <div className='text-gray-700 min-h-[5rem] p-2 hover:bg-gray-100  rounded-lg cursor-pointer '>
+                          <div className='text-gray-700 min-h-[5rem] hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '>
                             <h2 className='underline '>Objetivos de la clase:</h2>
                             <textarea
                               value={content}
                               onChange={(e) => setContent(e.target.value)}
                               className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
                           </div>
-                          <div className='text-gray-700 min-h-[5rem] p-2 hover:bg-gray-100  rounded-lg cursor-pointer '>
+                          <div className='text-gray-700 min-h-[5rem]  hover:bg-gray-100 cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-lg '>
                             <h2 className='underline '>Objetivos de aprendizaje Basales/Complementarios:</h2>
 
                             {
@@ -774,7 +879,7 @@ export default function Vmclass() {
                               />
                             </div>
                           </div>
-                          <div className='text-gray-700 min-h-[5rem] p-2 hover:bg-gray-100  rounded-lg cursor-pointer ' >
+                          <div className='text-gray-700 min-h-[5rem] hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md ' >
 
                             <div className='rounded-lg' >
 
@@ -828,14 +933,42 @@ export default function Vmclass() {
                                   </ul>
                                 ))
                               }
-                              <h2 className='underline '>Ingresar indicadores de evaluación:</h2>
-                              <textarea
-                                value={indicatorsForEvaluateClassManual}
-                                onChange={(e) => setIndicatorsForEvaluateClassManual(e.target.value)}
-                                className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
+                             
                             </div>
                           </div>
-                          <div className='text-gray-700  p-2 hover:bg-gray-100  rounded-lg cursor-pointer '  >
+
+                          <div className='border-l-4 border-teal-500 mb-2 p-2 rounded'>
+                                <h2 className='underline'>Ingresar indicadores de evaluación:</h2>
+                                <div className="flex items-center border border-gray-300 rounded px-1 mt-1">
+                                  <input
+                                    placeholder='ingresar indicador de evaluación'
+                                    type="text"
+                                    value={addExtraIndicator}
+                                    onChange={(e) => setAddExtraIndicator(e.target.value)}
+                                    className="w-full p-1 mt-1 outline-none focus:bg-gray-100"
+                                  />
+                                  <MdPostAdd
+                                    onClick={addIndicatorsForEvaluateClassManual}
+                                    size={30}
+                                    className="text-white cursor-pointer bg-teal-500 rounded-md m-1"
+                                    aria-label='Agregar'
+                                    title='Agregar'
+                                  />
+                                </div>
+                                <ul className="mt-2 flex flex-col gap-2">
+                                  {indicatorsForEvaluateClassManual.map((indicator, index) => (
+                                    <li key={indicator.id} className="flex items-center justify-between border-b text-gray-700">
+                                      <span className="mr-2">{indicator.value}</span>
+                                      <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteIndicatorsForEvaluateClassManual(index)}> <AiOutlineDelete size={12} /> </button>
+
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+
+
+
+                          <div className='text-gray-700  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md  '  >
 
                             {
                               normalTime === "normalTime" ? (
@@ -874,7 +1007,7 @@ export default function Vmclass() {
                         <div className=' border '> </div>
 
                         <div className='w-[40%] h-full text-gray-700 divide-y divide-gray-100'>
-                          <div className='text-gray-700 min-h-[5rem]  p-2 hover:bg-gray-100  rounded-lg cursor-pointer '>
+                          <div className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md  '>
                             <h2 className='underline' >Objetivos Transversales/Actitudes</h2>
                             {
                               learningObjetives.map((item) => (
@@ -902,9 +1035,10 @@ export default function Vmclass() {
                             />
                           </div>
 
-                          <div className='text-gray-700 min-h-[5rem] p-2 hover:bg-gray-100  rounded-lg cursor-pointer'>
+                          <div className=''>
+                            <div className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '>
                             <h2 className='underline'>Materiales:</h2>
-                            <div className='flex flex-wrap ' >
+                            <div className='' >
                               {
                                 materials.map((item) => (
                                   <div key={item.id} className='flex justify-between items-center p-2 border-r'>
@@ -913,10 +1047,7 @@ export default function Vmclass() {
                                   </div>
                                 ))
                               }
-                            </div>
-                            <div className="pt-1 flex flex-col flex-initial rounded-lg  gap-2 ">
-
-                              <Select
+                                                            <Select
                                 closeMenuOnSelect={true}
                                 components={animatedComponents}
                                 isMulti
@@ -936,6 +1067,13 @@ export default function Vmclass() {
                                 value={materials}
                                 backspaceRemovesValue={true}
                               />
+                            </div>
+                              </div>
+
+
+                            <div className="flex flex-col flex-initial  gap-2 text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md  ">
+
+
                               <div className="flex flex-col rounded-lg w-full">
                                 <h3 className='text-left underline' >Otros materiales:</h3>
                                 <textarea
@@ -945,7 +1083,9 @@ export default function Vmclass() {
                               </div>
                             </div>
                           </div>
-                          <div className='text-gray-700 min-h-[5rem] p-2 hover:bg-gray-100  rounded-lg cursor-pointer '>
+
+                          <div >
+                          <div  className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '  >
                             <h2 className='underline ' >Actividades:</h2>
                             <textarea
                               value={activities}
@@ -953,9 +1093,11 @@ export default function Vmclass() {
                               className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50  "
                             />
                           </div>
+                            </div>
 
-
-                          <div className='text-gray-700 min-h-[5rem]  p-2 hover:bg-gray-100  rounded-lg cursor-pointer' >
+                          <div>
+                                                      
+                          <div className='text-gray-700 min-h-[5rem]  p-2 hover:bg-gray-100  rounded border-l-4 border-teal-500 shadow-md cursor-pointer' >
                             <h2 className='underline'>Tipo de evaluación</h2>
                             <Select
                               closeMenuOnSelect={true}
@@ -984,10 +1126,12 @@ export default function Vmclass() {
                             }
                           </div>
 
+                            </div>
+
                         </div>
                         <div className=' border '> </div>
 
-                        <div className='p-2 text-gray-700 w-fit ' >
+                        <div className='p-2 text-gray-700 w-fit hover:bg-gray-100  rounded border-l-4 border-teal-500 shadow-md cursor-pointer ' >
                           <h3 className='w-max' >Relojes disponibles:</h3>
                           <ul className='py-2 flex flex-col md:flex-row md:flex-wrap gap-2 w-fit' >
                             <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-001' > <BsSmartwatch /> <p className='px-1'>RV-001</p> </li>
@@ -1008,8 +1152,318 @@ export default function Vmclass() {
                       </div>
 
                     ) : (
-                      <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded" role="alert">
-                        <p>No hay actividad programada para hoy</p>
+                      <div >
+                        <p className="bg-green-100 border border-green-400 text-green-700 px-4 py-2 text-center  mb-2 rounded" role="alert">Planificación para clase</p>
+                        <div className='flex flex-wrap justify-between' >
+                        <div className='w-[48%]'>
+                          <div className='text-gray-700 min-h-[5rem] hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '>
+                            <h2 className='underline '>Objetivos de la clase:</h2>
+                            <textarea
+                              value={content}
+                              onChange={(e) => setContent(e.target.value)}
+                              className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
+                          </div>
+                          <div className='text-gray-700 min-h-[5rem]  hover:bg-gray-100 cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-lg '>
+                            <h2 className='underline '>Objetivos de aprendizaje Basales/Complementarios:</h2>
+
+                            {
+                              classObjectives.map((item) => (
+                                <div className='flex justify-between items-center py-2'>
+                                  <p className='text-justify'>{item.label}: {item.value.substring(0, 85)}{item.value.length > 100 ? "..." : ""}</p>
+                                  <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteClassObjective(item)}> <AiOutlineDelete size={12} /> </button>
+                                </div>
+                              ))
+                            }
+                            <div className="flex mt-1 flex-col items-center rounded-lg w-full">
+                              <Select
+                                closeMenuOnSelect={true}
+                                components={animatedComponents}
+                                isMulti
+                                options={objBasalesComplementarios.filter(obj => !classObjectivesIds.includes(obj.id)).map(obj => ({ ...obj, isDisabled: false }))}
+                                className='w-full font-thin'
+                                styles={customStyles}
+                                formatOptionLabel={formatOptionLabel}
+                                placeholder='agrega un objetivo'
+                                onChange={(selected) => {
+                                  const selectedValues = selected.map(option => ({ id: option.id, label: option.label, value: option.value }));
+                                  setClassObjectives([...selectedValues]);
+                                }}
+                                value={classObjectives}
+                                backspaceRemovesValue={true}
+                              />
+                            </div>
+                          </div>
+                          <div className='text-gray-700 min-h-[5rem] hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md ' >
+
+                            <div className='rounded-lg' >
+
+                              {
+                                filteredIndicators?.length > 0 ? (
+                                  <Modalindicators title={"Ver Indicadores"} >
+                                    <div>
+                                      {
+                                        filteredIndicators.map((item, index) => {
+                                          return (
+                                            <div className=' overflow-y-auto flex items-center  gap-2 px-4 border-lg my-4 bg-gray-200 shadow rounded-lg'>
+                                              <p className='w-[5rem] text-sm text-center font-thin ' >Indicadores: {item.id} </p>
+                                              <ul className='flex flex-wrap p-4 gap-2 overflow-y-auto max-h-[20vh] w-full'>
+                                                {
+                                                  item.indicators.map((indicator) => {
+                                                    // const isChecked = selectedIndicators.includes(indicator.value);
+                                                    const isChecked = selectedIndicators.some(selected => selected.id === indicator.id);
+                                                    return (
+                                                      <li key={indicator.id} className='w-[16rem] font-thin '>
+                                                        <label className='flex text-justify gap-3 border rounded-lg p-2 text-xs bg-white  min-h-[3rem]' >
+                                                          <input
+                                                            type="checkbox"
+                                                            onChange={(event) =>
+                                                              handleCheckboxChangeIndicators(event, indicator.id, indicator.value)
+                                                            }
+                                                            checked={isChecked}
+                                                          />
+                                                          {indicator.value}
+                                                        </label>
+                                                      </li>
+                                                    )
+                                                  })
+                                                }
+                                              </ul>
+                                            </div>
+                                          )
+                                        })
+                                      }
+                                    </div>
+                                  </Modalindicators>
+                                ) : (
+                                  null
+                                )
+                              }
+
+
+                              <h2 className='underline mt-2 '>Indicadores de evaluacion:</h2>
+                              {
+                                indicatorsForEvaluateClass.map((item) => (
+                                  <ul className='flex justify-between items-center list-disc w-full px-3'>
+                                    <li className='text-justify border-b pb-1'>{item.value.substring(0, 80)}{item.value.length > 80 ? "..." : ""}</li>
+                                  </ul>
+                                ))
+                              }
+                             
+                            </div>
+                          </div>
+
+                              <div className='border-l-4 border-teal-500 mb-2 p-2 rounded'>
+                                <h2 className='underline'>Ingresar indicadores de evaluación:</h2>
+                                <div className="flex items-center border border-gray-300 rounded px-1 mt-1">
+                                  <input
+                                    placeholder='ingresar indicador de evaluación'
+                                    type="text"
+                                    value={addExtraIndicator}
+                                    onChange={(e) => setAddExtraIndicator(e.target.value)}
+                                    className="w-full p-1 mt-1 outline-none focus:bg-gray-100"
+                                  />
+                                  <MdPostAdd
+                                    onClick={addIndicatorsForEvaluateClassManual}
+                                    size={30}
+                                    className="text-white cursor-pointer bg-teal-500 rounded-md m-1"
+                                    aria-label='Agregar'
+                                    title='Agregar'
+                                  />
+                                </div>
+                                <ul className="mt-2 flex flex-col gap-2">
+                                  {indicatorsForEvaluateClassManual.map((indicator, index) => (
+                                    <li key={indicator.id} className="flex items-center justify-between border-b text-gray-700">
+                                      <span className="mr-2">{indicator.value}</span>
+                                      <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteIndicatorsForEvaluateClassManual(index)}> <AiOutlineDelete size={12} /> </button>
+
+                                    </li>
+                                  ))}
+                                </ul>
+                              </div>
+
+
+                          <div className='text-gray-700  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md  '  >
+
+                            {
+                              normalTime === "normalTime" ? (
+                                <div className='rounded-lg flex items-center gap-2 ' >
+                                  <h3 className='underline'>Tiempo de clase:</h3>
+
+                                  <input
+                                    type="number"
+                                    min={10}
+                                    value={duration}
+                                    onChange={(e) => setDuration(e.target.value)}
+                                    className="p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 w-[20%] " />
+                                  <p>Minutos</p>
+                                </div>
+                              ) : (
+                                <div className='rounded-lg flex items-center gap-2 ' >
+                                  <h3 className='underline' >Tiempo de clase:</h3>
+
+                                  <input
+                                    type="number"
+                                    max={8}
+                                    min={0}
+                                    value={schoolBlock}
+                                    onChange={(e) => setSchoolBlock(e.target.value)}
+                                    className="p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 w-[20%] " />
+                                  <p>Bloque/s ({` ${schoolBlock * 45} minutos `}) </p>
+                                </div>
+                              )
+                            }
+                          </div>
+
+
+
+
+                        </div>
+                       
+
+                        <div className='w-[48%] h-full text-gray-700 divide-y divide-gray-100'>
+                          <div className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md  '>
+                            <h2 className='underline' >Objetivos Transversales/Actitudes</h2>
+                            {
+                              learningObjetives.map((item) => (
+                                <div className='flex justify-between items-center py-2'>
+                                  <p className='text-justify'>{item.id}: {item.value.substring(0, 85)}{item.value.length > 100 ? "..." : ""}</p>
+                                  <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteLearningObjectives(item)}> <AiOutlineDelete size={12} /> </button>
+                                </div>
+                              ))
+                            }
+                            <Select
+                              closeMenuOnSelect={true}
+                              components={animatedComponents}
+                              isMulti
+                              options={ojbTransversalesActitudes.filter(obj => !learningObjectivesIds?.includes(obj.id)).map(obj => ({ ...obj, isDisabled: false }))}
+                              className='w-full font-thin'
+                              styles={customStyles}
+                              formatOptionLabel={formatOptionLabel}
+                              placeholder='Selecciona un objetivo'
+                              onChange={(selectedTA) => {
+                                const selectedTransversalActitud = selectedTA.map(option => ({ id: option.id, label: option.label, value: option.value }));
+                                setLearningObjetives([...selectedTransversalActitud]);
+                              }}
+                              value={learningObjetives}
+                              backspaceRemovesValue={true}
+                            />
+                          </div>
+
+                          <div className=''>
+                            <div className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '>
+                            <h2 className='underline'>Materiales:</h2>
+                            <div className='' >
+                              {
+                                materials.map((item) => (
+                                  <div key={item.id} className='flex justify-between items-center p-2 border-r'>
+                                    <p className='text-justify'>{item.value}</p>
+                                    <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteMaterials(item)}> <AiOutlineDelete size={12} /> </button>
+                                  </div>
+                                ))
+                              }
+                                                            <Select
+                                closeMenuOnSelect={true}
+                                components={animatedComponents}
+                                isMulti
+                                options={materialsSchool.sort((a, b) => {
+                                  if (a.label < b.label) return -1;
+                                  if (a.label > b.label) return 1;
+                                  return 0;
+                                }).filter(obj => !materialsIds.includes(obj.id)).map(obj => ({ ...obj, isDisabled: false }))}
+                                className='w-full font-thin'
+                                styles={customStyles}
+                                formatOptionLabel={formatOptionLabel}
+                                placeholder='Selecciona...'
+                                onChange={(selected) => {
+                                  const selectedValues = selected.map(option => ({ value: option.value, id: option.id, label: option.label }));
+                                  setMaterials([...selectedValues]);
+                                }}
+                                value={materials}
+                                backspaceRemovesValue={true}
+                              />
+                            </div>
+                              </div>
+
+
+                            <div className="flex flex-col flex-initial  gap-2 text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md  ">
+
+
+                              <div className="flex flex-col rounded-lg w-full">
+                                <h3 className='text-left underline' >Otros materiales:</h3>
+                                <textarea
+                                  value={otherMaterials}
+                                  onChange={(e) => setOtherMaterials(e.target.value)}
+                                  className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50" />
+                              </div>
+                            </div>
+                          </div>
+
+                          <div >
+                          <div  className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '  >
+                            <h2 className='underline ' >Actividades:</h2>
+                            <textarea
+                              value={activities}
+                              onChange={(e) => setActivities(e.target.value)}
+                              className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50  "
+                            />
+                          </div>
+                            </div>
+
+                          <div>
+                                                      
+                          <div className='text-gray-700 min-h-[5rem]  p-2 hover:bg-gray-100  rounded border-l-4 border-teal-500 shadow-md cursor-pointer' >
+                            <h2 className='underline'>Tipo de evaluación</h2>
+                            <Select
+                              closeMenuOnSelect={true}
+                              components={animatedComponents}
+                              options={evaluationArrayType}
+                              className='w-full font-thin'
+                              styles={customStyles}
+                              formatOptionLabel={formatOptionLabel}
+                              placeholder='Selecciona...'
+                              value={evaluationArrayType.find(element => element.value === evaluationType)}
+                              onChange={(selectedOption) => setEvaluationType(selectedOption.value)}
+                            />
+                            {
+                              evaluationType === "Sumativa" ? (
+
+                                <div className='flex gap-2 border px-2 py-1 rounded ' >
+                                  <AiOutlineFileText size={20} />
+                                  <input className='w-full font-thin cursor-pointer' type="file" onChange={(event) => {
+                                    const selectedFile = event.target.files[0];
+                                    console.log(selectedFile);
+                                  }} />
+                                </div>
+                              ) : (
+                                null
+                              )
+                            }
+                          </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <div className='p-2 text-gray-700 w-fit hover:bg-gray-100  rounded border-l-4 border-teal-500 shadow-md cursor-pointer ' >
+                          <h3 className='w-max' >Relojes disponibles:</h3>
+                          <ul className='py-2 flex flex-col md:flex-row md:flex-wrap gap-2 w-fit' >
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-001' > <BsSmartwatch /> <p className='px-1'>RV-001</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-002' > <BsSmartwatch /> <p className='px-1'>RV-002</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-003' > <BsSmartwatch /> <p className='px-1'>RV-003</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-004' > <BsSmartwatch /> <p className='px-1'>RV-004</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-005' > <BsSmartwatch /> <p className='px-1'>RV-005</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-006' > <BsSmartwatch /> <p className='px-1'>RV-006</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-007' > <BsSmartwatch /> <p className='px-1'>RV-007</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-008' > <BsSmartwatch /> <p className='px-1'>RV-008</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100  p-1' aria-details='Pulsera RV-001' title='Pulsera RV-009' > <BsSmartwatch /> <p className='px-1'>RV-009</p> </li>
+                            <li className='flex items-center cursor-pointer hover:bg-gray-100 p-1' aria-details='Pulsera RV-001' title='Pulsera RV-0010' > <BsSmartwatch /> <p className='px-1'>RV-0010</p> </li>
+
+                          </ul>
+                        </div>
+
+
+                      </div>
                       </div>
 
 
@@ -1117,7 +1571,7 @@ export default function Vmclass() {
               )}
               {currentStep === 2 && (
                 <div className="flex flex-wrap justify-evenly gap-4 md:justify-around md:gap-2 md:px-1">
-                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                  <div className=" border-l-4 border-teal-500 min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded cursor-pointer shadow-md md:w-[45%]">
                     <h2 className="underline text-gray-600">Actividades</h2>
                     <textarea
                       value={activities}
@@ -1126,7 +1580,7 @@ export default function Vmclass() {
                       disabled
                     />
 
-                    <h2 className="underline text-gray-600 mt-1">Agregar Actividades Extra</h2>
+                    <h2 className="underline text-gray-600 mt-1">Adecuación de Actividades</h2>
                     <div className="flex items-center border border-gray-300 rounded px-1 mt-1">
                       <input
                         placeholder='ingresar actividad'
@@ -1146,10 +1600,8 @@ export default function Vmclass() {
                       {extraActivitiesList.map((activityExtra, index) => (
                         <li key={index} className="flex items-center justify-between border-b text-gray-700">
                           <span className="mr-2">{activityExtra}</span>
-                          <RiDeleteBin6Line
-                            className="text-red-500 cursor-pointer" size={15}
-                            onClick={() => handleDeleteExtraActivities(index)}
-                          />
+
+                          <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteExtraActivities(index)}> <AiOutlineDelete size={12} /> </button>
                         </li>
                       ))}
                     </ul>
@@ -1157,7 +1609,7 @@ export default function Vmclass() {
 
                   </div>
 
-                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                  <div className=" border-l-4 border-teal-500 min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded cursor-pointer shadow-md md:w-[45%]">
                     <h2 className="underline text-gray-600">Agregar Observaciones</h2>
                     <div className="flex items-center border border-gray-300 rounded px-1 mt-1">
                       <input
@@ -1178,36 +1630,98 @@ export default function Vmclass() {
                       {observationsList.map((observation, index) => (
                         <li key={index} className="flex items-center justify-between border-b text-gray-700">
                           <span className="mr-2">{observation}</span>
-                          <RiDeleteBin6Line
-                            className="text-red-500 cursor-pointer" size={15}
-                            onClick={() => handleDeleteObservation(index)}
-                          />
+                          <button className='ml-2 px-2 py-1 bg-red-500 text-white rounded' onClick={() => handleDeleteObservation(index)}> <AiOutlineDelete size={12} /> </button>
+
                         </li>
                       ))}
                     </ul>
                   </div>
 
-                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
-                    <label for="doc" className="flex items-center p-4 gap-3 rounded-md border border-gray-300 border-dashed  cursor-pointer h-full">
-                      <BsCloudUpload className="h-16 w-16 text-teal-700 " />
+                  <div className="min-h-[12rem] w-[25rem] p-2 hover:bg-gray-100 rounded border-l-4 border-teal-500  shadow-md md:w-[45%] flex flex-col justify-center ">
+                    <div className='flex justify-around items-center' >
+                    <label for="docOne" className="flex md:flex-col items-center p-2 gap-1 text-center w-[30%] h-[100%] rounded border border-gray-300 border-dashed  cursor-pointer hover:shadow-lg ">
+                      <BsCloudUpload className="h-10 w-10 text-teal-700 " />
                       <div className="space-y-2">
-                        <h4 className="text-base font-semibold text-gray-700">Agregar Foto</h4>
+                        <h4 className=" font-semibold text-gray-700">Agregar Foto</h4>
                         <span className="text-xs text-gray-300">png/jpg</span>
-                        {progressIMG === 100 && (
-                          <div className="mt-2 text-sm text-green-500">Imagen cargada con éxito</div>
+                        { progressIMG === 100 && (
+                          <div className="mt-2 text-xs text-green-500">Imagen cargada con éxito</div>
                         )}
                         {activityImageError && <span className="text-red-400">{activityImageError}</span>}
                       </div>
-                      <input type="file" id="doc" name="doc" accept="png, jpg" hidden onChange={handleImageChange} />
+                      <input type="file" id="docOne" name="docOne" accept="png, jpg" hidden onChange={handleImageChangeFirst} />
                     </label>
+
+                    <label for="docTwo" className="flex md:flex-col items-center p-2 gap-1 text-center w-[30%] h-[100%]  rounded border border-gray-300 border-dashed  cursor-pointer hover:shadow-lg ">
+                      <BsCloudUpload className="h-10 w-10 text-teal-700  " />
+                      <div className="space-y-2">
+                        <h4 className=" font-semibold text-gray-700">Agregar Foto</h4>
+                        <span className="text-xs text-gray-300">png/jpg</span>
+                        {progressIMGSecond === 100 && (
+                          <div className="mt-2 text-xs text-green-500">Imagen cargada con éxito</div>
+                        )}
+                        {activityImageError && <span className="text-red-400">{activityImageError}</span>}
+                      </div>
+                      <input type="file" id="docTwo" name="docTwo" accept="png, jpg" hidden onChange={handleImageChangeSecond} />
+                    </label>
+
+                    <label for="docThree" className="flex md:flex-col items-center p-2 gap-1 text-center w-[30%] h-[100%]  rounded border border-gray-300 border-dashed  cursor-pointer hover:shadow-lg  ">
+                      <BsCloudUpload className="h-10 w-10 text-teal-700 " />
+                      <div className="space-y-2">
+                        <h4 className=" font-semibold text-gray-700">Agregar Foto</h4>
+                        <span className="text-xs text-gray-300">png/jpg</span>
+
+                        {progressIMGThird === 100 && (
+                          <div className="mt-2 text-xs text-green-500">Imagen cargada con éxito</div>
+                        )}
+
+                        {activityImageError && <span className="text-red-400">{activityImageError}</span>}
+
+                      </div>
+                      <input type="file" id="docThree" name="docThree" accept="png, jpg" hidden onChange={handleImageChangeThird} />
+                    </label>
+                      </div>
+
+
                     {isUploading && (
                       <div className="relative w-full h-2 mt-4 bg-gray-200 rounded-full">
                         <div className="absolute top-0 left-0 h-full bg-teal-500 rounded-full" style={{ width: `${progressIMG}%` }} />
                       </div>
                     )}
+                                        {isUploadingSecond && (
+                      <div className="relative w-full h-2 mt-4 bg-gray-200 rounded-full">
+                        <div className="absolute top-0 left-0 h-full bg-teal-500 rounded-full" style={{ width: `${progressIMGSecond}%` }} />
+                      </div>
+                    )}
+                                        {isUploadingThird && (
+                      <div className="relative w-full h-2 mt-4 bg-gray-200 rounded-full">
+                        <div className="absolute top-0 left-0 h-full bg-teal-500 rounded-full" style={{ width: `${progressIMGThird}%` }} />
+                      </div>
+                    )}
                   </div>
 
-                  <div className="flex flex-col items-center justify-center   w-[25rem] p-2 rounded-md shadow-md md:w-[45%]">
+                  <div className="flex items-center justify-center   w-[25rem] p-2 rounded shadow border-l-4 border-teal-500 md:w-[45%] gap-2">
+                    <div className='' >
+                      {
+                        timer === 0 ? (
+                          <AiOutlinePlayCircle
+                          size={100}
+                          className='bg-green-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
+                          onClick={handleStart}
+                        />
+                        ) : (
+                          <BsStopCircle
+                          size={100}
+                          className='bg-red-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
+                          onClick={handleReset}
+                        />
+                        )
+                      }
+
+
+                      </div>
+
+                    <div className="flex flex-col items-center justify-center  ">
                     <div className='flex justify-center gap-2 items-center'>
                       <h2 className="text-lg text-gray-700 text-center">Tiempo efectivo de clase:</h2>
                       {elapsedTime > 0 && timer === 0 && (
@@ -1221,27 +1735,13 @@ export default function Vmclass() {
                       {minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}
                     </div>
                     <div className="flex items-center gap-4">
-                      <AiOutlinePlayCircle
-                        size={30}
-                        className='bg-green-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
-                        onClick={handleStart}
-                      />
                       <AiOutlinePauseCircle
                         size={30}
                         className='bg-blue-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
                         onClick={handlePause}
                         disabled={interval === null}
                       />
-                      {
-                        timer !== 0 ? (
-                          <BsStopCircle
-                            size={30}
-                            className='bg-red-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-10
-                            active:scale-100'
-                            onClick={handleReset}
-                          />
-                        ) : null
-                      }
+
                       {
                         timer >= 0 || interval !== null ? (
                           <MdSettingsBackupRestore
@@ -1252,12 +1752,16 @@ export default function Vmclass() {
                         ) : null
                       }
                     </div>
+
+                    </div>
+
+
                   </div>
                 </div>
               )}
               {currentStep === 3 && (
                 <div className="px-4 flex flex-wrap justify-evenly gap-4 md:justify-around md:gap-2 md:px-1">
-                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded border-l-4 border-teal-500 cursor-pointer shadow-md md:w-[45%]">
                     <h2 className="underline text-gray-600">Actividades</h2>
                     <textarea
                       value={activities}
@@ -1281,7 +1785,7 @@ export default function Vmclass() {
 
                   </div>
 
-                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
+                  <div className="min-h-[10rem] w-[25rem] p-2 hover:bg-gray-100 rounded border-l-4 border-teal-500 cursor-pointer shadow-md md:w-[45%]">
                     <h2 className="underline text-gray-600">Observaciones</h2>
                     {observationsList.length === 0 ? (
                       <h3 className="text-gray-500">No hay observaciones</h3>
@@ -1296,13 +1800,43 @@ export default function Vmclass() {
                     )}
                   </div>
 
-                  <div className="min-h-[10rem] w-[25rem] p-3 hover:bg-gray-100 rounded-md cursor-pointer shadow-md md:w-[45%]">
-                    {!activityImage ? (
-                      <h3 className="text-gray-500">No hay imagen adjunta</h3>
+                  <div className=" flex justify-center gap-2 items-center border-l-4 border-teal-500 min-h-[10rem] w-[25rem] p-3 hover:bg-gray-100 rounded cursor-pointer shadow-md md:w-[45%]">
+
+                    {!activityImageFirst ? (
+                      <div className='border rounded h-full flex items-center border-gray-300 border-dashed border-1 p-2' >
+                        <h3 className="text-gray-500  ">No hay imagen adjunta</h3>
+                      </div>
                     ) : (
                       <div className="flex items-center justify-center">
                         <img
-                          src={URL.createObjectURL(activityImage)}
+                          src={URL.createObjectURL(activityImageFirst)}
+                          alt="Foto de actividades"
+                          className="w-[13rem] md:h-fit rounded-md"
+                        />
+                      </div>
+                    )}
+                    {!activityImageSecond ? (
+                      <div className='border rounded h-full flex items-center border-gray-300 border-dashed border-1 p-2' >
+                        <h3 className="text-gray-500  ">No hay imagen adjunta</h3>
+                      </div>
+                    ) : (
+                      <div className="flex items-center justify-center">
+                        <img
+                          src={URL.createObjectURL(activityImageSecond)}
+                          alt="Foto de actividades"
+                          className="w-[13rem] md:h-fit rounded-md"
+                        />
+                      </div>
+                    )}
+                    {!activityImageThird ? (
+                      <div className='border rounded h-full flex items-center border-gray-300 border-dashed border-1 p-2' >
+                        <h3 className="text-gray-500  ">No hay imagen adjunta</h3>
+                      </div>
+
+                    ) : (
+                      <div className="flex items-center justify-center">
+                        <img
+                          src={URL.createObjectURL(activityImageThird)}
                           alt="Foto de actividades"
                           className="w-[13rem] md:h-fit rounded-md"
                         />
@@ -1310,7 +1844,7 @@ export default function Vmclass() {
                     )}
                   </div>
 
-                  <div className="flex flex-col items-center hover:bg-gray-100 cursor-pointer justify-center w-[25rem] p-2 rounded-md shadow-md md:w-[45%]">
+                  <div className="flex flex-col items-center hover:bg-gray-100 cursor-pointer justify-center w-[25rem] p-2 rounded border-l-4 border-teal-500 shadow-md md:w-[45%]">
                     <BsClockHistory size={40} className="text-teal-700" />
                     {
                       elapsedTime === 0 ? (
@@ -1431,11 +1965,11 @@ export default function Vmclass() {
                     }
 
                     {
-                      evaluationNotation.map((item) => (
+                      evaluationNotation.map((item, index) => (
 
                         <div key={item.id} className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
 
-                          <h2 className='underline pb-1'>Indicador de evaluacion: {item.id} </h2>
+                          <h2 className='underline pb-1'>Indicador de evaluacion: 0{index+1}  </h2>
                          <p className='pb-1'>{item.value}</p>
                           
                          <Select
@@ -1455,7 +1989,7 @@ export default function Vmclass() {
                                   );
                                   setEvaluationNotation(updatedNotation);
                                 }}
-                                backspaceRemovesValue={true}
+
                               />
 
                          
@@ -1472,8 +2006,7 @@ export default function Vmclass() {
 
                 </div>
               )}
-              {
-                currentActivity ? (
+
                   <div className="mt-4 flex justify-end">
                     {currentStep > 0 && (
                       <button
@@ -1516,10 +2049,7 @@ export default function Vmclass() {
                       </button>
                     )}
                   </div>
-                ) : (
-                  null
-                )
-              }
+
 
 
             </div>

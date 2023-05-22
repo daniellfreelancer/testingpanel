@@ -30,7 +30,7 @@ export default function PlanificationViewTable({ idPlanner }) {
     const [content, setContent] = useState()                                                    //CONTENIDO
     const [classObjectives, setClassObjectives] = useState([])                                  //OBJ BASALES Y COMPLEMENTARIOS
     const [indicatorsForEvaluateClass, setIndicatorsForEvaluateClass] = useState([])            //INDICADORES DEPENDIENTES DE OBJ BASALES/COMPLEMENTARIOS
-    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState("")//INDICADORES CARGA MANUAL POR EL PROFESOR
+    const [indicatorsForEvaluateClassManual, setIndicatorsForEvaluateClassManual] = useState([])//INDICADORES CARGA MANUAL POR EL PROFESOR
     const [learningObjetives, setLearningObjetives] = useState([])                              //OBJ TRANSVERSALES Y ACTITUDES
     const [activities, setActivities] = useState([])                                            //ACTIVIDADES
     const [materials, setMaterials] = useState([])                                              //MATERIALES
@@ -334,7 +334,7 @@ export default function PlanificationViewTable({ idPlanner }) {
                             }
                             </div>
                         </td>
-                        <td className="text-center p-2">
+                        <td className="text-left p-2">
                             <div className="flex flex-col items-center min-h-[15rem] gap-2">
                                 {
                                     indicatorsForEvaluateClass.map((item) => (
@@ -344,15 +344,24 @@ export default function PlanificationViewTable({ idPlanner }) {
                                     ))
                                 }
                                 {
-                                     indicatorsForEvaluateClassManual[0] !== ''  ? (
-                                        <div className='rounded bg-green-200 mx-1 p-2 text-justify flex flex-col gap-1 w-full' >
-                                            <h2>Otros indicadores:</h2>
-                                            <p> {indicatorsForEvaluateClassManual}. </p>
+                                    indicatorsForEvaluateClassManual.length > 0 ? (
+                                        <div>
+                                        {
+                                             indicatorsForEvaluateClassManual.map((item)=>{
+                                                return (
+                                                    <ul className='flex justify-between text-left items-center list-disc w-fit px-3'>
+                                                        <li className='text-left border-b pb-1'>{item.value?.substring(0, 50)}{item.value?.length > 50 ? "..." : ""}</li>
+        
+                                                    </ul>
+                                                )
+                                             })
+                                        }
+        
                                         </div>
-                                    ) : (
-                                        null
-                                    )
+                                    ) : null
                                 }
+
+
                             </div>
                         </td>
                         <td className="border p-2">
