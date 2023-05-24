@@ -878,7 +878,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
     //       })
     //      })
 
-    const { data } = await axios.post('http://localhost:4000/vmclass/create-resume', {
+    const { data } = await axios.post('https://whale-app-qsx89.ondigitalocean.app/vmclass/create-resume', {
       byTeacher: teacher._id,
       plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
       elapsedClassTime: elapsedTime,
@@ -2273,6 +2273,21 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                       {activities}
                     </div>
 
+                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
+                    <p>Hola</p>
+                    {
+                      activityImageFirst ? `${activityImageFirst}` : 'no hay imagen seleccionada'
+                    }
+                    <p>Hola</p>
+                    {
+                      activityImageSecond ? `${activityImageSecond}` : 'no hay imagen seleccionada'
+                    }
+                    <p>Hola</p>
+                    {
+                      activityImageThird ? `${activityImageThird}` : 'no hay imagen seleccionada'
+                    }
+                    </div>
+
                     {
                       extraActivitiesList.length > 0 ? (
 
@@ -2330,52 +2345,54 @@ const [newResumeVMCLass] = useCreateResumeMutation();
 
                   </div>
 
+
+
                 </div>
               )}
 
-                  <div className="mt-4 flex justify-end">
-                    {currentStep > 0 && (
-                      <button
-                        type="button"
-                        className="text-base  focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer
+              <div className="mt-4 flex justify-end">
+                {currentStep > 0 && (
+                  <button
+                    type="button"
+                    className="text-base  focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer
       hover:bg-gray-200
       bg-gray-100
       text-gray-700
       border duration-200 ease-in-out
       border-gray-600 transition"
-                        onClick={handlePrevious}
-                      >
-                        Atrás
-                      </button>
-                    )}
-                    {currentStep < steps.length - 1 ? (
-                      <button
-                        type="button"
-                        className="text-base  ml-2 hover:text-gray-50  focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer
+                    onClick={handlePrevious}
+                  >
+                    Atrás
+                  </button>
+                )}
+                {currentStep < steps.length - 1 ? (
+                  <button
+                    type="button"
+                    className="text-base  ml-2 hover:text-gray-50  focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer
       hover:bg-teal-600
       bg-teal-600
       text-teal-100
       border duration-200 ease-in-out
       border-teal-600 transition"
-                        onClick={handleNext}
-                      >
-                        Continuar
-                      </button>
-                    ) : (
-                      <button
-                        type="button"
-                        className="text-base  ml-2 hover:text-gray-50 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer
+                    onClick={handleNext}
+                  >
+                    Continuar
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="text-base  ml-2 hover:text-gray-50 focus:outline-none flex justify-center px-4 py-2 rounded font-bold cursor-pointer
       hover:bg-teal-600
       bg-teal-600
       text-teal-100
       border duration-200 ease-in-out
       border-teal-600 transition"
-      onClick={handleCreateResumeVMClass}
-                      >
-                        Finalizar clase
-                      </button>
-                    )}
-                  </div>
+                    onClick={handleCreateResumeVMClass}
+                  >
+                    Finalizar clase
+                  </button>
+                )}
+              </div>
 
 
 
