@@ -24,7 +24,7 @@ import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
 import { useCreatePlanificationMutation } from '../../features/plannerAPI';
 import { v4 as uuidv4 } from 'uuid';
-import { MdSettingsBackupRestore, MdPostAdd } from 'react-icons/md'
+import { MdPostAdd } from 'react-icons/md'
 export default function PlanificationNewTable() {
     /**
      * HOOKS / PARAMS

@@ -1,4 +1,4 @@
-import { SlUser, SlUserFemale } from 'react-icons/sl';
+
 import {MdOutlineMeetingRoom, MdOutlineMailOutline} from 'react-icons/md'
 import {TbWeight} from 'react-icons/tb'
 import { GiBodyHeight} from 'react-icons/gi'

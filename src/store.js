@@ -14,6 +14,7 @@ import {
     REGISTER,
   } from "redux-persist";
 import plannerAPI from "./features/plannerAPI";
+import resumeVmAPI from "./features/resumeVmAPI";
 
   const persistConfig = {
     key: "root",
@@ -29,6 +30,7 @@ export const store = configureStore({
         auth: persistedReducer,
         [loginAPI.reducerPath]: loginAPI.reducer,
         [plannerAPI.reducerPath] : plannerAPI.reducer,
+        [resumeVmAPI.reducerPath] : resumeVmAPI.reducer,
         reload: reloadSlice,
         
     },
@@ -37,7 +39,7 @@ export const store = configureStore({
         serializableCheck: {
           ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
         },
-      }).concat(loginAPI.middleware, plannerAPI.middleware)
+      }).concat(loginAPI.middleware, plannerAPI.middleware, resumeVmAPI.middleware )
 })
 
 

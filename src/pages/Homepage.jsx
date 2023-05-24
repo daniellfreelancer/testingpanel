@@ -1,7 +1,6 @@
 import React from 'react'
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header'
-import InstallPWA from '../components/InstallPWA'
 
 export default function Homepage() {
   return (

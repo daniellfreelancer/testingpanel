@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import "react-datepicker/dist/react-datepicker.css";
-import axios from 'axios';
 import { reload } from '../../features/reloadSlice';
 import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'

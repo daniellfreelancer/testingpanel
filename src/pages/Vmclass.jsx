@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Sidebar from '../components/Sidebar'
 import Header from '../components/Header'
 import GoBackToButton from '../components/GoBackButton'
-import { useParams } from 'react-router'
+import { useNavigate, useParams } from 'react-router'
 import { GiTeacher } from 'react-icons/gi'
 import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock, BsCloudUpload, BsStopCircle, BsClockHistory } from 'react-icons/bs'
 import axios from 'axios'
@@ -23,13 +23,14 @@ import primeroBasicoIndicadores from '../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
 import { MdSettingsBackupRestore, MdPostAdd } from 'react-icons/md'
-import { RiDeleteBin6Line } from 'react-icons/ri';
 import { BiBookmarkAlt } from 'react-icons/bi';
 import { useUpdatePlanificationMutation } from '../features/plannerAPI'
 import { useDispatch } from 'react-redux'
 import { reload } from '../features/reloadSlice'
 import { v4 as uuidv4 } from 'uuid';
-
+import { useCreateResumeMutation } from '../features/resumeVmAPI'
+import Swal from 'sweetalert2'
+import swal from 'sweetalert2'
 
 
 const steps = [
@@ -45,6 +46,9 @@ export default function Vmclass() {
 
   const dispatch = useDispatch()
 
+  const navigate = useNavigate()
+
+
   /**
    * DATA Y STATES
    */
@@ -56,6 +60,7 @@ export default function Vmclass() {
   const [students, setStudents] = useState([])
   const [studentsOnClass, setStudentsOnClass] = useState(0);
   const [studentsOutClass, setStudentsOutClass] = useState(0);
+  const [plannerNoClass, setPlannerNoClass] = useState(null)
 
 
   /**
@@ -175,18 +180,10 @@ export default function Vmclass() {
   useEffect(() => {
 
     fetchData();
+    // eslint-disable-next-line
   }, [id]);
 
   useEffect(() => {
-    // const today = new Date();
-    // const todayLocalDateString = today.toLocaleDateString();
-    // const current = planner.find(
-    //   (activity) => {
-    //     const startDate = new Date(activity.startDate);
-    //     return startDate.toLocaleDateString() === todayLocalDateString;
-    //   }
-    // );
-
     const today = new Date();
     const todayLocalDateString = today.toLocaleDateString();
     const current = planner.find((activity) => {
@@ -220,9 +217,25 @@ export default function Vmclass() {
   
   useEffect(() => {
 
+    if (!currentActivity){
+      setPlannerNoClass({
+        activities,
+        classObjectives,
+        content,
+        duration,
+        indicatorsForEvaluateClass,
+        indicatorsForEvaluateClassManual,
+        evaluationType,
+        learningObjetives,
+        materials,
+        otherMaterials,
+      })
+    }
+
     handleUserData();
     addFieldsToPresentStudents(students);
-  }, [userClassroom])
+    // eslint-disable-next-line 
+  }, [userClassroom,currentActivity])
   
   
 
@@ -410,8 +423,8 @@ export default function Vmclass() {
 
   useEffect(() => {
     addFieldsToPresentStudents(students);
-    console.log(presentStudents)
-  }, [currentActivity]);
+
+  }, [currentActivity, students]);
 
   const [evaluationNotation, setEvaluationNotation] = useState([{
     id:null,
@@ -531,6 +544,7 @@ export default function Vmclass() {
     const { attended, notAttended } = countAttendances();
     setStudentsOnClass(attended);
     setStudentsOutClass(notAttended);
+    // eslint-disable-next-line
   }, [presentStudents]);
 
   const handleRestarAttendanceList = () => {
@@ -553,6 +567,7 @@ export default function Vmclass() {
 
 
     if (isActive) {
+      // eslint-disable-next-line
       interval = setInterval(() => {
         setTimer(timer => timer + 1);
       }, 1000);
@@ -590,8 +605,8 @@ export default function Vmclass() {
   const seconds = timer - minutes * 60;
   const elapsedMinutes = Math.floor(elapsedTime / 60);
   const elapsedSeconds = elapsedTime - elapsedMinutes * 60;
-  const progress = Math.min((elapsedTime / (90 * 60)) * 100, 100);
-  const progressRounded = Math.round(progress);
+  // const progress = Math.min((elapsedTime / (90 * 60)) * 100, 100);
+
 
 
   const [activityImageFirst, setActivityImageFirst] = useState(null);
@@ -773,14 +788,321 @@ export default function Vmclass() {
 
   useEffect(() => {
 
-    if (currentStep  === 1) {
+    if (currentStep  === 1 && currentActivity) {
       handleEditPlaning()
 
     }
+    // eslint-disable-next-line
+}, [currentStep, currentActivity])
+  
+
+const [newResumeVMCLass] = useCreateResumeMutation();
+  
+
+
+  const handleCreateResumeVMClass = async  () => {
+
+
+
+
+
+    const dataResume = {
+      byTeacher: teacher._id,
+      plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
+      elapsedClassTime: elapsedTime,
+      startClassTime: startClassTime.toISOString(),
+      endClassTime: endClassTime.toISOString(),
+      plannerNoClass: !currentActivity ? plannerNoClass : null,
+      classroomId: userClassroom._id,
+      imgFirstVMClass: activityImageFirst ? activityImageFirst : null ,
+      imgSecondVMClass: activityImageSecond ? activityImageSecond : null,
+      imgThirdVMClass: activityImageThird ? activityImageThird : null,
+      // presentStudents: JSON.stringify(presentStudents),
+      // evaluationNotation: JSON.stringify(evaluationNotation),
+      // extraActivities: JSON.stringify(extraActivitiesList),
+      // observationsClass: JSON.stringify(observationsList)
+      presentStudents: presentStudents,
+      evaluationNotation: evaluationNotation,
+      extraActivities: extraActivitiesList,
+      observationsClass: observationsList
+    };
     
+    const formData = new FormData();
+    
+    Object.entries(dataResume).forEach(([key, value]) => {
+      formData.append(key, value);
+    });
+
+    const dataForm = new FormData();
+
+    dataForm.append('byTeacher', teacher._id );
+    dataForm.append('plannerClass', currentActivity ? currentActivity._id : userClassroom._id)
+    dataForm.append('elapsedClassTime',elapsedTime)
+    dataForm.append('startClassTime',startClassTime.toISOString())
+    dataForm.append('endClassTime',endClassTime.toISOString())
+    dataForm.append('plannerNoClass', !currentActivity ? plannerNoClass : null)
+    dataForm.append('classroomId',userClassroom._id )
+    dataForm.append('imgFirstVMClass', activityImageFirst)
+    dataForm.append('imgSecondVMClass',activityImageSecond)
+    dataForm.append('imgThirdVMClass', activityImageThird )
+    dataForm.append('presentStudents',  JSON.stringify(presentStudents))
+    dataForm.append('evaluationNotation', JSON.stringify(evaluationNotation))
+    dataForm.append('extraActivities', JSON.stringify(extraActivitiesList))
+    dataForm.append('observationsClass', JSON.stringify(observationsList))
+
+    
+    // axios.post('http://localhost:4000/vmclass/create-resume', dataForm, {
+    //      headers: {
+    //          'Content-Type': 'multipart/form-data',
+    //        },
+    //      }).then((response)=>{
+    //       if (response.data){
+    //         console.log(response.data)
   
-  }, [currentStep])
-  
+    //         Swal.fire({
+    //           title:response.data.message,
+    //           icon: 'success'
+    //         })
+            
+    //        } else {
+    //         Swal.fire({
+    //           title:response.data.messagge,
+    //           icon: 'error'
+    //         })
+    //        }
+    //      }).catch((error)=>{
+    //       console.log(error)
+    //       Swal.fire({
+    //         title:error,
+    //         icon: 'error'
+    //       })
+    //      })
+
+    const { data } = await axios.post('http://localhost:4000/vmclass/create-resume', {
+      byTeacher: teacher._id,
+      plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
+      elapsedClassTime: elapsedTime,
+      startClassTime: startClassTime.toISOString(),
+      endClassTime: endClassTime.toISOString(),
+      plannerNoClass: !currentActivity ? plannerNoClass : null,
+      classroomId: userClassroom._id,
+      imgFirstVMClass:activityImageFirst ,
+      imgSecondVMClass: activityImageSecond,
+      imgThirdVMClass:activityImageThird ,
+      presentStudents: presentStudents,
+      evaluationNotation: evaluationNotation,
+      extraActivities: extraActivitiesList,
+      observationsClass: observationsList
+    }, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+    }
+    )
+
+      if (data) {
+        console.log(data)
+
+        Swal.fire({
+          title: data.message,
+          icon: 'success'
+        })
+        setTimeout(() => {
+          dispatch(reload())
+          navigate(-1)
+        }, 1500)
+      } else {
+        Swal.fire({
+          title: data.error,
+          icon: 'error'
+        })
+      }
+
+
+
+
+  //   Swal.fire({
+  //     title: '¿Deseas finalizar la clase?',
+  //     showDenyButton: true,
+  //     showCancelButton: false,
+  //     confirmButtonText: 'Si',
+  //     denyButtonText: `No`,
+  //     buttonsStyling: true,
+  //     showLoaderOnConfirm: true,
+  // }).then((result) => {
+  //     /* Read more about isConfirmed, isDenied below */
+
+  //     if (result.isConfirmed) {
+
+  //     //  const response = axios.post('http://localhost:4000/vmclass/create-resume', formData, {
+  //     //     headers: {
+  //     //       'Content-Type': 'multipart/form-data',
+  //     //     },
+  //     //   })
+        
+  //     //      if (response) {
+  //     //       console.log(response)
+  //     //       Swal.fire({
+  //     //         text: response.data.message,
+  //     //         icon: "success",
+  //     //     });
+
+  //     //   }
+
+  //     // newResumeVMCLass(dataResume).then((res)=>{
+  //     //   console.log(res)
+  //     //   if (res.data){
+  //     //     swal.fire({
+  //     //       text: res.data.message,
+  //     //       icon: "success",
+  //     //   });
+  //     //   }
+  //     // }).catch((error)=>{
+  //     //   console.log(error)
+  //     // })
+
+
+  //      fetch('http://localhost:4000/vmclass/create-resume',{
+  //       method: 'POST',
+  //       body: formData,
+  //       headers:{
+  //         'Content-Type': 'multipart/form-data',
+  //       }
+  //      }).then((res)=>{
+  //       console.log(res)
+  //      }).catch((error)=>{
+  //       console.log(error)
+  //      })
+
+
+
+
+
+
+
+  //       // axios.post('http://localhost:4000/vmclass/create-resume', formData, {
+  //       //   headers: {
+  //       //     'Content-Type': 'multipart/form-data',
+  //       //   },
+  //       // }).then((res) => {
+  //       //   console.log(res)
+  //       //   //  Check the status code of the response
+  //       //   if (res.status === 200) {
+  //       //     // Success
+  //       //     console.log(res);
+  //       //     Swal.fire({
+  //       //       text: res.data.message,
+  //       //       icon: "success",
+  //       //     });
+  //       //     setTimeout(() => {
+  //       //       dispatch(reload())
+  //       //       navigate(-1)
+  //       //     }, 1500)
+  //       //   } else {
+  //       //     // Error
+  //       //     console.log(res);
+  //       //     Swal.fire({
+  //       //       text: "Ha ocurrido un error al finalizar la clase",
+  //       //       icon: "error",
+  //       //     });
+  //       //   }
+  //       // }).catch((error) => {
+  //       //   console.log(error)
+  //       // });
+
+
+  //   // try {
+  //   //   axios.post('http://localhost:4000/vmclass/create-resume', formData, {
+  //   //     headers: {
+  //   //       'Content-Type': 'multipart/form-data',
+  //   //     },
+  //   //   }).then((res)=>{
+  //   //     console.log(res)
+  //   //   //  Check the status code of the response
+  //   //   if (res.status === 200) {
+  //   //     // Success
+  //   //     console.log(res);
+  //   //     Swal.fire({
+  //   //       text: "Clase Finalizada con exito",
+  //   //       icon: "success",
+  //   //     });
+  //   //     setTimeout(()=>{
+  //   //       dispatch(reload())
+  //   //       navigate(-1)
+  //   //     },1500)
+  //   //   } else {
+  //   //     // Error
+  //   //     console.log(res);
+  //   //     Swal.fire({
+  //   //       text: "Ha ocurrido un error al finalizar la clase",
+  //   //       icon: "error",
+  //   //     });
+
+
+  //   //   }
+  //   //   }).catch((error)=>{
+  //   //     console.log(error)
+  //   //   });
+
+
+  //   // } catch (error) {
+  //   //   // Handle the error
+  //   //   console.log(error);
+  //   //   Swal.fire({
+  //   //     text: "Ha ocurrido un error inesperado",
+  //   //     icon: "error",
+  //   //   });
+  //   // }
+
+  //   // try {
+  //   //   const res = axios.post('http://localhost:4000/vmclass/create-resume', formData, {
+  //   //     headers: {
+  //   //       'Content-Type': 'multipart/form-data',
+  //   //     },
+  //   //   });
+  //   //   console.log(res);
+    
+  //   //   // Check the status code of the response
+  //   //   if (res) {
+  //   //     // Success
+  //   //     console.log(res);
+  //   //     Swal.fire({
+  //   //       text: res.data.message,
+  //   //       icon: "success",
+  //   //     });
+  //   //     // setTimeout(() => {
+  //   //     //   dispatch(reload());
+  //   //     //   navigate(-1);
+  //   //     // }, 1500);
+  //   //   } else {
+  //   //     // Error
+  //   //     console.log(res);
+  //   //     Swal.fire({
+  //   //       text: "Ha ocurrido un error al finalizar la clase",
+  //   //       icon: "error",
+  //   //     });
+  //   //   }
+  //   // } catch (error) {
+  //   //   // Handle the error
+  //   //   console.log(error);
+  //   //   Swal.fire({
+  //   //     text: "Ha ocurrido un error inesperado",
+  //   //     icon: "error",
+  //   //   });
+  //   // }
+    
+
+  //     } else if (result.isDenied) {
+  //         Swal.fire('No se ha podido finalizar la clase', '', 'info')
+
+  //         dispatch(reload())
+  //     }
+  // })
+
+
+
+
+  }
   
 
   
@@ -2048,6 +2370,7 @@ export default function Vmclass() {
       text-teal-100
       border duration-200 ease-in-out
       border-teal-600 transition"
+      onClick={handleCreateResumeVMClass}
                       >
                         Finalizar clase
                       </button>

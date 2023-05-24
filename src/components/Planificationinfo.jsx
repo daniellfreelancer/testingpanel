@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useState } from 'react'
 import { AiOutlineDelete, AiOutlineSchedule} from 'react-icons/ai';
 import { useDispatch } from 'react-redux';
@@ -86,17 +85,7 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
 
     const [deleteSelectedPlanification] = useDeletePlanificationMutation()
 
-    async function requestDeletePlanification(idPlanificationForDelete, idClassroomForDelete) {
-       await axios.delete(`https://whale-app-qsx89.ondigitalocean.app/planing/delete-planification/${idPlanificationForDelete}/classroom/${idClassroomForDelete}`).then((response) => {
-            if (response.data) {
-                dispatch(reload())
-                Swal.fire(response.data.message, '', 'success')
-            }
-        }).catch((error) => {
-            console.log(error)
-        })
 
-    }
 
     async function requestDeletePlanificationByquery(planificationID, idClassroom ){
       let planificationInfo = {

@@ -20,11 +20,10 @@ import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
 import Modalindicators from '../../components/modal/Modalindicators';
 import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
 import { useParams } from 'react-router';
-import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
 import { useUpdatePlanificationMutation } from '../../features/plannerAPI';
 import { v4 as uuidv4 } from 'uuid';
-import { MdSettingsBackupRestore, MdPostAdd } from 'react-icons/md'
+import { MdPostAdd } from 'react-icons/md'
 export default function PlanificationeditTable({ idPlanner }) {
     /**
      * HOOKS / PARAMS
