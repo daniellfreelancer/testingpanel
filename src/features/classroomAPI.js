@@ -21,10 +21,19 @@ export const classroomAPI = createApi({
             })
 
         }),
+        getClassroomData: builder.mutation({
+            query: (id) => ({
+                url:`/classroom/find/${id}`,
+                method: 'GET',
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                    },
+            })
+        })
 
     })
 })
 
 export default classroomAPI
 
-export const {useCreatePlanificationMutation} = classroomAPI
+export const {useCreatePlanificationMutation, useGetClassroomDataMutation} = classroomAPI

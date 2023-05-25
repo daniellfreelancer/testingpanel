@@ -15,6 +15,8 @@ import Modalcreateplaning from '../components/modal/Modalcreateplaning';
 import PlanificationNewTable from '../components/forms/PlanificationNewTable';
 import ScrollToTopOnRender from '../layout/ScrollToTopOnRender';
 import { Link } from 'react-router-dom';
+import { useGetClassroomDataMutation } from '../features/classroomAPI';
+import ClasshistoryList from '../components/ClasshistoryList';
 
 export default function ClassroomDetail() {
     const { id } = useParams();
@@ -23,19 +25,32 @@ export default function ClassroomDetail() {
     const [userTeachersData, setuserTeachersData] = useState([])
     const [userStudents, setUserStudents] = useState([])
     const [userPlanner, setUserPlanner] = useState([])
+    const [userClasshistory, setUserClasshistory] = useState([])
 // eslint-disable-next-line
     const dispatch = useDispatch()
     const reloaded = useSelector(reloadValueState)
 
+    const [getClassroomDetail] = useGetClassroomDataMutation()
 
     useEffect(() => {
         const fetchData = async () => {
+            // try {
+            //     const { data } = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/classroom/find/${id}`);
+            //     setuserClassroom(data.response)
+            //     setuserTeachersData(data.response.teacher)
+            //     setUserStudents(data.response.students)
+            //     setUserPlanner(data.response.planner)
+            // } catch (error) {
+            //     console.log(error);
+            // }
             try {
-                const { data } = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/classroom/find/${id}`);
+                const { data } = await getClassroomDetail(id);
                 setuserClassroom(data.response)
                 setuserTeachersData(data.response.teacher)
                 setUserStudents(data.response.students)
                 setUserPlanner(data.response.planner)
+                setUserClasshistory(data.response.classHistory)
+            
             } catch (error) {
                 console.log(error);
             }
@@ -61,8 +76,10 @@ export default function ClassroomDetail() {
                             <Link className='p-2 rounded-md bg-blue-500 text-white font-medium cursor-pointer hover:bg-indigo-500 transform duration-300 ease-in-out ' to={`/vmclass/${id}`} >Iniciar Clase</Link>
                         </div>
                         <Clasroominfo userClassroom={userClassroom} />
+                        
                         <Teachers userTeachersData={userTeachersData} />
                         <Planificationinfo userPlanner={userPlanner} />
+                        <ClasshistoryList userClassHistory={userClasshistory} />+
                         <Students userStudents={userStudents} />
                     </div>
                 </div>

@@ -30,7 +30,7 @@ import { reload } from '../features/reloadSlice'
 import { v4 as uuidv4 } from 'uuid';
 import { useCreateResumeMutation } from '../features/resumeVmAPI'
 import Swal from 'sweetalert2'
-import swal from 'sweetalert2'
+
 
 
 const steps = [
@@ -796,6 +796,7 @@ export default function Vmclass() {
 }, [currentStep, currentActivity])
   
 
+// eslint-disable-next-line
 const [newResumeVMCLass] = useCreateResumeMutation();
   
 
@@ -878,227 +879,113 @@ const [newResumeVMCLass] = useCreateResumeMutation();
     //       })
     //      })
 
-    const { data } = await axios.post('https://whale-app-qsx89.ondigitalocean.app/vmclass/create-resume', {
-      byTeacher: teacher._id,
-      plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
-      elapsedClassTime: elapsedTime,
-      startClassTime: startClassTime.toISOString(),
-      endClassTime: endClassTime.toISOString(),
-      plannerNoClass: !currentActivity ? plannerNoClass : null,
-      classroomId: userClassroom._id,
-      imgFirstVMClass:activityImageFirst ,
-      imgSecondVMClass: activityImageSecond,
-      imgThirdVMClass:activityImageThird ,
-      presentStudents: presentStudents,
-      evaluationNotation: evaluationNotation,
-      extraActivities: extraActivitiesList,
-      observationsClass: observationsList
-    }, {
-      headers: {
-        'Content-Type': 'multipart/form-data'
-      }
-    }
-    )
 
-      if (data) {
-        console.log(data)
 
-        Swal.fire({
-          title: data.message,
-          icon: 'success'
+
+
+
+    Swal.fire({
+      title: '¿Deseas finalizar la clase?',
+      showDenyButton: true,
+      showCancelButton: false,
+      confirmButtonText: 'Si',
+      denyButtonText: `No`,
+      buttonsStyling: true,
+      showLoaderOnConfirm: true,
+  }).then((result) => {
+      /* Read more about isConfirmed, isDenied below */
+
+      if (result.isConfirmed) {
+        // const { data } = axios.post('https://whale-app-qsx89.ondigitalocean.app/vmclass/create-resume', {
+        //   byTeacher: teacher._id,
+        //   plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
+        //   elapsedClassTime: elapsedTime,
+        //   startClassTime: startClassTime.toISOString(),
+        //   endClassTime: endClassTime.toISOString(),
+        //   plannerNoClass: !currentActivity ? plannerNoClass : null,
+        //   classroomId: userClassroom._id,
+        //   imgFirstVMClass:activityImageFirst ,
+        //   imgSecondVMClass: activityImageSecond,
+        //   imgThirdVMClass:activityImageThird ,
+        //   presentStudents: presentStudents,
+        //   evaluationNotation: evaluationNotation,
+        //   extraActivities: extraActivitiesList,
+        //   observationsClass: observationsList
+        // }, {
+        //   headers: {
+        //     'Content-Type': 'multipart/form-data'
+        //   }
+        // }
+        // )
+    
+        //   if (data) {
+        //     console.log(data)
+    
+        //     Swal.fire({
+        //       title: data.message,
+        //       icon: 'success'
+        //     })
+        //     setTimeout(() => {
+        //       dispatch(reload())
+        //       navigate(-1)
+        //     }, 1500)
+        //   } else {
+        //     Swal.fire({
+        //       title: data.error,
+        //       icon: 'error'
+        //     })
+        //   }
+        axios.post('https://whale-app-qsx89.ondigitalocean.app/vmclass/create-resume', {
+          byTeacher: teacher._id,
+          plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
+          elapsedClassTime: elapsedTime,
+          startClassTime: startClassTime.toISOString(),
+          endClassTime: endClassTime.toISOString(),
+          plannerNoClass: !currentActivity ? plannerNoClass : null,
+          classroomId: userClassroom._id,
+          imgFirstVMClass:activityImageFirst ,
+          imgSecondVMClass: activityImageSecond,
+          imgThirdVMClass:activityImageThird ,
+          presentStudents: presentStudents,
+          evaluationNotation: evaluationNotation,
+          extraActivities: extraActivitiesList,
+          observationsClass: observationsList
+        }, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        ).then((response)=>{
+    
+          if (response.data) {
+            console.log(response)
+    
+            Swal.fire({
+              title: response.data.message,
+              icon: 'success'
+            })
+            setTimeout(() => {
+              dispatch(reload())
+              navigate(-1)
+            }, 1500)
+          } else {
+            Swal.fire({
+              title: response.data.error,
+              icon: 'error'
+            })
+          }
+
+        }).catch((error)=>{
+          console.log(error)
         })
-        setTimeout(() => {
+
+
+      } else if (result.isDenied) {
+          Swal.fire('No se ha podido finalizar la clase', '', 'info')
+
           dispatch(reload())
-          navigate(-1)
-        }, 1500)
-      } else {
-        Swal.fire({
-          title: data.error,
-          icon: 'error'
-        })
       }
-
-
-
-
-  //   Swal.fire({
-  //     title: '¿Deseas finalizar la clase?',
-  //     showDenyButton: true,
-  //     showCancelButton: false,
-  //     confirmButtonText: 'Si',
-  //     denyButtonText: `No`,
-  //     buttonsStyling: true,
-  //     showLoaderOnConfirm: true,
-  // }).then((result) => {
-  //     /* Read more about isConfirmed, isDenied below */
-
-  //     if (result.isConfirmed) {
-
-  //     //  const response = axios.post('http://localhost:4000/vmclass/create-resume', formData, {
-  //     //     headers: {
-  //     //       'Content-Type': 'multipart/form-data',
-  //     //     },
-  //     //   })
-        
-  //     //      if (response) {
-  //     //       console.log(response)
-  //     //       Swal.fire({
-  //     //         text: response.data.message,
-  //     //         icon: "success",
-  //     //     });
-
-  //     //   }
-
-  //     // newResumeVMCLass(dataResume).then((res)=>{
-  //     //   console.log(res)
-  //     //   if (res.data){
-  //     //     swal.fire({
-  //     //       text: res.data.message,
-  //     //       icon: "success",
-  //     //   });
-  //     //   }
-  //     // }).catch((error)=>{
-  //     //   console.log(error)
-  //     // })
-
-
-  //      fetch('http://localhost:4000/vmclass/create-resume',{
-  //       method: 'POST',
-  //       body: formData,
-  //       headers:{
-  //         'Content-Type': 'multipart/form-data',
-  //       }
-  //      }).then((res)=>{
-  //       console.log(res)
-  //      }).catch((error)=>{
-  //       console.log(error)
-  //      })
-
-
-
-
-
-
-
-  //       // axios.post('http://localhost:4000/vmclass/create-resume', formData, {
-  //       //   headers: {
-  //       //     'Content-Type': 'multipart/form-data',
-  //       //   },
-  //       // }).then((res) => {
-  //       //   console.log(res)
-  //       //   //  Check the status code of the response
-  //       //   if (res.status === 200) {
-  //       //     // Success
-  //       //     console.log(res);
-  //       //     Swal.fire({
-  //       //       text: res.data.message,
-  //       //       icon: "success",
-  //       //     });
-  //       //     setTimeout(() => {
-  //       //       dispatch(reload())
-  //       //       navigate(-1)
-  //       //     }, 1500)
-  //       //   } else {
-  //       //     // Error
-  //       //     console.log(res);
-  //       //     Swal.fire({
-  //       //       text: "Ha ocurrido un error al finalizar la clase",
-  //       //       icon: "error",
-  //       //     });
-  //       //   }
-  //       // }).catch((error) => {
-  //       //   console.log(error)
-  //       // });
-
-
-  //   // try {
-  //   //   axios.post('http://localhost:4000/vmclass/create-resume', formData, {
-  //   //     headers: {
-  //   //       'Content-Type': 'multipart/form-data',
-  //   //     },
-  //   //   }).then((res)=>{
-  //   //     console.log(res)
-  //   //   //  Check the status code of the response
-  //   //   if (res.status === 200) {
-  //   //     // Success
-  //   //     console.log(res);
-  //   //     Swal.fire({
-  //   //       text: "Clase Finalizada con exito",
-  //   //       icon: "success",
-  //   //     });
-  //   //     setTimeout(()=>{
-  //   //       dispatch(reload())
-  //   //       navigate(-1)
-  //   //     },1500)
-  //   //   } else {
-  //   //     // Error
-  //   //     console.log(res);
-  //   //     Swal.fire({
-  //   //       text: "Ha ocurrido un error al finalizar la clase",
-  //   //       icon: "error",
-  //   //     });
-
-
-  //   //   }
-  //   //   }).catch((error)=>{
-  //   //     console.log(error)
-  //   //   });
-
-
-  //   // } catch (error) {
-  //   //   // Handle the error
-  //   //   console.log(error);
-  //   //   Swal.fire({
-  //   //     text: "Ha ocurrido un error inesperado",
-  //   //     icon: "error",
-  //   //   });
-  //   // }
-
-  //   // try {
-  //   //   const res = axios.post('http://localhost:4000/vmclass/create-resume', formData, {
-  //   //     headers: {
-  //   //       'Content-Type': 'multipart/form-data',
-  //   //     },
-  //   //   });
-  //   //   console.log(res);
-    
-  //   //   // Check the status code of the response
-  //   //   if (res) {
-  //   //     // Success
-  //   //     console.log(res);
-  //   //     Swal.fire({
-  //   //       text: res.data.message,
-  //   //       icon: "success",
-  //   //     });
-  //   //     // setTimeout(() => {
-  //   //     //   dispatch(reload());
-  //   //     //   navigate(-1);
-  //   //     // }, 1500);
-  //   //   } else {
-  //   //     // Error
-  //   //     console.log(res);
-  //   //     Swal.fire({
-  //   //       text: "Ha ocurrido un error al finalizar la clase",
-  //   //       icon: "error",
-  //   //     });
-  //   //   }
-  //   // } catch (error) {
-  //   //   // Handle the error
-  //   //   console.log(error);
-  //   //   Swal.fire({
-  //   //     text: "Ha ocurrido un error inesperado",
-  //   //     icon: "error",
-  //   //   });
-  //   // }
-    
-
-  //     } else if (result.isDenied) {
-  //         Swal.fire('No se ha podido finalizar la clase', '', 'info')
-
-  //         dispatch(reload())
-  //     }
-  // })
-
+  })
 
 
 
@@ -2273,20 +2160,6 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                       {activities}
                     </div>
 
-                    <div className='text-gray-600 border-teal-500 rounded p-2 border-l-4 h-fit shadow-lg cursor-pointer bg-gray-50' >
-                    <p>Hola</p>
-                    {
-                      activityImageFirst ? `${activityImageFirst}` : 'no hay imagen seleccionada'
-                    }
-                    <p>Hola</p>
-                    {
-                      activityImageSecond ? `${activityImageSecond}` : 'no hay imagen seleccionada'
-                    }
-                    <p>Hola</p>
-                    {
-                      activityImageThird ? `${activityImageThird}` : 'no hay imagen seleccionada'
-                    }
-                    </div>
 
                     {
                       extraActivitiesList.length > 0 ? (
