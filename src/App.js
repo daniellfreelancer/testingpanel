@@ -14,6 +14,7 @@ import { adminValue } from './features/userApi';
 import SchoolDetail from './pages/SchoolDetail';
 import ClassroomDetail from './pages/ClassroomDetail';
 import Tableplanification from './pages/Tableplanification';
+import Vmclassresume from './pages/Vmclassresume';
 
 function App() {
 
@@ -32,6 +33,7 @@ function App() {
               <Route path="/classroom/:id" element={<ClassroomDetail />} />
               <Route path="/notifications" element={<Notifications />} />
               <Route path="/vmclass/:id" element={<Vmclass />} />
+              <Route path="/classroom/:id/vmclassresume/:idresume" element={<Vmclassresume />} />
               <Route path="/create-planification" element={<CreatePlanifications />} />
               <Route path="/planifications" element={<Planifications />} />
               <Route path="/*" element={<Error404 />} />

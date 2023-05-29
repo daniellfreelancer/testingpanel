@@ -32,7 +32,7 @@ export default function SchoolDetail() {
            setUserTeachersData(data.response.teachers);
            setUserClassroom(data.response.classrooms)
            setUserStudents(data.response.students)
-           console.log(data.response.students)
+
           } catch (error) {
             console.log(error);
           }

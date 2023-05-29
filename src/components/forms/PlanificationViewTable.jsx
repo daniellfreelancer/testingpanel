@@ -254,7 +254,7 @@ export default function PlanificationViewTable({ idPlanner }) {
      */
     return (
 
-        <div className="  overflow-x-auto pt-5  ">
+        <div className="overflow-x-auto pt-5  ">
             {/* <GoBackToButton /> */}
             <table className="min-w-max w-full rounded-lg border my-4 ">
                 <caption className="py-3 text-gray-600 border-t">Planificación: {`${userClassroom.grade}° ${userClassroom.level === 'basico' ? 'Básico' : 'Medio'} - Sección: "${userClassroom.section}"`}</caption>

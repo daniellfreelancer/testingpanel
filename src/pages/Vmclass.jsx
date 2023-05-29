@@ -203,6 +203,7 @@ export default function Vmclass() {
       setActivities(current.activities);
       setLearningObjetives(current.learningObjectives);
       setMaterials(current.materials);
+      setOtherMaterials(current.otherMaterials)
       setDuration(current.duration);
       current.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime");
       setSchoolBlock(current.schoolBlock);

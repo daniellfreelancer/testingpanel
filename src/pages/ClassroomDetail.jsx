@@ -40,6 +40,7 @@ export default function ClassroomDetail() {
             //     setuserTeachersData(data.response.teacher)
             //     setUserStudents(data.response.students)
             //     setUserPlanner(data.response.planner)
+            // setUserClasshistory(data.response.classHistory)
             // } catch (error) {
             //     console.log(error);
             // }

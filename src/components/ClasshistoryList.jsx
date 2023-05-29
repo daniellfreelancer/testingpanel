@@ -3,8 +3,11 @@ import { useDispatch } from 'react-redux';
 import Swal from 'sweetalert2';
 import { SiGoogleclassroom} from 'react-icons/si'
 import {AiOutlineEye} from 'react-icons/ai'
+import { useParams } from 'react-router';
+import { Link } from 'react-router-dom';
 
 export default function ClasshistoryList({ userClassHistory }) {
+
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
@@ -28,18 +31,16 @@ export default function ClasshistoryList({ userClassHistory }) {
     return (
         <div className='w-full md:col-span-1 relative lg:h-[75vh] h-[45vh] m-auto border rounded-lg bg-white overflow-scroll'>
           <p className='px-4 py-2 text-2xl font-bold'>VMClass:</p>
-          {userClassHistory.length > 0 ? (
+          {userClassHistory.length > 0 && userClassHistory !== null ? (
             <>
               <ul>
-                {userClassHistory.slice(startIndex, endIndex).map((item, _id) => (
+                {userClassHistory?.slice(startIndex, endIndex).map((item, _id) => (
                   <ClassHistoryItem
                     key={_id}
                     startClassTime={item.startClassTime}
-                    duration={item.plannerClass.duration}
-                    schoolBlock={item.plannerClass.schoolBlock}
-                    content={item.plannerClass.content}
-                    byTeacherName={item.byTeacher.name}
-                    byTeacherLastName={item.byTeacher.lastName}
+                    content={item.plannerClass?.content}
+                    byTeacherName={item.byTeacher?.name}
+                    byTeacherLastName={item.byTeacher?.lastName}
                     elapsedClassTime={item.elapsedClassTime}
                     idResume={item._id}
                   />
@@ -81,7 +82,7 @@ function ClassHistoryItem({ startClassTime, duration, schoolBlock, content, byTe
     const elapsedMinutes = Math.floor(elapsedClassTime / 60);
     const elapsedSeconds = elapsedClassTime - elapsedMinutes * 60;
 
-
+    const {id}= useParams()
 
 
     function formatDate(startClassTime) {
@@ -110,7 +111,10 @@ function ClassHistoryItem({ startClassTime, duration, schoolBlock, content, byTe
                 <h2 className=''>Tiempo efectivo:</h2>
                      {elapsedMinutes.toString().padStart(2, '0')}:{elapsedSeconds.toString().padStart(2, '0')} Minutos
                 </div>
+                <Link to={`/classroom/${id}/vmclassresume/${idResume}`}>
                 <AiOutlineEye size={20} className='text-indigo-600' />
+                </Link>
+                
             </div>
         </li>
     );
