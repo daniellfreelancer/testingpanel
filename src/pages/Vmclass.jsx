@@ -30,6 +30,7 @@ import { reload } from '../features/reloadSlice'
 import { v4 as uuidv4 } from 'uuid';
 import { useCreateResumeMutation } from '../features/resumeVmAPI'
 import Swal from 'sweetalert2'
+import LoadingModal from '../components/modal/LoadingModal'
 
 
 
@@ -41,7 +42,10 @@ const steps = [
   { label: 'Fin Clase', completed: false, img: BsSendFill },
 ];
 
+
+
 export default function Vmclass() {
+  const [isLoading, setIsLoading] = useState(false);
   const { id } = useParams()
 
   const dispatch = useDispatch()
@@ -60,7 +64,6 @@ export default function Vmclass() {
   const [students, setStudents] = useState([])
   const [studentsOnClass, setStudentsOnClass] = useState(0);
   const [studentsOutClass, setStudentsOutClass] = useState(0);
-  const [plannerNoClass, setPlannerNoClass] = useState(null)
 
 
   /**
@@ -215,23 +218,10 @@ export default function Vmclass() {
     console.log(current);
     // eslint-disable-next-line
   }, [planner]);
+
+ 
   
   useEffect(() => {
-
-    if (!currentActivity){
-      setPlannerNoClass({
-        activities,
-        classObjectives,
-        content,
-        duration,
-        indicatorsForEvaluateClass,
-        indicatorsForEvaluateClassManual,
-        evaluationType,
-        learningObjetives,
-        materials,
-        otherMaterials,
-      })
-    }
 
     handleUserData();
     addFieldsToPresentStudents(students);
@@ -804,85 +794,18 @@ const [newResumeVMCLass] = useCreateResumeMutation();
 
   const handleCreateResumeVMClass = async  () => {
 
-
-
-
-
-    const dataResume = {
-      byTeacher: teacher._id,
-      plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
-      elapsedClassTime: elapsedTime,
-      startClassTime: startClassTime.toISOString(),
-      endClassTime: endClassTime.toISOString(),
-      plannerNoClass: !currentActivity ? plannerNoClass : null,
-      classroomId: userClassroom._id,
-      imgFirstVMClass: activityImageFirst ? activityImageFirst : null ,
-      imgSecondVMClass: activityImageSecond ? activityImageSecond : null,
-      imgThirdVMClass: activityImageThird ? activityImageThird : null,
-      // presentStudents: JSON.stringify(presentStudents),
-      // evaluationNotation: JSON.stringify(evaluationNotation),
-      // extraActivities: JSON.stringify(extraActivitiesList),
-      // observationsClass: JSON.stringify(observationsList)
-      presentStudents: presentStudents,
-      evaluationNotation: evaluationNotation,
-      extraActivities: extraActivitiesList,
-      observationsClass: observationsList
-    };
-    
-    const formData = new FormData();
-    
-    Object.entries(dataResume).forEach(([key, value]) => {
-      formData.append(key, value);
-    });
-
-    const dataForm = new FormData();
-
-    dataForm.append('byTeacher', teacher._id );
-    dataForm.append('plannerClass', currentActivity ? currentActivity._id : userClassroom._id)
-    dataForm.append('elapsedClassTime',elapsedTime)
-    dataForm.append('startClassTime',startClassTime.toISOString())
-    dataForm.append('endClassTime',endClassTime.toISOString())
-    dataForm.append('plannerNoClass', !currentActivity ? plannerNoClass : null)
-    dataForm.append('classroomId',userClassroom._id )
-    dataForm.append('imgFirstVMClass', activityImageFirst)
-    dataForm.append('imgSecondVMClass',activityImageSecond)
-    dataForm.append('imgThirdVMClass', activityImageThird )
-    dataForm.append('presentStudents',  JSON.stringify(presentStudents))
-    dataForm.append('evaluationNotation', JSON.stringify(evaluationNotation))
-    dataForm.append('extraActivities', JSON.stringify(extraActivitiesList))
-    dataForm.append('observationsClass', JSON.stringify(observationsList))
-
-    
-    // axios.post('http://localhost:4000/vmclass/create-resume', dataForm, {
-    //      headers: {
-    //          'Content-Type': 'multipart/form-data',
-    //        },
-    //      }).then((response)=>{
-    //       if (response.data){
-    //         console.log(response.data)
-  
-    //         Swal.fire({
-    //           title:response.data.message,
-    //           icon: 'success'
-    //         })
-            
-    //        } else {
-    //         Swal.fire({
-    //           title:response.data.messagge,
-    //           icon: 'error'
-    //         })
-    //        }
-    //      }).catch((error)=>{
-    //       console.log(error)
-    //       Swal.fire({
-    //         title:error,
-    //         icon: 'error'
-    //       })
-    //      })
-
-
-
-
+    const plannerWihtoutPlan = {
+      activities: activities,
+      classbjectives: classObjectives,
+      content: content,
+      duration: duration,
+      evaluationIndicators: indicatorsForEvaluateClass,
+      evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
+      evaluationType: evaluationType,
+      learningObjetives: learningObjetives,
+      materials: materials,
+      otherMaterials: otherMaterials,
+    }
 
 
     Swal.fire({
@@ -894,55 +817,17 @@ const [newResumeVMCLass] = useCreateResumeMutation();
       buttonsStyling: true,
       showLoaderOnConfirm: true,
   }).then((result) => {
-      /* Read more about isConfirmed, isDenied below */
 
       if (result.isConfirmed) {
-        // const { data } = axios.post('https://whale-app-qsx89.ondigitalocean.app/vmclass/create-resume', {
-        //   byTeacher: teacher._id,
-        //   plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
-        //   elapsedClassTime: elapsedTime,
-        //   startClassTime: startClassTime.toISOString(),
-        //   endClassTime: endClassTime.toISOString(),
-        //   plannerNoClass: !currentActivity ? plannerNoClass : null,
-        //   classroomId: userClassroom._id,
-        //   imgFirstVMClass:activityImageFirst ,
-        //   imgSecondVMClass: activityImageSecond,
-        //   imgThirdVMClass:activityImageThird ,
-        //   presentStudents: presentStudents,
-        //   evaluationNotation: evaluationNotation,
-        //   extraActivities: extraActivitiesList,
-        //   observationsClass: observationsList
-        // }, {
-        //   headers: {
-        //     'Content-Type': 'multipart/form-data'
-        //   }
-        // }
-        // )
-    
-        //   if (data) {
-        //     console.log(data)
-    
-        //     Swal.fire({
-        //       title: data.message,
-        //       icon: 'success'
-        //     })
-        //     setTimeout(() => {
-        //       dispatch(reload())
-        //       navigate(-1)
-        //     }, 1500)
-        //   } else {
-        //     Swal.fire({
-        //       title: data.error,
-        //       icon: 'error'
-        //     })
-        //   }
+        setIsLoading(true);
+
         axios.post('https://whale-app-qsx89.ondigitalocean.app/vmclass/create-resume', {
           byTeacher: teacher._id,
           plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
           elapsedClassTime: elapsedTime,
           startClassTime: startClassTime.toISOString(),
           endClassTime: endClassTime.toISOString(),
-          plannerNoClass: !currentActivity ? plannerNoClass : null,
+          plannerNoClass: !currentActivity ? plannerWihtoutPlan : null,
           classroomId: userClassroom._id,
           imgFirstVMClass:activityImageFirst ,
           imgSecondVMClass: activityImageSecond,
@@ -957,13 +842,14 @@ const [newResumeVMCLass] = useCreateResumeMutation();
           }
         }
         ).then((response)=>{
-    
+          setIsLoading(false);
           if (response.data) {
             console.log(response)
     
             Swal.fire({
               title: response.data.message,
-              icon: 'success'
+              icon: 'success',
+              timer: 2000
             })
             setTimeout(() => {
               dispatch(reload())
@@ -977,13 +863,12 @@ const [newResumeVMCLass] = useCreateResumeMutation();
           }
 
         }).catch((error)=>{
+          setIsLoading(false);
           console.log(error)
         })
 
-
       } else if (result.isDenied) {
           Swal.fire('No se ha podido finalizar la clase', '', 'info')
-
           dispatch(reload())
       }
   })
@@ -1777,10 +1662,6 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                       ))}
                     </div>
                   </div>
-
-
-
-
                 </div>
               )}
               {currentStep === 2 && (
@@ -2273,6 +2154,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
             </div>
           </div>
         </div>
+        {isLoading && <LoadingModal title={'Finalizando clase'} />}
       </main>
     </Sidebar>
   )

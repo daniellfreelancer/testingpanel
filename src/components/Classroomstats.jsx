@@ -183,18 +183,20 @@ export default function Classroomstats({ userClassroom }) {
 
 
     useEffect(() => {
+        const ladies = femaleStudents.length || 0
+        const guys = maleStudents.length || 0
         const chartData = {
             labels: ["Niñas", "Niños"],
             datasets: [
                 {
                     label: "Niñas",
-                    data: [femaleStudents.length, 0],
+                    data: [ladies, 0],
                     borderColor: "rgb(75, 85, 99)",
                     backgroundColor: "#6366F1",
                 },
                 {
                     label: "Niños",
-                    data: [0, maleStudents.length],
+                    data: [0, guys],
                     borderColor: "rgb(75, 85, 99)",
                     backgroundColor: "#38B2AC",
                 },
@@ -253,7 +255,7 @@ export default function Classroomstats({ userClassroom }) {
         };
         setAttendaceOptions(options);
          // eslint-disable-next-line
-    }, [userClassroom])
+    }, [attendance])
 
 
 
@@ -292,3 +294,4 @@ export default function Classroomstats({ userClassroom }) {
       </div>
     )
 }
+

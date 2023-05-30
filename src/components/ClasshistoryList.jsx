@@ -1,6 +1,4 @@
 import React, { useState } from 'react'
-import { useDispatch } from 'react-redux';
-import Swal from 'sweetalert2';
 import { SiGoogleclassroom} from 'react-icons/si'
 import {AiOutlineEye} from 'react-icons/ai'
 import { useParams } from 'react-router';
@@ -11,7 +9,9 @@ export default function ClasshistoryList({ userClassHistory }) {
 
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
-  
+
+    const sortedHistory = userClassHistory?.slice().sort((a, b) => new Date(b.startClassTime) - new Date(a.startClassTime));
+ 
     const totalPages = Math.ceil(userClassHistory.length / itemsPerPage);
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -34,11 +34,11 @@ export default function ClasshistoryList({ userClassHistory }) {
           {userClassHistory.length > 0 && userClassHistory !== null ? (
             <>
               <ul>
-                {userClassHistory?.slice(startIndex, endIndex).map((item, _id) => (
+                {sortedHistory.slice(startIndex, endIndex).map((item, _id) => (
                   <ClassHistoryItem
                     key={_id}
                     startClassTime={item.startClassTime}
-                    content={item.plannerClass?.content}
+                    content={item.plannerClass?.content ? item.plannerClass?.content : item.plannerNoClass[0]?.content }
                     byTeacherName={item.byTeacher?.name}
                     byTeacherLastName={item.byTeacher?.lastName}
                     elapsedClassTime={item.elapsedClassTime}
@@ -78,7 +78,6 @@ export default function ClasshistoryList({ userClassHistory }) {
 
 function ClassHistoryItem({ startClassTime, duration, schoolBlock, content, byTeacherName, byTeacherLastName, elapsedClassTime, idResume   }) {
 
-    const dispatch = useDispatch();
     const elapsedMinutes = Math.floor(elapsedClassTime / 60);
     const elapsedSeconds = elapsedClassTime - elapsedMinutes * 60;
 

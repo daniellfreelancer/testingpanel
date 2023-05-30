@@ -78,14 +78,13 @@ export default function Vmclassresume() {
                 setStartClassTime(data.response.startClassTime)
                 setEndClassTime(data.response.endClassTime)
                 setPlannerClass(data.response.plannerClass)
-                console.log(data.response)
             }
 
         }
 
         fetchData(idresume)
 
-    }, [])
+    }, [idresume])
 
 
     useEffect(() => {
@@ -120,9 +119,9 @@ export default function Vmclassresume() {
                 <GoBackToButton />
 
                 <div className='w-full m-auto p-4'  >
-                    <div className='flex sm:flex sm:flex-wrap justify-around gap-4 w-full' >
+                    <div className='flex sm:flex sm:flex-wrap justify-between gap-4 w-full' >
 
-                        <div className='rounded shadow-lg bg-white p-3 lg:w-[24%] sm:w-[48%] h-[6rem] items-center justify-evenly text-gray-600 flex gap-4'>
+                        <div className='rounded shadow-lg bg-white p-3 lg:w-[23.5%] sm:w-[48%] h-[6rem] items-center justify-evenly text-gray-600 flex gap-4'>
                             <div className='bg-indigo-100 rounded-full p-3'>
                                 <GiTeacher className='text-indigo-700' size={20} />
                             </div>
@@ -132,7 +131,7 @@ export default function Vmclassresume() {
                             </div>
                         </div>
 
-                        <div className='rounded shadow-lg bg-white p-3 lg:w-[24%] sm:w-[48%]  h-[6rem] items-center justify-evenly text-gray-600 flex gap-4'>
+                        <div className='rounded shadow-lg bg-white p-3 lg:w-[23.5%] sm:w-[48%]  h-[6rem] items-center justify-evenly text-gray-600 flex gap-4'>
                             <div className='bg-indigo-100 rounded-full p-3'>
                                 <BsPeopleFill className='text-teal-700' size={20} />
                             </div>
@@ -146,7 +145,7 @@ export default function Vmclassresume() {
                             </div>
                         </div>
 
-                        <div className='rounded shadow-lg bg-white p-3 lg:w-[24%] sm:w-[48%]  h-[6rem] items-center justify-evenly text-gray-600 flex gap-4'>
+                        <div className='rounded shadow-lg bg-white p-3 lg:w-[23.5%] sm:w-[48%]  h-[6rem] items-center justify-evenly text-gray-600 flex gap-4'>
                             <div className='bg-indigo-100 rounded-full p-3'>
                                 <BsCalendarDate className='text-indigo-700' size={20} />
                             </div>
@@ -157,7 +156,7 @@ export default function Vmclassresume() {
 
                             </div>
                         </div>
-                        <div className='rounded shadow-lg bg-white p-3 lg:w-[24%] sm:w-[48%]  h-[6rem] items-center justify-evenly text-gray-600 flex gap-4'>
+                        <div className='rounded shadow-lg bg-white p-3 lg:w-[23.5%] sm:w-[48%]  h-[6rem] items-center justify-evenly text-gray-600 flex gap-4'>
                             <div className='bg-indigo-100 rounded-full p-3'>
                                 <BsInfoCircle className='text-indigo-700' size={20} />
                             </div>
@@ -318,7 +317,7 @@ export default function Vmclassresume() {
 
 
                     <div className='lg:w-full mt-4 lg:mx-0 sm:mx-1 bg-white rounded shadow-lg '>
-                        <Presentstudents presentStudents={classResume?.presentStudents} />
+                        <Presentstudents presentStudents={studentsResume} />
                     </div>
 
 
@@ -344,8 +343,15 @@ export default function Vmclassresume() {
                         <div className='bg-white rounded shadow-lg w-[49%] p-4 '>
                         <h2 className="font-bold text-xl text-2x1 text-gray-800">Planificación:</h2>
                         <div className="flex gap-4 justify-between w-full items-center ">
-                           <p>Planificación de la clase</p> 
-                            <Modalviewplaning idPlanner={plannerClass?._id} />
+                           <p>Planificación de la clase</p>
+                           {
+                            plannerClass?._id ? (
+                                <Modalviewplaning idPlanner={plannerClass?._id} />
+                            ) : (
+                                <p>Clase realizada sin planificación</p>
+                            )
+                           } 
+                            
                         </div>
                         </div>
 

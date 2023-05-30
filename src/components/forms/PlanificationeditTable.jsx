@@ -106,7 +106,9 @@ export default function PlanificationeditTable({ idPlanner }) {
             denyButtonText: `No`,
             buttonsStyling: true,
             showLoaderOnConfirm:true,
-            customClass: {
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor:'#d33',
+            showClass: {
               title: 'text-xs',
               confirmButton: 'text-green-500',
               denyButton: 'text-green-500',

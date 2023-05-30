@@ -1,0 +1,133 @@
+const segundoMedioIndicadores=[
+
+        {
+        id: "EF2MOA01",
+        indicators: [
+        { id: "2M01IE01", value: "Aplican y perfeccionan sus habilidades motrices específicas de locomoción, manipulación y estabilidad en deportes individuales y de oposición."},
+        { id: "2M01IE02", value: "Afinan sus habilidades motrices de manipulación para realizar saques en tenis de mesa o bádminton y el manejo de implementos en la gimnasia rítmica, entre otros."},
+        { id: "2M01IE03", value: "Ejecutan con precisión los golpes con distintos efectos y a distintas alturas, entre otros."},
+        { id: "2M01IE04", value: "Ajustan y aplican con precisión sus habilidades motrices específicas en un ambiente acuático o terrestre."},
+        { id: "2M01IE05", value: "Aplican con precisión sus habilidades motrices para ejecutar desplazamientos, giros y lanzamientos."},
+        { id: "2M01IE06", value: "Afinan sus habilidades motrices para aumentar la complejidad de la tarea, como durante un salto con la cuerda al cual se incorpora un doble salto."},
+        { id: "2M01IE07", value: "Perfeccionan y aplican con precisión las habilidades motrices específicas adquiridas de locomoción, para resolver una tarea de manera eficiente en situaciones diversas al escalar, ejecutar ascensos en trekking, entre otros."},
+        { id: "2M01IE08", value: "Aplican sus habilidades motrices específicas para sobrepasar y controlar a un adversario o una adversaria durante situaciones de juego."},
+        { id: "2M01IE09", value: "Perfeccionan las habilidades motrices específicas, controlando la ejecución a diferentes velocidades."},
+        { id: "2M01IE10", value: "Aplican con precisión y ajustan sus habilidades motrices específicas durante las competencias, al aire libre y en deportes por equipos, entre otros."},
+        { id: "2M01IE11", value: "Aplican y proponen estrategias para controlar factores asociados al deterioro del medioambiente en su propio entorno."},
+        { id: "2M01IE12", value: "Aplican y adecuan sus habilidades motrices específicas durante las actividades físicas al aire libre."},
+        { id: "2M01IE13", value: "Perfeccionan y aplican sus habilidades motrices en la práctica de al menos un deporte de oposición/colaboración (por ejemplo, básquetbol, hándbol, vóleibol, hockey, rugby, fútbol, entre otros)."},
+        { id: "2M01IE14", value: "Aplican y utilizan con precisión sus habilidades motrices para sobrepasar y controlar a un adversario."},
+        { id: "2M01IE15", value: "Perfeccionan y combinan los desplazamientos, giros y lanzamientos en diferentes situaciones de baile."},
+        { id: "2M01IE16", value: "Aplican y adaptan a diferentes coreografías los ritmos de danzas folclóricas y populares."},
+        { id: "2M01IE17", value: "Perfeccionan y aplican con precisión sus habilidades motrices en un deporte de oposición/colaboración (por ejemplo, básquetbol, hándbol, vóleibol, hockey, rugby, fútbol, entre otros)."},
+        { id: "2M01IE18", value: "Aplican con precisión sus habilidades motrices para sobrepasar y controlar a un adversario."},
+        { id: "2M01IE19", value: "Aplican con precisión y control las habilidades motrices en un deporte de colaboración/oposición."},
+        { id: "2M01IE20", value: "Utilizan términos como pasar, recibir, desplazarse con el balón, marcar e interceptar, abordar y desafiar a un o una oponente que tenga el balón."}
+        ]
+        },
+        {
+        id: "EF2MOA02",
+        indicators: [
+        { id: "2M02IE01", value: "Evalúan y ajustan la tarea motriz, reaccionando y seleccionando la mejor respuesta para responder a los oponentes durante el juego."},
+        { id: "2M02IE02", value: "Diseñan estrategias para resolver problemas que pueden ocurrir durante el juego."},
+        { id: "2M02IE03", value: "Aplican y toman decisiones (cómo, cuándo y dónde) en relación con tácticas y estrategias que intervienen en el juego."},
+        { id: "2M02IE04", value: "Proponen y analizan estrategias para resolver en el juego del oponente los problemas que se den en el juego."},
+        { id: "2M02IE05", value: "Evalúan el terreno y las situaciones de juego para generar la respuesta más indicada."},
+        { id: "2M02IE06", value: "Diseñan y aplican estrategias de colaboración para resolver un problema durante la práctica de un juego o deporte."},
+        { id: "2M02IE07", value: "Evalúan el juego del contrario y adecuan las respuestas según las diferentes situaciones que se presenten, como acompañar la jugada, colaborar con una compañera o un compañero, entre otras."},
+        { id: "2M02IE08", value: "Aplican diferentes estrategias de ataque y de defensa y las reglas apropiadas para el juego o el deporte."},
+        { id: "2M02IE09", value: "Reconocen su error y aceptan la sanción frente a una infracción."},
+        { id: "2M02IE10", value: "Diseñan diferentes estrategias grupales para elaborar una danza."},
+        { id: "2M02IE11", value: "Evalúan una danza para aplicar diferentes diseños coreográficos."},
+        { id: "2M02IE12", value: "Utilizan diversas estrategias de defensa y ataque durante un juego o deporte de oposición/colaboración."},
+        { id: "2M02IE13", value: "Aplican las habilidades motrices específicas en situación de ataque o defensa, en superioridad o inferioridad numérica, según sea requerido."},
+        { id: "2M02IE14", value: "Evalúan el juego de su contrincante para adecuar las diferentes respuestas a las situaciones, como mayor número de jugadores o jugadoras, espacio más reducido, entre otros."},
+        { id: "2M02IE15", value: "Diseñan y aplican estrategias de defensa y ataque en un juego."},
+        { id: "2M02IE16", value: "Evalúan de acuerdo a la situación que se da en el juego, la aplicación de estrategias de ataque o defensa, en superioridad o inferioridad numérica."},
+        { id: "2M02IE17", value: "Aplican y reconocen estrategias básicas de defensa y de ataque en situaciones modificadas de juego."},
+        { id: "2M02IE18", value: "Evalúan el juego y adecuan las diferentes situaciones, como mayor número de jugadoras o jugadores, espacio más reducido, etc."},
+        { id: "2M02IE19", value: "Diseñan y aplican diferentes estrategias de ataque y defensa según las reglas apropiadas al deporte."},
+        { id: "2M02IE20", value: "Aplican y ejecutan ataques rápidos, contraataques, contragolpes, ajustes defensivos en el juego."}
+        ]
+        },
+        {
+        id: "EF2MOA03",
+        indicators: [
+        { id: "2M03IE01", value: "Diseñan y aplican un programa de entrenamiento de acuerdo a sus intereses y necesidades individuales, considerando evaluaciones, principios y métodos de entrenamiento de la condición física."},
+        { id: "2M03IE02", value: "Ejecutan y evalúan si los ejercicios seleccionados les permiten mejorar los componentes de la condición física."},
+        { id: "2M03IE03", value: "Evalúan, a partir del diagnóstico personal, los progresos que produce el entrenamiento en el ámbito muscular, respiratorio y cardiovascular."},
+        { id: "2M03IE04", value: "Identifican los procesos que afectan el rendimiento deportivo, como falta de descanso, cambios en la planificación del entrenamiento, entre otros."},
+        { id: "2M03IE05", value: "Comparten sus registros personales de los niveles de aptitud física alcanzada y establecen objetivos para mejorarlos."},
+        { id: "2M03IE06", value: "Ejecutan ejercicios que les permiten mejorar los componentes de la condición física."},
+        { id: "2M03IE07", value: "Evalúan y comparten sus niveles de avances personales en su condición física, los registran y establecen nuevos desafíos."},
+        { id: "2M03IE08", value: "Asignan un tiempo determinado para aplicar un entrenamiento para la condición física."},
+        { id: "2M03IE09", value: "Explican los procesos que afectan durante el ejercicio y/o el rendimiento deportivo; por ejemplo, falta de descanso, progresión, deshidratación, entre otros."},
+        { id: "2M03IE10", value: "Aplican acciones para reforzar aquellos componentes de la condición física que necesitan mejorar, utilizando procedimientos para lograrlo."},
+        { id: "2M03IE11", value: "Diseñan y practican un plan para mejorar su capacidad aeróbica y registran los cambios."},
+        { id: "2M03IE12", value: "Evalúan su condición física y fijan sus propios estándares para mejorarla."},
+        { id: "2M03IE13", value: "Aplican las habilidades motrices básicas para desarrollar sus capacidades físicas, incrementando la velocidad, fuerza, resistencia y flexibilidad, y respetando su propia potencialidad."},
+        { id: "2M03IE14", value: "Diseñan y aplican ejercicios para mejorar la musculatura abdominal y dorsal, entre otros."},
+        { id: "2M03IE15", value: "Evalúan sus niveles personales al caminar, correr, trotar, entre otros, en el medio natural, para incrementar su resistencia orgánica."},
+        { id: "2M03IE16", value: "Diseñan y cumplen un plan para mejorar su capacidad aeróbica y registran los cambios en su condición física."},
+        { id: "2M03IE17", value: "Evalúan la manera en que controlan la intensidad del esfuerzo y explican cómo afecta su plan de entrenamiento al organismo para ajustar sus objetivos, los resultados que quieren lograr, para controlar su progreso, entre otros."},
+        { id: "2M03IE18", value: "Aplican en su planificación del entrenamiento los principios de frecuencia, intensidad, recuperación, progresión y tiempo."},
+        { id: "2M03IE19", value: "Diseñan un programa para mejorar su condición física que desarrolle su fuerza muscular, resistencia cardiovascular, velocidad, y flexibilidad."},
+        { id: "2M03IE20", value: "Evalúan y seleccionan para su entrenamiento actividades físicas que les interesen."},
+        { id: "2M03IE21", value: "Evalúan y explican cuál fue el gasto energético de la actividad desarrollada y lo relacionan con cuánta energía aporta un alimento."},
+        { id: "2M03IE22", value: "Evalúan el progreso de su condición física por medio de algún test y modifican su plan de entrenamiento según los resultados."}
+        ]
+        },
+        {
+        id: "EF2MOA04",
+        indicators: [
+        { id: "2M04IE01", value: "Practican una variedad de actividades físicas cinco veces por semana, al menos, a una intensidad de moderada a vigorosa; por ejemplo: al trotar, su escala de percepción de esfuerzo está entre 4 y 7 puntos o logran mantener la frecuencia cardiaca a esa intensidad."},
+        { id: "2M04IE02", value: "Ejecutan actividades físicas durante la semana y elaboran un registro de lo que realizan, incluyendo tiempo, progresión, recuperación intensidad y tipo de ejercicio efectuado."},
+        { id: "2M04IE03", value: "Actúan y señalan cómo abordar las emergencias que surgen en la práctica de la actividad física."},
+        { id: "2M04IE04", value: "Aplican medidas pertinentes para trasladar a accidentados, como inmovilización, improvisación de camillas, aplicar entablillamientos, medidas de compresión, entre otros."},
+        { id: "2M04IE05", value: "Practican una variedad de actividades físicas cinco veces por semana, al menos, a una intensidad de moderada a vigorosa; por ejemplo, al trotar, su escala de percepción de esfuerzo está entre 4 y 7 puntos o logran mantener la frecuencia cardiaca a esa intensidad."},
+        { id: "2M04IE06", value: "Realizan actividad física durante la semana, señalando el tiempo, la intensidad y el tipo de ejercicio y llevando un registro de sus logros y avances."},
+        { id: "2M04IE07", value: "Actúan con seguridad y aplican en circunstancias de emergencia los conocimientos adquiridos en relación con los primeros auxilios."},
+        { id: "2M04IE08", value: "Presentan estrategias preventivas frente a las enfermedades crónicas no transmisibles asociadas a la falta de actividad física."},
+        { id: "2M04IE09", value: "Aplican medidas específicas para detener una hemorragia nasal."},
+        { id: "2M04IE10", value: "Aplican y proponen el desarrollando campañas para la mantención y el cuidado de espacios de juegos y áreas verdes y para la preservación de la flora y la fauna."},
+        { id: "2M04IE11", value: "Practican regularmente una variedad de actividades físicas al menos cinco veces por semana a una intensidad moderada a vigorosa; por ejemplo, al realizar un trote su escala de percepción está entre la puntuación 5 y 7 o logra mantener la frecuencia cardiaca a esa intensidad."},
+        { id: "2M04IE12", value: "Aplican maniobras con seguridad para enfrentar emergencias y accidentes durante las clases de Educación Física y Salud."},
+        { id: "2M04IE13", value: "Aplican medidas para trasladar a accidentados, como la inmovilización, la improvisación de camillas, los entablillamientos, la compresión, entre otras."},
+        { id: "2M04IE14", value: "Promueven con sus compañeros y compañeras, junto al profesor o profesora, los factores protectores para la salud y cómo deben realizar actividad física de manera regular, alimentarse saludablemente, entre otros."},
+        { id: "2M04IE15", value: "Practican una variedad de actividades físicas cinco veces por semana, al menos, a una intensidad de moderada a vigorosa; por ejemplo: al trotar, su escala de percepción de esfuerzo está entre 4 y 7 puntos o logran mantener la frecuencia cardiaca a esa intensidad."},
+        { id: "2M04IE16", value: "Se hidratan de forma permanente con agua."},
+        { id: "2M04IE17", value: "Actúan positivamente ante lesiones traumáticas, organizan a la gente y proponen estrategias ante urgencias."},
+        { id: "2M04IE18", value: "Relacionan experiencias motrices con eventuales situaciones de riesgo al caminar por senderos irregulares y posibles accidentes que pueden ocurrir durante la actividad."}
+        ]
+        },
+        {
+        id: "EF2MOA05",
+        indicators: [
+        { id: "2M05IE01", value: "Promueven e incentivan la práctica regular de actividad física en su comunidad."},
+        { id: "2M05IE02", value: "Lideran y contribuyen a que todos los miembros del grupo se incorporen a la tarea común."},
+        { id: "2M05IE03", value: "Promueven la convivencia y la participación con todos los compañeros durante y después del juego."},
+        { id: "2M05IE04", value: "Asumen el rol de líder, de seguidor o seguidora, cuando es apropiado, para lograr objetivos o metas grupales propuestas para la práctica de actividad física."},
+        { id: "2M05IE05", value: "Participan en la resolución de problemas originados en la práctica de actividad física, proponiendo soluciones a los conflictos, mediante sus cualidades de liderazgo."},
+        { id: "2M05IE06", value: "Expresan cuáles son sus potencialidades y limitaciones y usan las primeras para fomentar una vida activa en la comunidad."},
+        { id: "2M05IE07", value: "Promueven el compromiso por las normas éticas del juego y dan importancia a conductas responsables durante su participación en la actividad física en una variedad de entornos."},
+        { id: "2M05IE08", value: "Participan y promueven la práctica de actividad física y generan proyectos o propuestas para el trabajo en conjunto con sus compañeras y compañeros, utilizando sus entornos cercanos."},
+        { id: "2M05IE09", value: "Lideran el triunfo y el éxito y lo aceptan de buena forma, sin generar conflictos."},
+        { id: "2M05IE10", value: "Lideran y explican a sus pares que el conflicto puede ser constructivo para consolidar el trabajo en equipo."},
+        { id: "2M05IE11", value: "Promueven el interés en su comunidad por la práctica regular de actividad física."},
+        { id: "2M05IE12", value: "Proponen y usan una variedad de entornos para practicar una variedad de actividades físicas."},
+        { id: "2M05IE13", value: "Lideran la práctica de actividad física y evidencian una capacidad crítica para resolver conflictos."},
+        { id: "2M05IE14", value: "Promueven las soluciones concretas para resolver el conflicto generado en el trabajo de equipo."},
+        { id: "2M05IE15", value: "Promueven que el éxito grupal depende del trabajo colectivo."},
+        { id: "2M05IE16", value: "Participan en una variedad de actividades físicas y señalan con propiedad cuándo se comete una injusticia en el juego, para que sea corregida."},
+        { id: "2M05IE17", value: "Participan en una variedad de actividades físicodeportivas y aceptan el cobro de la o el árbitro."},
+        { id: "2M05IE18", value: "Promueven y organizan campeonatos, jornadas recreativas, encuentros deportivos u otros en su escuela y su comunidad."},
+        { id: "2M05IE19", value: "Participan y buscan alianzas estratégicas para promover una vida activa en su comunidad y/o entorno."},
+        { id: "2M05IE20", value: "Participan con entusiasmo en diferentes actividades físicas y demuestran sus talentos y capacidades."},
+        { id: "2M05IE21", value: "Reconocen cuáles son sus potencialidades y limitaciones y ponen las primeras al servicio de la actividad."},
+        { id: "2M05IE22", value: "Lideran el trabajo y se atreven a ser ejemplo para sus compañeros y compañeras."},
+        { id: "2M05IE23", value: "Participan activamente de una variedad de actividades físicas y están conscientes de sus condiciones para lograr resultados concretos."}
+        ]
+        },
+]
+
+export default segundoMedioIndicadores
