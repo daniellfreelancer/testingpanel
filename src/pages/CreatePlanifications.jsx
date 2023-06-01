@@ -1,8 +1,4 @@
 import React from 'react'
-import Sidebar from '../components/Sidebar'
-import UserLogout from '../components/UserLogout'
-
-
 
 export default function CreatePlanifications() {
   return (

@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from '../components/Sidebar'
-import UserLogout from '../components/UserLogout'
-import GoBackToButton from '../components/GoBackButton'
 import { useParams } from 'react-router';
 import Clasroominfo from '../components/Clasroominfo';
-import axios from 'axios';
 import Teachers from '../components/Teachers';
 import Students from '../components/Students';
 import Planificationinfo from '../components/Planificationinfo';
-import { useDispatch, useSelector } from 'react-redux';
+import {  useSelector } from 'react-redux';
 import { reloadValueState } from '../features/reloadSlice';
-// import { reload } from '../features/reloadSlice';
 import Modalcreateplaning from '../components/modal/Modalcreateplaning';
 import PlanificationNewTable from '../components/forms/PlanificationNewTable';
 import ScrollToTopOnRender from '../layout/ScrollToTopOnRender';
@@ -26,8 +21,7 @@ export default function ClassroomDetail() {
     const [userStudents, setUserStudents] = useState([])
     const [userPlanner, setUserPlanner] = useState([])
     const [userClasshistory, setUserClasshistory] = useState([])
-    // eslint-disable-next-line
-    const dispatch = useDispatch()
+
     const reloaded = useSelector(reloadValueState)
 
     const [getClassroomDetail] = useGetClassroomDataMutation()

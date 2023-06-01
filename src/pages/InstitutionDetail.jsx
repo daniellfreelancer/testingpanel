@@ -1,6 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from '../components/Sidebar'
-import UserLogout from '../components/UserLogout'
 import { useParams } from 'react-router-dom'
 import { useSelector } from 'react-redux';
 import { reloadValueState } from '../features/reloadSlice';
@@ -8,9 +6,8 @@ import axios from 'axios';
 import Teachers from '../components/Teachers';
 import InstitutionInfo from '../components/InstitutionInfo';
 import Schools from '../components/Schools';
-import GoBackToButton from '../components/GoBackButton';
 import UserPrograms from '../components/UserPrograms';
-import ScrollToTopOnRender from '../layout/ScrollToTopOnRender';
+
 
 export default function InstitutionDetail() {
   const { id } = useParams();

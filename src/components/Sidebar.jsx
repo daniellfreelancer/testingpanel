@@ -7,13 +7,8 @@ import { GrPlan } from 'react-icons/gr'
 import { MdOutlineSchool } from 'react-icons/md'
 import { BiHomeAlt2, BiArrowToLeft, BiArrowToRight } from 'react-icons/bi'
 import { VscOrganization } from 'react-icons/vsc'
-import { BiFilter } from "react-icons/bi";
-import { AiOutlineClose } from 'react-icons/ai'
 import { useState } from 'react'
 import UserLogout from './UserLogout'
-import { BsMenuDown } from 'react-icons/bs'
-
-
 // const Sidebar = ({ children }) => {
 //     const [isSidebarOpen, setIsSidebarOpen] = useState(true);
 

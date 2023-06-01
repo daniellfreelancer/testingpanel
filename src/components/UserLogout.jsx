@@ -1,7 +1,6 @@
 import { adminValue, deleteCredentials } from '../features/userApi'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { IoMdLogOut} from 'react-icons/io'
 import { useSignoutMutation } from '../features/loginAPI'
 import swal from 'sweetalert2';
 import Cookies from 'js-cookie'

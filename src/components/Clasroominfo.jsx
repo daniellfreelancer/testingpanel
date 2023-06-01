@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { SiGoogleclassroom } from "react-icons/si";
-import { Bar, Line } from "react-chartjs-2";
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -13,7 +13,7 @@ import {
   LineElement,
   Filler,
 } from "chart.js";
-import { useParams } from "react-router";
+
 import Classroomstats from "./Classroomstats";
 
 ChartJS.register(

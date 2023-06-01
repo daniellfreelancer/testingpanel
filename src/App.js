@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, } from 'react-router-dom';
+import { BrowserRouter, Routes, Route,  Navigate  } from 'react-router-dom';
 import Homepage from "./pages/Homepage";
 import Loginpage from "./pages/Loginpage";
 import Users from "./pages/Users";
@@ -22,32 +22,64 @@ function App() {
   const userActive = useSelector(adminValue)
 
   return (
-    <>
-      <BrowserRouter>
-      <ScrollToTopOnRender/>
+    // <>
+    //   <BrowserRouter>
+    //   <ScrollToTopOnRender/>
       
-        <Routes>
-        <Route path="/" index={true} element={<Loginpage />} />
-        </Routes>
-        {userActive && localStorage.getItem('token') ? (
-        <VMLayout>
-        <Routes>
-              <Route path="/dashboard" element={userActive && localStorage.getItem('token')  ? < Homepage /> : <Loginpage />} />
-              <Route path="/users" element={<Users />} />
-              <Route path="/institutions" element={<Institutions />} />
-              <Route path="/institutions/:id" element={<InstitutionDetail />} />
-              <Route path="/school/:id" element={<SchoolDetail />} />
-              <Route path="/classroom/:id" element={<ClassroomDetail />} />
-              <Route path="/notifications" element={<Notifications />} />
-              <Route path="/vmclass/:id" element={<Vmclass />} />
-              <Route path="/classroom/:id/vmclassresume/:idresume" element={<Vmclassresume />} />
-              <Route path="/create-planification" element={<CreatePlanifications />} />
-              <Route path="/planifications" element={<Planifications />} />
-              <Route path="/*" element={<Error404 />} />
-        </Routes>
-        </VMLayout>) : null }
-      </BrowserRouter>
-    </>
+    //     <Routes>
+    //     <Route path="/" index={true} element={userActive && localStorage.getItem('token') ?  <Navigate to={'/dashboard'} /> : <Loginpage />} />
+    //     </Routes>
+    //     {userActive && localStorage.getItem('token') ? (
+    //     <VMLayout>
+    //     <Routes>
+    //           <Route path="/dashboard"  element={userActive && localStorage.getItem('token')  ? < Homepage /> : <Navigate to={'/'} />} />
+    //           <Route path="/users" element={<Users />} />
+    //           <Route path="/institutions" element={<Institutions />} />
+    //           <Route path="/institutions/:id" element={<InstitutionDetail />} />
+    //           <Route path="/school/:id" element={<SchoolDetail />} />
+    //           <Route path="/classroom/:id" element={<ClassroomDetail />} />
+    //           <Route path="/notifications" element={<Notifications />} />
+    //           <Route path="/vmclass/:id" element={<Vmclass />} />
+    //           <Route path="/classroom/:id/vmclassresume/:idresume" element={<Vmclassresume />} />
+    //           <Route path="/create-planification" element={<CreatePlanifications />} />
+    //           <Route path="/planifications" element={<Planifications />} />
+    //           <Route path="/*" element={<Error404 />} />
+    //     </Routes>
+    //     </VMLayout>) : null }
+    //   </BrowserRouter>
+    // </>
+
+    <>
+    <BrowserRouter>
+    <ScrollToTopOnRender/>
+    
+      <Routes>
+      <Route path="/" index={true} element={!userActive ? (
+        <Loginpage />
+      ) : (
+        userActive && localStorage.getItem('token') ?  <Navigate to={'/dashboard'} /> : <Loginpage />
+      )} />
+      </Routes>
+      {userActive && localStorage.getItem('token') ? (
+      <VMLayout>
+      <Routes>
+            <Route path="/dashboard"  element={userActive && localStorage.getItem('token')  ? < Homepage /> : <Loginpage />} />
+            <Route path="/users" element={<Users />} />
+            <Route path="/institutions" element={<Institutions />} />
+            <Route path="/institutions/:id" element={<InstitutionDetail />} />
+            <Route path="/school/:id" element={<SchoolDetail />} />
+            <Route path="/classroom/:id" element={<ClassroomDetail />} />
+            <Route path="/notifications" element={<Notifications />} />
+            <Route path="/vmclass/:id" element={<Vmclass />} />
+            <Route path="/classroom/:id/vmclassresume/:idresume" element={<Vmclassresume />} />
+            <Route path="/create-planification" element={<CreatePlanifications />} />
+            <Route path="/planifications" element={<Planifications />} />
+            <Route path="/*" element={<Error404 />} />
+      </Routes>
+      </VMLayout>) : null }
+    </BrowserRouter>
+  </>
+
   );
 
 }

@@ -1,17 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from '../components/Sidebar'
-import UserLogout from '../components/UserLogout'
 import { useParams } from 'react-router';
 import { useSelector } from 'react-redux';
 import { reloadValueState } from '../features/reloadSlice';
 import axios from 'axios';
-import GoBackToButton from '../components/GoBackButton';
 import Schoolinfo from '../components/Schoolinfo';
 import Teachers from '../components/Teachers';
 import Classroomlist from '../components/Classroomlist';
 import Students from '../components/Students';
-import ScrollToTopOnRender from '../layout/ScrollToTopOnRender';
-
 
 export default function SchoolDetail() {
 

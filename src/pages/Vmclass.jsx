@@ -1,12 +1,8 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from '../components/Sidebar'
-import UserLogout from '../components/UserLogout'
-import GoBackToButton from '../components/GoBackButton'
 import { useNavigate, useParams } from 'react-router'
 import { GiTeacher } from 'react-icons/gi'
 import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock, BsCloudUpload, BsStopCircle, BsClockHistory } from 'react-icons/bs'
 import axios from 'axios'
-import Topcards from '../components/Topcards'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
 import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
@@ -58,13 +54,12 @@ export default function Vmclass() {
    */
   const [currentStep, setCurrentStep] = useState(0);
   const [userClassroom, setuserClassroom] = useState([])
-  const [teacher, setTeacher] = useState({})                                                  // PROFESOR
-  const [currentActivity, setCurrentActivity] = useState(null);                               // PLANIFICACION DEL DIA
-  const [planner, setPlanner] = useState([]);                                                 // SELECCIONAR LA FECHA DE PLANIFICACION, FILTRA Y RETORNA PLANIFICACION DEL DIA
+  const [currentActivity, setCurrentActivity] = useState(null);          // PLANIFICACION DEL DIA
+  const [planner, setPlanner] = useState([]);                            // SELECCIONAR LA FECHA DE PLANIFICACION, FILTRA Y RETORNA PLANIFICACION DEL DIA
   const [students, setStudents] = useState([])
   const [studentsOnClass, setStudentsOnClass] = useState(0);
   const [studentsOutClass, setStudentsOutClass] = useState(0);
-  const [allTeachers, setAllTeachers] = useState([])
+  const [allTeachers, setAllTeachers] = useState([])                    // PROFESOR
 
 
   /**

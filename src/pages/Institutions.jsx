@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react'
-import UserLogout from '../components/UserLogout'
-import Sidebar from '../components/Sidebar'
 import { useSelector } from 'react-redux'
 import { reloadValueState } from '../features/reloadSlice'
 import axios from 'axios'
 import InstitutionsList from '../components/InstitutionsList'
-import GoBackToButton from '../components/GoBackButton'
+
 
 
 
