@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Header from '../components/Header'
+import UserLogout from '../components/UserLogout'
 import Sidebar from '../components/Sidebar'
 import { useSelector } from 'react-redux'
 import { reloadValueState } from '../features/reloadSlice'
@@ -26,10 +26,8 @@ export default function Institutions() {
 
 
   return (
-    <Sidebar>
+    <>
     <main className='bg-gray-200 min-h-screen min-w-screen' >
-        <Header />
-        <GoBackToButton/>
         <div className='p-2'>
             <div className='w-full m-auto border rounded-lg bg-white overflow-y-auto' >
                 <div className='m-3 p-2 flex  gap-1 '>
@@ -44,6 +42,6 @@ export default function Institutions() {
             </div>
         </div>
     </main>
-</Sidebar>
+</>
   )
 }

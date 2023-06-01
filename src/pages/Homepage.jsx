@@ -1,16 +1,15 @@
 import React from 'react'
 import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
+import UserLogout from '../components/UserLogout'
 
 export default function Homepage() {
   return (
-    <Sidebar>
-      <main className='bg-gray-200 min-h-screen min-w-screen' >
-        <Header />
-        <div className='p-4 grid md:grid-cols-3 gap-4'>
+    <>
+      <main className='bg-gray-200 w-full' >
+        <div className='p-4'>
           <h2>Home</h2>
         </div>
       </main>
-    </Sidebar>
+    </>
   )
 }

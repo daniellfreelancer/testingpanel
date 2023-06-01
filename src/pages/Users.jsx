@@ -3,8 +3,9 @@ import { useSelector } from 'react-redux'
 import { reloadValueState } from '../features/reloadSlice'
 import axios from 'axios'
 import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
+import UserLogout from '../components/UserLogout'
 import UserList from '../components/UserList'
+import HeaderLogo from '../components/HeaderLogo'
 
 export default function Users() {
 
@@ -25,11 +26,8 @@ export default function Users() {
   }, [reloaded])
 
   return (
-    <Sidebar>
-      <main className='bg-gray-200 min-h-screen min-w-screen' >
-        <Header />
-        <UserList usersData={usersData} />
-      </main>
-    </Sidebar>
+    <>
+      <UserList usersData={usersData} />
+    </>
   )
 }

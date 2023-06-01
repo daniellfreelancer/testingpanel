@@ -7,6 +7,8 @@ import { reload } from '../features/reloadSlice';
 import Modaleditplanification from './modal/Modaleditplanification';
 import Modalviewplaning from './modal/Modalviewplaning';
 import { useDeletePlanificationMutation } from '../features/plannerAPI';
+import { isToday } from 'date-fns';
+
 export default function PlanificationInfo({ userPlanner }) {
     const sortedPlanner = [...userPlanner].sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
 
@@ -147,12 +149,16 @@ function PlanificationItem({ startDate, endDate, duration, schoolBlock, content,
         <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex justify-between items-center cursor-pointer text-start'>
             <div className='flex items-center w-full'>
                 <div className='flex items-center gap-2 lg:w-[14rem]'>
-                    <AiOutlineSchedule size={20} />
+
+              
+              {isToday(new Date(startDate)) && true ? (
+                <span className='bg-green-200 text-green-500 px-2 py-1 rounded border border-green-500'>Hoy</span>
+              ) : <AiOutlineSchedule size={20}  /> }
                     {
                         endDate !== null && endDate > startDate ? (
                             <p className='text-gray-700 w-full text-justify'>Desde: {formatDate(startDate)} <br /> Hasta: {formatDate(endDate)}</p>
                         ) : (
-                            <p className='text-gray-700 w-full text-justify  '>Fecha: {formatDate(startDate)}</p>
+                            <p className='text-gray-700 w-full text-justify  '>{formatDate(startDate)}</p>
                         )
                     }
                 </div>

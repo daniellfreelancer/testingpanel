@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
 import { useParams } from 'react-router'
-import GoBackToButton from '../components/GoBackButton'
 import axios from 'axios'
 import { GiTeacher } from 'react-icons/gi'
 import { BsPeopleFill, BsInfoCircle, BsClockHistory, BsCalendarDate } from 'react-icons/bs'
@@ -113,10 +110,8 @@ export default function Vmclassresume() {
 
 
     return (
-        <Sidebar>
+        <>
             <main className='bg-gray-200 w-full min-h-[100vh]' >
-                <Header />
-                <GoBackToButton />
 
                 <div className='w-full m-auto p-4'  >
                     <div className='flex sm:flex sm:flex-wrap justify-between gap-4 w-full' >
@@ -384,6 +379,6 @@ export default function Vmclassresume() {
 
                 </div>
             </main>
-        </Sidebar>
+        </>
     )
 }

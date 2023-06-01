@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import Sidebar from '../components/Sidebar'
-import Header from '../components/Header'
+import UserLogout from '../components/UserLogout'
 import GoBackToButton from '../components/GoBackButton'
 import { useNavigate, useParams } from 'react-router'
 import { GiTeacher } from 'react-icons/gi'
@@ -64,6 +64,7 @@ export default function Vmclass() {
   const [students, setStudents] = useState([])
   const [studentsOnClass, setStudentsOnClass] = useState(0);
   const [studentsOutClass, setStudentsOutClass] = useState(0);
+  const [allTeachers, setAllTeachers] = useState([])
 
 
   /**
@@ -89,6 +90,7 @@ export default function Vmclass() {
   const [observationsList, setObservationsList] = useState([]);
   const [addExtraActivities, setAddExtraActivities] = useState('')
   const [extraActivitiesList, setExtraActivitiesList] = useState([])
+  const [teacherClass, setTeacherClass] = useState("")
 
   const [addExtraIndicator, setAddExtraIndicator] = useState([])
 
@@ -106,7 +108,7 @@ export default function Vmclass() {
   const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
   const [evaluationIndicators, setEvaluationIndicators] = useState([])
   const [selectedIndicators, setSelectedIndicators] = useState([]);
-
+  const [isRunning, setIsRunning] = useState(false);
   function handleNext() {
     setCurrentStep((prev) => prev + 1);
   }
@@ -173,7 +175,7 @@ export default function Vmclass() {
       console.log(data.response)
       setStudents(data.response.students)
       setuserClassroom(data.response)       // TENGO LA DATA DEL GRADO Y NIVEL 
-      setTeacher(data.response.teacher[0])  // PROFESOR DEL SALON DE CLASE
+      setAllTeachers([...data.response.teacher, ...data.response.teacherSubstitute])
       setPlanner(data.response.planner)     // PLANIFICACIONES
     } catch (error) {
       console.log(error);
@@ -467,11 +469,6 @@ export default function Vmclass() {
   }, [indicatorsForEvaluateClass, indicatorsForEvaluateClassManual])
   
 
-
-
-
-
-
   const handleAttendanceToggle = (studentId, attendance) => {
     const updatedPresentStudents = presentStudents.map((student) => {
       if (student._id === studentId) {
@@ -572,10 +569,12 @@ export default function Vmclass() {
 
   const handleStart = () => {
     setIsActive(true);
+    setIsRunning(true); // Mostrar el botón de stop
   };
 
   const handlePause = () => {
     setIsActive(false);
+    setIsRunning(false); // Ocultar el botón de stop
   };
 
   const handleReset = () => {
@@ -677,10 +676,6 @@ export default function Vmclass() {
         setProgressIMGThird(100);
       }, 1000);
   }
-
-
-
-
 
   useEffect(() => {
     if (activityImageFirst && activityImageFirst.size > 5000000) {
@@ -822,7 +817,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
         setIsLoading(true);
 
         axios.post('https://whale-app-qsx89.ondigitalocean.app/vmclass/create-resume', {
-          byTeacher: teacher._id,
+          byTeacher: teacherClass,
           plannerClass: currentActivity ? currentActivity._id : userClassroom._id,
           elapsedClassTime: elapsedTime,
           startClassTime: startClassTime.toISOString(),
@@ -876,20 +871,77 @@ const [newResumeVMCLass] = useCreateResumeMutation();
 
 
   }
+
+  function handleSelectTeacher(event) {
+    const selectedValue = event.target.value;
+    setTeacherClass(selectedValue);
+  }
   
-
-  
-
-
-
 
   return (
-    <Sidebar>
+    <>
       <main className='bg-gray-200 min-h-screen min-w-screen' >
-        <Header />
-        <GoBackToButton />
 
-        <Topcards students={userClassroom.students ? userClassroom.students.length : null} teacher={teacher} classroom={userClassroom} />
+      <div className='grid lg:grid-cols-6 gap-4 p-4' >
+            <div className='lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-2 rounded' >
+                <div className='flex flex-col w-full p-2' >
+                    <p className='text-2xl' >{`${userClassroom?.grade}° Sección: "${userClassroom?.section}" `}</p>
+                    <p className='text-gray-600' >{ userClassroom?.level === 'basico' ? 'Básico' : 'Medio' }</p>
+                </div>
+            </div>
+            <div className='lg:col-span-2 col-span-1 bg-white flex justify-between w-full border px-4 md:p-3 rounded items-center' >            
+            <div className='flex flex-col w-full pb-2 ' >
+
+              <>
+                {/* <select className='cursor-pointer p-2 border rounded'>
+                          <option selected >Seleccione un profesor</option>
+                          {
+                            allTeachers.map((teacher)=>(
+                              <option className='text-2x1' value={teacher._id} >{teacher.name}, {teacher.lastName} - <span className={`${teacher.role === 'SUPF' ? 'p-2 bg-green-200 text-green-500 rounded border-green-500' : 'p-2 bg-yellow-200 text-yellow-green-500 rounded border-yellow-500'}`} >{`${teacher.role === 'SUPF' ? 'Pf. Titular' : 'Pf. Suplente'}`}</span> </option>
+                            ))
+                          }
+                        </select> */}
+                <div>
+                  <select
+                    className="cursor-pointer p-2 border rounded bg-white text-gray-500 w-full"
+                    value={teacherClass}
+                    onChange={handleSelectTeacher}
+                    required
+                  >
+                    <option defaultValue>Seleccione un profesor</option>
+                    {allTeachers.map((teacher) => (
+                      <option
+                        key={teacher._id}
+                        className="text-base font-thin"
+                        value={teacher._id}
+                      >
+                        {`${teacher.name}, ${teacher.lastName} - `}
+                        <span>
+                          {`${teacher.role === 'SUPF' ? 'Pf. Titular' : 'Pf. Suplente'}`}
+                        </span>
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <p className='text-gray-600'>Profesor </p>
+              </>
+
+
+            </div>
+            </div>
+            <div className='lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-4 rounded items-start' >            
+            <div className='flex flex-col w-full ' >
+                <p className='text-2xl  ' >Alumnos</p>
+            </div>
+            <p className='bg-green-200 rounded flex justify-center items-center p-2 w-10 h-10'>
+                    <span className='text-green-700 text-lg'>{students?.length}</span>
+                </p>
+            </div>
+        </div>
+
+
+        
         <div className=" min-h full mx-4 bg-white shadow-lg rounded-md overflow-hidden">
           <div className=" mb-10">
             
@@ -1798,18 +1850,22 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                   <div className="flex items-center justify-center   w-[25rem] p-2 rounded shadow border-l-4 border-teal-500 md:w-[45%] gap-2">
                     <div className='' >
                       {
-                        timer === 0 ? (
+                        timer === 0 || !isRunning ? (
                           <AiOutlinePlayCircle
                           size={100}
                           className='bg-green-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
                           onClick={handleStart}
                         />
                         ) : (
-                          <BsStopCircle
-                          size={100}
-                          className='bg-red-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100'
-                          onClick={handleReset}
-                        />
+                          <>
+                          {isRunning ? ( // Verificar el estado "isRunning"
+                            <BsStopCircle
+                              size={100}
+                              className="bg-red-500 rounded-full text-white cursor-pointer transition-all duration-200 ease-in-out transform hover:scale-105 active:scale-100"
+                              onClick={handleReset}
+                            />
+                          ) : null}
+                        </>
                         )
                       }
 
@@ -2156,6 +2212,6 @@ const [newResumeVMCLass] = useCreateResumeMutation();
         </div>
         {isLoading && <LoadingModal title={'Finalizando clase'} />}
       </main>
-    </Sidebar>
+    </>
   )
 }

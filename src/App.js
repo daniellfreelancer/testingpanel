@@ -1,4 +1,4 @@
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, } from 'react-router-dom';
 import Homepage from "./pages/Homepage";
 import Loginpage from "./pages/Loginpage";
 import Users from "./pages/Users";
@@ -13,8 +13,9 @@ import { useSelector } from 'react-redux';
 import { adminValue } from './features/userApi';
 import SchoolDetail from './pages/SchoolDetail';
 import ClassroomDetail from './pages/ClassroomDetail';
-import Tableplanification from './pages/Tableplanification';
 import Vmclassresume from './pages/Vmclassresume';
+import VMLayout from './layout/VMLayout';
+import ScrollToTopOnRender from './layout/ScrollToTopOnRender';
 
 function App() {
 
@@ -23,8 +24,14 @@ function App() {
   return (
     <>
       <BrowserRouter>
+      <ScrollToTopOnRender/>
+      
         <Routes>
-          <Route path="/" index={true} element={<Loginpage />} />
+        <Route path="/" index={true} element={<Loginpage />} />
+        </Routes>
+        {userActive && localStorage.getItem('token') ? (
+        <VMLayout>
+        <Routes>
               <Route path="/dashboard" element={userActive && localStorage.getItem('token')  ? < Homepage /> : <Loginpage />} />
               <Route path="/users" element={<Users />} />
               <Route path="/institutions" element={<Institutions />} />
@@ -37,11 +44,12 @@ function App() {
               <Route path="/create-planification" element={<CreatePlanifications />} />
               <Route path="/planifications" element={<Planifications />} />
               <Route path="/*" element={<Error404 />} />
-              <Route path="/table" element={<Tableplanification />} />
         </Routes>
+        </VMLayout>) : null }
       </BrowserRouter>
     </>
   );
+
 }
 
 
