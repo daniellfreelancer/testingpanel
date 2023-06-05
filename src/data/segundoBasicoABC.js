@@ -50,7 +50,7 @@ const segundoBasicoABC = [
     {
         id: "EF02OA10",
         label:"EF02 OA 10",
-        value: ""
+        value: "Practicar juegos o actividades motrices para aprender a trabajar en equipo, asumiendo diferentes roles (respetar al otro, recoger los materiales solicitados o liderar si se le asigna ese rol)."
     },
     {
         id: "EF02OA11",

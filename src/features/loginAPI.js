@@ -33,10 +33,20 @@ export const loginAPI = createApi({
                 },
             })
         }),
+        resetPassword: builder.mutation({
+            query: (data) => ({
+                url:'/admin/reset',
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            })
+        })
         
 
     })
 })
 
 export default loginAPI;
-export const {useSigninMutation, useSignoutMutation} = loginAPI;
+export const {useSigninMutation, useSignoutMutation, useResetPasswordMutation} = loginAPI;

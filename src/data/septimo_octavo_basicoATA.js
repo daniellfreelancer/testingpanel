@@ -128,4 +128,4 @@ const septimo_octavo_basicoATA = [
 
 ]
 
-export default primero_sexto_basicoATA
+export default septimo_octavo_basicoATA

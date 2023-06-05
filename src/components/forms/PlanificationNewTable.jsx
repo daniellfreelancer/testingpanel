@@ -6,17 +6,31 @@ import ReactSwitch from 'react-switch';
 import axios from 'axios';
 import materialsSchool from '../../data/materialsSchool';
 import { reload } from '../../features/reloadSlice';
+import { useDispatch } from 'react-redux';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
 import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
-import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'
+import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA';
+import septimo_octavo_basicoACT from '../../data/septimo_octavo_basicoACT'
+import septimo_octavo_basicoATA from '../../data/septimo_octavo_basicoATA'
+
 import dataPrimeroBasico from '../../data/primeroBasicoABC'
 import dataSegundoBasico from '../../data/segundoBasicoABC'
 import dataTerceroBasico from '../../data/terceroBasicoABC'
-import { useDispatch } from 'react-redux';
+import dataCuartoBasico from '../../data/cuartoBasicoABC'
+import dataQuintoBasico from '../../data/quintoBasicoABC'
+import dataSextoBasico from '../../data/sextoBasicoABC'
+import dataSeptimoBasico from '../../data/septimoBasicoABC'
+import dataOctavoBasico from '../../data/octavoBasicoABC'
+
 import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
+import cuartoBasicoIndicadores from '../../data/cuartoBasicoIndicadores'
+import quintoBasicoIndicadores from '../../data/quintoBasicoIndicadores'
+import sextoBasicoIndicadores from '../../data/sextoBasicoIndicadores'
+import septimoBasicoIndicadores from '../../data/septimoBasicoIndicadores'
+import octavoBasicoIndicadores from '../../data/octavoBasicoIndicadores'
 import Modalindicators from '../../components/modal/Modalindicators';
 import {AiOutlineFileText, AiOutlineDelete} from 'react-icons/ai'
 import { useParams } from 'react-router';
@@ -151,7 +165,9 @@ export default function PlanificationNewTable() {
     const [filteredIndicators, setFilteredIndicators] = useState([])
     const [dayWeek, setDayWeek] = useState("day")
     const [normalTime, setNormalTime] = useState("normalTime")
-    const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
+    const [ojbTransversalesActitudes, setOjbTransversalesActitudes] = useState([])
+    const primero_sexto_transversales_actitud  = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
+    const septimo_octavo_transversales_actitud = [...septimo_octavo_basicoACT, ...septimo_octavo_basicoATA]
     const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
     const [userClassroom, setUserClassroom] = useState({})
@@ -207,6 +223,7 @@ export default function PlanificationNewTable() {
                     case "basico":
                         setObjBasalesComplementarios(dataPrimeroBasico);
                         setEvaluationIndicators(primeroBasicoIndicadores)
+                        setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
                         break;
                     case "medio":
                         setObjBasalesComplementarios(dataPrimeroBasico);
@@ -220,6 +237,7 @@ export default function PlanificationNewTable() {
                     case "basico":
                         setObjBasalesComplementarios(dataSegundoBasico);
                         setEvaluationIndicators(segundoBasicoIndicadores)
+                        setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
                         break;
                     case "medio":
                         setObjBasalesComplementarios(dataSegundoBasico);
@@ -233,6 +251,7 @@ export default function PlanificationNewTable() {
                     case "basico":
                         setObjBasalesComplementarios(dataTerceroBasico);
                         setEvaluationIndicators(terceroBasicoIndicadores);
+                        setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
                         break;
                     case "medio":
                         setObjBasalesComplementarios(dataTerceroBasico);
@@ -241,6 +260,66 @@ export default function PlanificationNewTable() {
                         console.log("El nivel no se encontró");
                 }
                 break;
+                case "4":
+                    switch (userClassroom.level) {
+                        case "basico":
+                            setObjBasalesComplementarios(dataCuartoBasico);
+                            setEvaluationIndicators(cuartoBasicoIndicadores);
+                            setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
+                            break;
+                        case "medio":
+                            setObjBasalesComplementarios(dataTerceroBasico);
+                            break;
+                        default:
+                            console.log("El nivel no se encontró");
+                    }
+                    break;
+                case "5":
+                switch (userClassroom.level) {
+                    case "basico":
+                        setObjBasalesComplementarios(dataQuintoBasico);
+                        setEvaluationIndicators(quintoBasicoIndicadores);
+                        setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
+                        break;
+                    default:
+                        console.log("El nivel no se encontró");
+                }
+                break;
+                case "6":
+                    switch (userClassroom.level) {
+                        case "basico":
+                            setObjBasalesComplementarios(dataSextoBasico);
+                            setEvaluationIndicators(sextoBasicoIndicadores);
+                            setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
+                            break;
+                        default:
+                            console.log("El nivel no se encontró");
+                    }
+                    break;
+                    case "7":
+                        switch (userClassroom.level) {
+                            case "basico":
+                                setObjBasalesComplementarios(dataSeptimoBasico);
+                                setEvaluationIndicators(septimoBasicoIndicadores);
+                                setOjbTransversalesActitudes(septimo_octavo_transversales_actitud)
+                                break;
+                                default:
+                                    console.log("El nivel no se encontró");
+                                    }
+                                    break;
+                    case "8":
+                        switch (userClassroom.level) {
+                            case "basico":
+                                setObjBasalesComplementarios(dataOctavoBasico);
+                                setEvaluationIndicators(octavoBasicoIndicadores);
+                                setOjbTransversalesActitudes(septimo_octavo_transversales_actitud)
+                                break;
+                                default:
+                                    console.log("El nivel no se encontró");
+                                    }
+                                    break;
+
+                
             default:
                 console.log("El valor no se encontró");
         }
@@ -678,7 +757,8 @@ export default function PlanificationNewTable() {
                                 <textarea
                                     value={activities}
                                     onChange={(e) => setActivities(e.target.value)}
-                                    className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7rem] " />
+                                    className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 h-[7rem] "
+                                    spellCheck={true} />
                             </div>
                         </td>
                         <td className="px-2 border text-center">
