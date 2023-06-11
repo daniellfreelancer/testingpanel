@@ -1,15 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import "react-datepicker/dist/react-datepicker.css";
 import { reload } from '../../features/reloadSlice';
-import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
-import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'
-import dataPrimeroBasico from '../../data/primeroBasicoABC'
-import dataSegundoBasico from '../../data/segundoBasicoABC'
-import dataTerceroBasico from '../../data/terceroBasicoABC'
-import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
-import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
-import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
 import { usePlanifitacionByIdMutation } from '../../features/plannerAPI';
+import {BsFileEarmarkPdf} from 'react-icons/bs'
 
 
 export default function PlanificationViewTable({ idPlanner }) {
@@ -20,7 +13,7 @@ export default function PlanificationViewTable({ idPlanner }) {
 
 
     /**
-     * DATA DE PLANIFICACIÓN PARA ENVIAR A BASE DE DATOS
+     * DATA DE PLANIFICACIÓN
      */
     const [startDate, setStartDate] = useState(new Date());                                     //FECHA Y HORA DE INICIO
     const [endDate, setEndDate] = useState(null);                                               //FECHA DE FIN
@@ -35,6 +28,8 @@ export default function PlanificationViewTable({ idPlanner }) {
     const [materials, setMaterials] = useState([])                                              //MATERIALES
     const [otherMaterials, setOtherMaterials] = useState([])                                    //OTROS MATERIALES
     const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
+    const [quizDoc, setquizDoc] = useState()
+
     
     /**
      * ACTUALIZAR PLANIFICACIÓN
@@ -47,9 +42,6 @@ export default function PlanificationViewTable({ idPlanner }) {
     const [dayWeek, setDayWeek] = useState("day")
     const [normalTime, setNormalTime] = useState("normalTime")
     // eslint-disable-next-line
-    const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
-    // eslint-disable-next-line
-    const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
     const [userClassroom, setUserClassroom] = useState({})
     // eslint-disable-next-line
@@ -65,7 +57,7 @@ export default function PlanificationViewTable({ idPlanner }) {
      */
     const fetchData = async () => {
         try {
-           // const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
+          // const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
             const response = await getPlanificationById(idPlanner)
             setUserClassroom(response.data.classroom)
             setDuration(response.data.duration)
@@ -84,59 +76,16 @@ export default function PlanificationViewTable({ idPlanner }) {
             setSelectedIndicators(response.data.evaluationIndicators)
             setOtherMaterials(response.data.otherMaterials)
             setIndicatorsForEvaluateClassManual(response.data.evaluationIndicatorsTeacher)
-
-
+            setquizDoc(response.data.quiz)
 
 
         } catch (error) {
             console.log(error);
         }
     };
-    const handleUserData = () => {
-        switch (userClassroom.grade) {
-            case "1":
-                switch (userClassroom.level) {
-                    case "basico":
-                        setObjBasalesComplementarios(dataPrimeroBasico);
-                        setEvaluationIndicators(primeroBasicoIndicadores)
-                        break;
-                    case "medio":
-                        setObjBasalesComplementarios(dataPrimeroBasico);
-                        break;
-                    default:
-                        console.log("El nivel no se encontró");
-                }
-                break;
-            case "2":
-                switch (userClassroom.level) {
-                    case "basico":
-                        setObjBasalesComplementarios(dataSegundoBasico);
-                        setEvaluationIndicators(segundoBasicoIndicadores)
-                        break;
-                    case "medio":
-                        setObjBasalesComplementarios(dataSegundoBasico);
-                        break;
-                    default:
-                        console.log("El nivel no se encontró");
-                }
-                break;
-            case "3":
-                switch (userClassroom.level) {
-                    case "basico":
-                        setObjBasalesComplementarios(dataTerceroBasico);
-                        setEvaluationIndicators(terceroBasicoIndicadores);
-                        break;
-                    case "medio":
-                        setObjBasalesComplementarios(dataTerceroBasico);
-                        break;
-                    default:
-                        console.log("El nivel no se encontró");
-                }
-                break;
-            default:
-                console.log("El valor no se encontró");
-        }
-    }
+
+
+
     function filterEvaluationIndicatorsByClassObjectives(evaluationIndicators, classObjectives) {
         const selectedIds = classObjectives.map(obj => obj.id);
         return evaluationIndicators.filter(indicator => selectedIds.includes(indicator.id));
@@ -186,11 +135,6 @@ export default function PlanificationViewTable({ idPlanner }) {
 
         // eslint-disable-next-line
     }, [reload]);
-
-    useEffect(() => {
-        handleUserData();
-        // eslint-disable-next-line
-    }, [userClassroom])
 
 
 
@@ -404,6 +348,25 @@ export default function PlanificationViewTable({ idPlanner }) {
                         <td className="px-2 border ">
                         <div className="flex flex-col items-center min-h-[15rem] gap-2 px-3">
                             <p> {evaluationType} </p>
+
+                                {
+                                    quizDoc ? (
+                                        <>
+                                        <a 
+                                        href={`https://vmtestphotos.s3.sa-east-1.amazonaws.com/${quizDoc}`}
+                                        target='_blank'
+                                        className='text-blue-500 hover:text-blue-700'
+                                        rel="noreferrer" 
+                                        >
+                                        <BsFileEarmarkPdf size={40} />
+                                        </a>
+                                          
+                                        </>
+                                    ) : null
+
+                                }
+                                
+
                         </div>
                         </td>
                     </tr>

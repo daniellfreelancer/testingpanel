@@ -42,8 +42,7 @@ export default function SchoolDetail() {
           <div className='flex justify-between flex-wrap gap-2' >
             <Schoolinfo infoSchool={infoSchool} />
             <Teachers userTeachersData={userTeachersData} />
-            <Classroomlist userClassroom={userClassroom} />
-            <Students userStudents={userStudents} />
+            <Classroomlist userClassroom={userClassroom} />           
           </div>
         </div>
 

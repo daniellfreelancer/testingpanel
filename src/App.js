@@ -16,6 +16,7 @@ import ClassroomDetail from './pages/ClassroomDetail';
 import Vmclassresume from './pages/Vmclassresume';
 import VMLayout from './layout/VMLayout';
 import ScrollToTopOnRender from './layout/ScrollToTopOnRender';
+import ModalGoBack from './components/modal/ModalGoBack';
 
 function App() {
 
@@ -52,6 +53,7 @@ function App() {
     <>
     <BrowserRouter>
     <ScrollToTopOnRender/>
+
     
       <Routes>
       <Route path="/" index={true} element={!userActive ? (

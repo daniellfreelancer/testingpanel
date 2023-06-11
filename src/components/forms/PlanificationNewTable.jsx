@@ -9,6 +9,7 @@ import { reload } from '../../features/reloadSlice';
 import { useDispatch } from 'react-redux';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+
 import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
 import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA';
 import septimo_octavo_basicoACT from '../../data/septimo_octavo_basicoACT'
@@ -31,6 +32,7 @@ import quintoBasicoIndicadores from '../../data/quintoBasicoIndicadores'
 import sextoBasicoIndicadores from '../../data/sextoBasicoIndicadores'
 import septimoBasicoIndicadores from '../../data/septimoBasicoIndicadores'
 import octavoBasicoIndicadores from '../../data/octavoBasicoIndicadores'
+
 import Modalindicators from '../../components/modal/Modalindicators';
 import {AiOutlineFileText, AiOutlineDelete} from 'react-icons/ai'
 import { useParams } from 'react-router';
@@ -39,13 +41,11 @@ import Swal from 'sweetalert2';
 import { useCreatePlanificationMutation } from '../../features/plannerAPI';
 import { v4 as uuidv4 } from 'uuid';
 import { MdPostAdd } from 'react-icons/md'
+import LoadingModal from '../modal/LoadingModal';
 export default function PlanificationNewTable() {
-    /**
-     * HOOKS / PARAMS
-     */
+
         const dispatch = useDispatch()
         const {id} = useParams()
-
         const [newPlanification] = useCreatePlanificationMutation()
     
 
@@ -65,8 +65,9 @@ export default function PlanificationNewTable() {
     const [materials, setMaterials] = useState([])                                              //MATERIALES
     const [otherMaterials, setOtherMaterials] = useState("")                                    //OTROS MATERIALES
     const [evaluationType, setEvaluationType] = useState([])                                    //TIPO DE EVALUACION
-
     const [addExtraIndicator, setAddExtraIndicator] = useState([])
+    const [quizDoc, setQuizDoc] = useState(null)
+    const [isLoading, setIsLoading] = useState(false);
 
 
       function handleClear(){
@@ -130,22 +131,60 @@ export default function PlanificationNewTable() {
             /* Read more about isConfirmed, isDenied below */
 
             if (result.isConfirmed) {
+                setIsLoading(true);
 
-                newPlanification(planificationData)
-                    .then((response) => {
+                axios.post('https://whale-app-qsx89.ondigitalocean.app/planing/create', {
+                    classroom: id,
+                    startDate: startDate ? startDate.toISOString() : "",
+                    endDate: endDate ? endDate.toISOString() : null,
+                    duration: duration ? duration : 0,
+                    schoolBlock: schoolBlock ? schoolBlock : 0,
+                    content: content,
+                    classObjectives: classObjectives,
+                    evaluationIndicators: indicatorsForEvaluateClass,
+                    evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
+                    learningObjectives: learningObjetives,
+                    activities: activities,
+                    materials: materials,
+                    otherMaterials: otherMaterials,
+                    evaluationType: evaluationType,
+                    quiz: quizDoc
+                }, {
+                    headers: {
+                      'Content-Type': 'multipart/form-data'
+                    }
+                  }).then((response) => {
+                    setIsLoading(false);
+                   
 
-                        if (response.data) {
-                            swal.fire({
-                                text: response.data.message,
-                                icon: "success",
-                            });
-                            handleClear()
-                        }
+                    if (response.data) {
+                        swal.fire({
+                            text: response.data.message,
+                            icon: "success",
+                        });
+                        handleClear()
+                    }
 
-                    })
-                    .catch((error) => {
-                        console.log(error)
-                    })
+                })
+                .catch((error) => {
+                    console.log(error)
+                })
+
+                // newPlanification(planificationData)
+                //     .then((response) => {
+
+                //         if (response.data) {
+                //             swal.fire({
+                //                 text: response.data.message,
+                //                 icon: "success",
+                //             });
+                //             handleClear()
+                //         }
+
+                //     })
+                //     .catch((error) => {
+                //         console.log(error)
+                //     })
 
             } else if (result.isDenied) {
                 Swal.fire('No se ha creado la planificación', '', 'info')
@@ -479,6 +518,16 @@ export default function PlanificationNewTable() {
           return newState;
         });
       };
+      
+      const handleUploadFile = (event) => {
+        const selectedImage = event.target.files[0];
+        if (selectedImage) {
+            setQuizDoc(selectedImage)
+        }
+        setTimeout(() => {
+
+        }, 1000);
+      };
 
 
 
@@ -809,10 +858,7 @@ export default function PlanificationNewTable() {
 
                                         <div className='flex gap-2 border bg-gray-200 px-2 py-1 rounded ' >
                                             <AiOutlineFileText size={20} />
-                                            <input className='w-full font-thin cursor-pointer' type="file" onChange={(event) => {
-                                                const selectedFile = event.target.files[0];
-                                                console.log(selectedFile);
-                                            }} />
+                                            <input className='w-full font-thin cursor-pointer' type="file" onChange={handleUploadFile} />
                                         </div>
                                     ) : (
                                         null
@@ -831,6 +877,7 @@ export default function PlanificationNewTable() {
         Guardar
     </button>
 </div>
+{isLoading && <LoadingModal title={'Creando planificación'} />}
         </div>
     )
 }

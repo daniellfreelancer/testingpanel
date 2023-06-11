@@ -334,7 +334,7 @@ const Sidebar = ({ children }) => {
                                     title="VitalMove Panel"
                                 />
                                 <BiArrowToRight
-                                    className="cursor-pointer text-gray-500  hover:rounded-md hover:shadow-lg  hover:border"
+                                    className="cursor-pointer text-gray-500  hover:rounded-md hover:shadow-lg  w-10 h-10 p-2 hover:border"
                                     size={20}
                                     onClick={tooggleOpenSidebar}
                                     aria-details="Abrir menú"

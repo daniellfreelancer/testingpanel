@@ -361,17 +361,17 @@ export default function Vmclassresume() {
                     <div className='lg:w-full mt-4 lg:mx-0 sm:mx-1 bg-white rounded shadow-lg flex justify-between '>
                         {
                             classResume.imgFirstVMClass ? (
-                                <img src={classResume.imgFirstVMClass} alt='img-class' className='rounded shadow-lg w-[30%]' />
+                                <img src={`https://vmclass-photo.s3.sa-east-1.amazonaws.com/${classResume.imgFirstVMClass}`}  alt='img-class' className='rounded shadow-lg w-[30%]' />
                             ) : null
                         }
                         {
                             classResume.imgSecondVMClass ? (
-                                <img src={classResume.imgSecondVMClass} alt='img-class' className='rounded shadow-lg w-[30%]' />
+                                <img src={`https://vmclass-photo.s3.sa-east-1.amazonaws.com/${classResume.imgSecondVMClass}`} alt='img-class' className='rounded shadow-lg w-[30%]' />
                             ) : null
                         }
                         {
                             classResume.imgThirdVMClass ? (
-                                <img src={classResume.imgThirdVMClass} alt='img-class' className='rounded shadow-lg w-[30%]' />
+                                <img src={`https://vmclass-photo.s3.sa-east-1.amazonaws.com/${classResume.imgThirdVMClass}`} alt='img-class' className='rounded shadow-lg w-[30%]' />
                             ) : null
                         }
                     </div>

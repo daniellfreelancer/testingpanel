@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react'
+ import React, { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router'
 import { GiTeacher } from 'react-icons/gi'
-import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock, BsCloudUpload, BsStopCircle, BsClockHistory } from 'react-icons/bs'
+import { BsPeopleFill, BsCalendarCheckFill, BsSendFill, BsSmartwatch, BsClock, BsCloudUpload, BsStopCircle, BsClockHistory, BsFileEarmarkPdf } from 'react-icons/bs'
 import axios from 'axios'
 import Select from 'react-select'
 import makeAnimated from 'react-select/animated';
@@ -27,6 +27,8 @@ import { v4 as uuidv4 } from 'uuid';
 import { useCreateResumeMutation } from '../features/resumeVmAPI'
 import Swal from 'sweetalert2'
 import LoadingModal from '../components/modal/LoadingModal'
+import AlertOnLeave from '../components/AlertOnLeave'
+import ModalGoBack from '../components/modal/ModalGoBack'
 
 
 
@@ -86,6 +88,7 @@ export default function Vmclass() {
   const [addExtraActivities, setAddExtraActivities] = useState('')
   const [extraActivitiesList, setExtraActivitiesList] = useState([])
   const [teacherClass, setTeacherClass] = useState("")
+  const [quizDoc, setQuizDoc] = useState("")
 
   const [addExtraIndicator, setAddExtraIndicator] = useState([])
 
@@ -155,11 +158,11 @@ export default function Vmclass() {
             setObjBasalesComplementarios(dataTerceroBasico);
             break;
           default:
-            console.log("El nivel no se encontró");
+            console.log("");
         }
         break;
       default:
-        console.log("El valor no se encontró");
+        console.log("");
     }
   }
   const fetchData = async () => {
@@ -167,7 +170,6 @@ export default function Vmclass() {
       const { data } = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/classroom/find/${id}`);
 
 
-      console.log(data.response)
       setStudents(data.response.students)
       setuserClassroom(data.response)       // TENGO LA DATA DEL GRADO Y NIVEL 
       setAllTeachers([...data.response.teacher, ...data.response.teacherSubstitute])
@@ -210,9 +212,12 @@ export default function Vmclass() {
       setEvaluationType(current.evaluationType);
       setEvaluationIndicators(current.evaluationIndicators);
       setSelectedIndicators(current.evaluationIndicators);
+
+      current.quiz ?  setQuizDoc(current.quiz) : setQuizDoc("")
+      console.log(current)
+     
       handleUserData();
     }
-    console.log(current);
     // eslint-disable-next-line
   }, [planner]);
 
@@ -225,9 +230,6 @@ export default function Vmclass() {
     // eslint-disable-next-line 
   }, [userClassroom,currentActivity])
   
-  
-
-
 
   useEffect(() => {
     const filteredEvaluationIndicators = filterEvaluationIndicatorsByClassObjectives(evaluationIndicators, classObjectives);
@@ -355,8 +357,6 @@ export default function Vmclass() {
       value:1
     }
   ]
-
-
 
 
   const [noPresentStudents, setNoPresentStudents] = useState([])
@@ -699,8 +699,6 @@ export default function Vmclass() {
     }
   }, [activityImageThird]);
 
-
-
   const handleAddObservation = () => {
     if (addObservations !== '') {
       setObservationsList([...observationsList, addObservations]);
@@ -729,9 +727,9 @@ export default function Vmclass() {
 
     const [updatePlanification] = useUpdatePlanificationMutation()
 
-        /**
-     * ACTUALIZAR PLANIFICACIÓN
-     */
+/**
+ * ACTUALIZAR PLANIFICACION
+ */
   async function handleEditPlaning() {
 
     let planificationData = {
@@ -776,12 +774,9 @@ export default function Vmclass() {
     // eslint-disable-next-line
 }, [currentStep, currentActivity])
   
-
 // eslint-disable-next-line
 const [newResumeVMCLass] = useCreateResumeMutation();
   
-
-
   const handleCreateResumeVMClass = async  () => {
 
     const plannerWihtoutPlan = {
@@ -809,6 +804,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
   }).then((result) => {
 
       if (result.isConfirmed) {
+
         setIsLoading(true);
 
         axios.post('https://whale-app-qsx89.ondigitalocean.app/vmclass/create-resume', {
@@ -834,7 +830,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
         ).then((response)=>{
           setIsLoading(false);
           if (response.data) {
-            console.log(response)
+            
     
             Swal.fire({
               title: response.data.message,
@@ -871,7 +867,27 @@ const [newResumeVMCLass] = useCreateResumeMutation();
     const selectedValue = event.target.value;
     setTeacherClass(selectedValue);
   }
-  
+
+  useEffect(() => {
+    const blockNavigation = (event) => {
+      event.preventDefault();
+      event.returnValue = ''; // Mensaje genérico, no se mostrará en la mayoría de los navegadores
+
+      // Opcional: puedes mostrar un mensaje personalizado al usuario antes de bloquear la navegación
+      const confirmationMessage = '¿Estás seguro de abandonar esta página? Los cambios no guardados se perderán.';
+      event.returnValue = confirmationMessage; // Mensaje personalizado que se mostrará en algunos navegadores
+
+      return confirmationMessage; // Mensaje personalizado para navegadores basados en Chromium
+    };
+
+    window.addEventListener('beforeunload', blockNavigation);
+
+    return () => {
+      window.removeEventListener('beforeunload', blockNavigation);
+    };
+  }, []);
+
+
 
   return (
     <>
@@ -888,14 +904,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
             <div className='flex flex-col w-full pb-2 ' >
 
               <>
-                {/* <select className='cursor-pointer p-2 border rounded'>
-                          <option selected >Seleccione un profesor</option>
-                          {
-                            allTeachers.map((teacher)=>(
-                              <option className='text-2x1' value={teacher._id} >{teacher.name}, {teacher.lastName} - <span className={`${teacher.role === 'SUPF' ? 'p-2 bg-green-200 text-green-500 rounded border-green-500' : 'p-2 bg-yellow-200 text-yellow-green-500 rounded border-yellow-500'}`} >{`${teacher.role === 'SUPF' ? 'Pf. Titular' : 'Pf. Suplente'}`}</span> </option>
-                            ))
-                          }
-                        </select> */}
+
                 <div>
                   <select
                     className="cursor-pointer p-2 border rounded bg-white text-gray-500 w-full"
@@ -989,7 +998,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                       <div className='flex flex-wrap justify-between' >
                         <div className='w-[45%]'>
                           <div className='text-gray-700 min-h-[5rem] hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '>
-                            <h2 className='underline '>Objetivos de la clase:</h2>
+                            <h2 className='underline '>Objetivos de la clase: (Consignación libro de clase)</h2>
                             <textarea
                               value={content}
                               onChange={(e) => setContent(e.target.value)}
@@ -1181,6 +1190,17 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                             />
                           </div>
 
+                          <div >
+                          <div  className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '  >
+                            <h2 className='underline ' >Actividades:</h2>
+                            <textarea
+                              value={activities}
+                              onChange={(e) => setActivities(e.target.value)}
+                              className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50 min-h-[8rem] "
+                            />
+                          </div>
+                            </div>
+
                           <div className=''>
                             <div className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '>
                             <h2 className='underline'>Materiales:</h2>
@@ -1230,16 +1250,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                             </div>
                           </div>
 
-                          <div >
-                          <div  className='text-gray-700 min-h-[5rem]  hover:bg-gray-100  cursor-pointer border-l-4  border-teal-500 rounded p-2 mb-2 shadow-md '  >
-                            <h2 className='underline ' >Actividades:</h2>
-                            <textarea
-                              value={activities}
-                              onChange={(e) => setActivities(e.target.value)}
-                              className="w-full p-1 mt-1 border border-gray-300 rounded outline-none focus:bg-gray-50  "
-                            />
-                          </div>
-                            </div>
+
 
                           <div>
                                                       
@@ -1259,13 +1270,18 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                             {
                               evaluationType === "Sumativa" ? (
 
-                                <div className='flex gap-2 border px-2 py-1 rounded ' >
-                                  <AiOutlineFileText size={20} />
-                                  <input className='w-full font-thin cursor-pointer' type="file" onChange={(event) => {
-                                    const selectedFile = event.target.files[0];
-                                    console.log(selectedFile);
-                                  }} />
-                                </div>
+
+                                        <a 
+                                        href={`https://vmtestphotos.s3.sa-east-1.amazonaws.com/${quizDoc}`}
+                                        target='_blank'
+                                        className='text-blue-500 hover:text-blue-700'
+                                        rel="noreferrer" 
+                                        >
+                                        <BsFileEarmarkPdf size={40} className='m-2' />
+                                        </a>
+                                          
+
+
                               ) : (
                                 null
                               )
@@ -2210,3 +2226,5 @@ const [newResumeVMCLass] = useCreateResumeMutation();
     </>
   )
 }
+
+
