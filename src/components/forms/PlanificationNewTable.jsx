@@ -42,6 +42,7 @@ import { useCreatePlanificationMutation } from '../../features/plannerAPI';
 import { v4 as uuidv4 } from 'uuid';
 import { MdPostAdd } from 'react-icons/md'
 import LoadingModal from '../modal/LoadingModal';
+import { BsCloudUpload } from 'react-icons/bs';
 export default function PlanificationNewTable() {
 
         const dispatch = useDispatch()
@@ -239,9 +240,6 @@ export default function PlanificationNewTable() {
     let handleColor = (time) => {
         return time.getHours() > 6 ? "text-green-800" : "text-red-800";
     };
-
-
-
 
     /**
      * PETICIONES Y UseEFFECTS
@@ -518,17 +516,27 @@ export default function PlanificationNewTable() {
           return newState;
         });
       };
-      
+      const [progressIMG, setProgressIMG] = useState(0);
+      const [isUploading, setIsUploading] = useState(false);
+    
       const handleUploadFile = (event) => {
         const selectedImage = event.target.files[0];
         if (selectedImage) {
-            setQuizDoc(selectedImage)
+          setIsUploading(true);
+          setQuizDoc(selectedImage);
+    
+          // Simulating file upload progress
+          let progress = 0;
+          const timer = setInterval(() => {
+            progress += 25;
+            setProgressIMG(progress);
+            if (progress === 100) {
+              clearInterval(timer);
+              setIsUploading(false);
+            }
+          }, 250);
         }
-        setTimeout(() => {
-
-        }, 1000);
       };
-
 
 
     /**
@@ -555,7 +563,7 @@ export default function PlanificationNewTable() {
                                 <label>{normalTime === "normalTime" ? (<p>Normal</p>) : (<p>Escolar</p>)}</label>
                             </div>
                         </th>
-                        {tableHeaders.map((header) => (<th key={header} className="py-3 px-3 text-center w-20 ">{header}</th>))}
+                        {tableHeaders.map((header) => (<th key={header} className="py-3 px-3 text-center w-24 ">{header}</th>))}
                     </tr>
                 </thead>
                 <tbody className="text-gray-600 text-xs">
@@ -856,9 +864,28 @@ export default function PlanificationNewTable() {
                                 {
                                     evaluationType === "Sumativa" ? (
 
-                                        <div className='flex gap-2 border bg-gray-200 px-2 py-1 rounded ' >
-                                            <AiOutlineFileText size={20} />
-                                            <input className='w-full font-thin cursor-pointer' type="file" onChange={handleUploadFile} />
+                                        <div className='flex flex-col gap-1 px-2 py-1 rounded w-full items-center justify-center' >
+                                            {/* <AiOutlineFileText size={20} />
+                                            <input className='w-full font-thin cursor-pointer' type="file" onChange={handleUploadFile} /> */}
+
+                                            <label htmlFor="docOne" className="flex md:flex-col items-center p-2 gap-1 text-center h-[100%] rounded border border-gray-300 border-dashed  cursor-pointer hover:shadow-lg">
+                                                <BsCloudUpload className="h-10 w-10 text-teal-700" />
+                                                <div className="space-y-2">
+                                                    <h4 className="font-semibold text-gray-700">Agregar Documento</h4>
+                                                    <span className="text-xs text-gray-300">pdf/word</span>
+                                                    {progressIMG === 100 && (
+                                                        <div className="mt-2 text-xs text-green-500">Archivo cargado con éxito</div>
+                                                    )}
+                                                </div>
+                                                <input type="file" id="docOne" name="docOne" hidden onChange={handleUploadFile} />
+                                            </label>
+
+                                            {isUploading && (
+                                                <div className="relative w-full h-2 bg-gray-200 rounded-full">
+                                                    <div className="absolute top-0 left-0 h-full bg-teal-500 rounded-full" style={{ width: `${progressIMG}%` }} />
+                                                </div>
+                                            )}
+
                                         </div>
                                     ) : (
                                         null

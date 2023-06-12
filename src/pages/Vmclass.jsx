@@ -1266,6 +1266,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                               placeholder='Selecciona...'
                               value={evaluationArrayType.find(element => element.value === evaluationType)}
                               onChange={(selectedOption) => setEvaluationType(selectedOption.value)}
+                              isDisabled={true}
                             />
                             {
                               evaluationType === "Sumativa" ? (

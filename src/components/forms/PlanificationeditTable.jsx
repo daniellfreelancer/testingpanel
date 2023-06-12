@@ -8,15 +8,32 @@ import materialsSchool from '../../data/materialsSchool';
 import { reload } from '../../features/reloadSlice';
 import Select from 'react-select';
 import makeAnimated from 'react-select/animated';
+
 import primero_sexto_basicoACT from '../../data/primero_sexto_basicoACT';
-import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA'
+import primero_sexto_basicoATA from '../../data/primero_sexto_basicoATA';
+import septimo_octavo_basicoACT from '../../data/septimo_octavo_basicoACT'
+import septimo_octavo_basicoATA from '../../data/septimo_octavo_basicoATA'
+
 import dataPrimeroBasico from '../../data/primeroBasicoABC'
 import dataSegundoBasico from '../../data/segundoBasicoABC'
 import dataTerceroBasico from '../../data/terceroBasicoABC'
-import { useDispatch } from 'react-redux';
+import dataCuartoBasico from '../../data/cuartoBasicoABC'
+import dataQuintoBasico from '../../data/quintoBasicoABC'
+import dataSextoBasico from '../../data/sextoBasicoABC'
+import dataSeptimoBasico from '../../data/septimoBasicoABC'
+import dataOctavoBasico from '../../data/octavoBasicoABC'
+
 import primeroBasicoIndicadores from '../../data/primeroBasicoIndicadores'
 import segundoBasicoIndicadores from '../../data/segundoBasicoIndicadores'
 import terceroBasicoIndicadores from '../../data/terceroBasicoIndicadores'
+import cuartoBasicoIndicadores from '../../data/cuartoBasicoIndicadores'
+import quintoBasicoIndicadores from '../../data/quintoBasicoIndicadores'
+import sextoBasicoIndicadores from '../../data/sextoBasicoIndicadores'
+import septimoBasicoIndicadores from '../../data/septimoBasicoIndicadores'
+import octavoBasicoIndicadores from '../../data/octavoBasicoIndicadores'
+
+
+import { useDispatch } from 'react-redux';
 import Modalindicators from '../../components/modal/Modalindicators';
 import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
 import { useParams } from 'react-router';
@@ -24,6 +41,8 @@ import Swal from 'sweetalert2';
 import { useUpdatePlanificationMutation } from '../../features/plannerAPI';
 import { v4 as uuidv4 } from 'uuid';
 import { MdPostAdd } from 'react-icons/md'
+import { BsCloudUpload } from 'react-icons/bs';
+import LoadingModal from '../modal/LoadingModal';
 export default function PlanificationeditTable({ idPlanner }) {
     /**
      * HOOKS / PARAMS
@@ -49,10 +68,11 @@ export default function PlanificationeditTable({ idPlanner }) {
     const [otherMaterials, setOtherMaterials] = useState("")                                    //OTROS MATERIALES
     const [evaluationType, setEvaluationType] = useState([])        
     const [addExtraIndicator, setAddExtraIndicator] = useState([])                            //TIPO DE EVALUACION
-    
+    const [quizDoc, setQuizDoc] = useState(null)
     const [updatePlanification] = useUpdatePlanificationMutation()
-
-
+    const primero_sexto_transversales_actitud  = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
+    const septimo_octavo_transversales_actitud = [...septimo_octavo_basicoACT, ...septimo_octavo_basicoATA]
+    const [isLoading, setIsLoading] = useState(false);
 
     /**
      * 
@@ -76,28 +96,28 @@ export default function PlanificationeditTable({ idPlanner }) {
      */
     async function handleEditPlaning() {
 
-        let planificationData = {
-            classroom : id,
-            startDate: startDate ? startDate.toISOString() : "",
-            endDate: endDate ? endDate.toISOString() : null,
-            duration: duration ? duration : 0,
-            schoolBlock: schoolBlock ? schoolBlock : 0,
-            content: content,
-            classObjectives: classObjectives,
-            evaluationIndicators:indicatorsForEvaluateClass,
-            evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
-            learningObjectives: learningObjetives,
-            activities: activities,
-            materials: materials,
-            otherMaterials: otherMaterials,
-            evaluationType:evaluationType
+        // let planificationData = {
+        //     classroom : id,
+        //     startDate: startDate ? startDate.toISOString() : "",
+        //     endDate: endDate ? endDate.toISOString() : null,
+        //     duration: duration ? duration : 0,
+        //     schoolBlock: schoolBlock ? schoolBlock : 0,
+        //     content: content,
+        //     classObjectives: classObjectives,
+        //     evaluationIndicators:indicatorsForEvaluateClass,
+        //     evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
+        //     learningObjectives: learningObjetives,
+        //     activities: activities,
+        //     materials: materials,
+        //     otherMaterials: otherMaterials,
+        //     evaluationType:evaluationType
 
-        }
+        // }
 
-        const dataForUpdate = {
-            idPlanner,
-            ...planificationData
-        }
+        // const dataForUpdate = {
+        //     idPlanner,
+        //     ...planificationData
+        // }
         Swal.fire({
             title: '¿Deseas actualizar?',
             showDenyButton: true,
@@ -117,22 +137,59 @@ export default function PlanificationeditTable({ idPlanner }) {
             /* Read more about isConfirmed, isDenied below */
 
             if (result.isConfirmed) {
+                setIsLoading(true);
+                axios.patch(`https://whale-app-qsx89.ondigitalocean.app/planing/update/${idPlanner}`, {
+                    classroom : id,
+                    startDate: startDate ? startDate.toISOString() : "",
+                    endDate: endDate ? endDate.toISOString() : "",
+                    duration: duration ? duration : 0,
+                    schoolBlock: schoolBlock ? schoolBlock : 0,
+                    content: content,
+                    classObjectives: classObjectives,
+                    evaluationIndicators:indicatorsForEvaluateClass,
+                    evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
+                    learningObjectives: learningObjetives,
+                    activities: activities,
+                    materials: materials,
+                    otherMaterials: otherMaterials,
+                    evaluationType:evaluationType,
+                    quiz: quizDoc
+                }, {
+                    headers: {
+                      'Content-Type': 'multipart/form-data'
+                    }
+                  }).then((response) => {
+                    setIsLoading(false);
+                   
 
-                updatePlanification(dataForUpdate)
-                .then((response)=>{
-                    dispatch(reload())
-                    console.log(response)
-                    if(response.data){
-                        Swal.fire(
-                            'Actualizado!',
-                            'La planificación se actualizó con éxito.',
-                            'success'
-                            )
-                        }
-                        
+                    if (response.data) {
+                        Swal.fire({
+                            text: response.data.message,
+                            icon: "success",
+                        });
+                       
+                    }
 
                 })
-                .catch(handleError);
+                .catch((error) => {
+                    console.log(error)
+                })
+
+                // updatePlanification(dataForUpdate)
+                // .then((response)=>{
+                //     dispatch(reload())
+                //     console.log(response)
+                //     if(response.data){
+                //         Swal.fire(
+                //             'Actualizado!',
+                //             'La planificación se actualizó con éxito.',
+                //             'success'
+                //             )
+                //         }
+                        
+
+                // })
+                // .catch(handleError);
 
             } else if (result.isDenied) {
                 Swal.fire('No se ha creado la planificación', '', 'info')
@@ -151,12 +208,12 @@ export default function PlanificationeditTable({ idPlanner }) {
     const [filteredIndicators, setFilteredIndicators] = useState([])
     const [dayWeek, setDayWeek] = useState("day")
     const [normalTime, setNormalTime] = useState("normalTime")
-    const ojbTransversalesActitudes = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
+    
     const [objBasalesComplementarios, setObjBasalesComplementarios] = useState([])
     const [evaluationIndicators, setEvaluationIndicators] = useState([])
     const [userClassroom, setUserClassroom] = useState({})
     const [selectedIndicators, setSelectedIndicators] = useState([]);
-
+    const [ojbTransversalesActitudes, setOjbTransversalesActitudes] = useState([])
 
     const evaluationArrayType = [
         {
@@ -196,25 +253,30 @@ export default function PlanificationeditTable({ idPlanner }) {
             const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
 
             console.log(response.data.classroom)
+            console.log(response.data)
+
 
             setUserClassroom(response.data.classroom)
-            console.log(response.data.classroom)
+
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)
             response.data.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
             response.data.endDate !== null && response.data.endDate > response.data.startDate ? setDayWeek("week") : setDayWeek("day")
+            response.data.endDate !== null && response.data.endDate > response.data.startDate ? setEndDate(new Date(response.data.endDate)) : setEndDate(null)
             setContent(response.data.content)
             setClassObjectives(response.data.classObjectives)
             setActivities(response.data.activities)
             setEvaluationType(response.data.evaluationType)
             setLearningObjetives(response.data.learningObjectives)
             setStartDate(new Date(response.data.startDate))
-            setEndDate(new Date(response.data.endDate))
+            
             setMaterials(response.data.materials)
             setIndicatorsForEvaluateClass(response.data.evaluationIndicators)
             setSelectedIndicators(response.data.evaluationIndicators)
             setOtherMaterials(response.data.otherMaterials)
             setIndicatorsForEvaluateClassManual(response.data.evaluationIndicatorsTeacher)
+            setQuizDoc(response.data.quiz)
+
         } catch (error) {
             console.log(error);
         }
@@ -227,6 +289,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                     case "basico":
                         setObjBasalesComplementarios(dataPrimeroBasico);
                         setEvaluationIndicators(primeroBasicoIndicadores)
+                        setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
                         break;
                     case "medio":
                         setObjBasalesComplementarios(dataPrimeroBasico);
@@ -240,6 +303,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                     case "basico":
                         setObjBasalesComplementarios(dataSegundoBasico);
                         setEvaluationIndicators(segundoBasicoIndicadores)
+                        setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
                         break;
                     case "medio":
                         setObjBasalesComplementarios(dataSegundoBasico);
@@ -253,6 +317,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                     case "basico":
                         setObjBasalesComplementarios(dataTerceroBasico);
                         setEvaluationIndicators(terceroBasicoIndicadores);
+                        setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
                         break;
                     case "medio":
                         setObjBasalesComplementarios(dataTerceroBasico);
@@ -261,6 +326,66 @@ export default function PlanificationeditTable({ idPlanner }) {
                         console.log("El nivel no se encontró");
                 }
                 break;
+                case "4":
+                    switch (userClassroom.level) {
+                        case "basico":
+                            setObjBasalesComplementarios(dataCuartoBasico);
+                            setEvaluationIndicators(cuartoBasicoIndicadores);
+                            setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
+                            break;
+                        case "medio":
+                            setObjBasalesComplementarios(dataTerceroBasico);
+                            break;
+                        default:
+                            console.log("El nivel no se encontró");
+                    }
+                    break;
+                case "5":
+                switch (userClassroom.level) {
+                    case "basico":
+                        setObjBasalesComplementarios(dataQuintoBasico);
+                        setEvaluationIndicators(quintoBasicoIndicadores);
+                        setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
+                        break;
+                    default:
+                        console.log("El nivel no se encontró");
+                }
+                break;
+                case "6":
+                    switch (userClassroom.level) {
+                        case "basico":
+                            setObjBasalesComplementarios(dataSextoBasico);
+                            setEvaluationIndicators(sextoBasicoIndicadores);
+                            setOjbTransversalesActitudes(primero_sexto_transversales_actitud)
+                            break;
+                        default:
+                            console.log("El nivel no se encontró");
+                    }
+                    break;
+                    case "7":
+                        switch (userClassroom.level) {
+                            case "basico":
+                                setObjBasalesComplementarios(dataSeptimoBasico);
+                                setEvaluationIndicators(septimoBasicoIndicadores);
+                                setOjbTransversalesActitudes(septimo_octavo_transversales_actitud)
+                                break;
+                                default:
+                                    console.log("El nivel no se encontró");
+                                    }
+                                    break;
+                    case "8":
+                        switch (userClassroom.level) {
+                            case "basico":
+                                setObjBasalesComplementarios(dataOctavoBasico);
+                                setEvaluationIndicators(octavoBasicoIndicadores);
+                                setOjbTransversalesActitudes(septimo_octavo_transversales_actitud)
+                                break;
+                                default:
+                                    console.log("El nivel no se encontró");
+                                    }
+                                    break;
+
+                
             default:
                 console.log("El valor no se encontró");
         }
@@ -453,6 +578,31 @@ export default function PlanificationeditTable({ idPlanner }) {
           return newState;
         });
       };
+
+      const [progressIMG, setProgressIMG] = useState(0);
+      const [isUploading, setIsUploading] = useState(false);
+    
+      const handleUploadFile = (event) => {
+        const selectedImage = event.target.files[0];
+        if (selectedImage) {
+          setIsUploading(true);
+          setQuizDoc(selectedImage);
+    
+          // Simulating file upload progress
+          let progress = 0;
+          const timer = setInterval(() => {
+            progress += 25;
+            setProgressIMG(progress);
+            if (progress === 100) {
+              clearInterval(timer);
+              setIsUploading(false);
+            }
+          }, 250);
+        }
+      };
+
+
+
     
 
     /**
@@ -821,12 +971,25 @@ export default function PlanificationeditTable({ idPlanner }) {
                                 {
                                     evaluationType === "Sumativa" ? (
 
-                                        <div className='flex gap-2 border bg-gray-200 px-2 py-1 rounded ' >
-                                            <AiOutlineFileText size={20} />
-                                            <input className='w-full font-thin cursor-pointer' type="file" onChange={(event) => {
-                                                const selectedFile = event.target.files[0];
-                                                console.log(selectedFile);
-                                            }} />
+
+                                        <div className='flex gap-1 flex-col items-center justify-center px-2 py-1 rounded ' >
+                                                                                       <label htmlFor="docOne" className="flex md:flex-col items-center p-2 gap-1 text-center h-[100%] rounded border border-gray-300 border-dashed  cursor-pointer hover:shadow-lg">
+                                                <BsCloudUpload className="h-10 w-10 text-teal-700" />
+                                                <div className="space-y-2">
+                                                    <h4 className="font-semibold text-gray-700">Actualizar Documento</h4>
+                                                    <span className="text-xs text-gray-300">pdf/word</span>
+                                                    {progressIMG === 100 && (
+                                                        <div className="mt-2 text-xs text-green-500">Archivo cargado con éxito</div>
+                                                    )}
+                                                </div>
+                                                <input type="file" id="docOne" name="docOne" hidden onChange={handleUploadFile} />
+                                            </label>
+
+                                            {isUploading && (
+                                                <div className="relative w-full h-2 bg-gray-200 rounded-full">
+                                                    <div className="absolute top-0 left-0 h-full bg-teal-500 rounded-full" style={{ width: `${progressIMG}%` }} />
+                                                </div>
+                                            )}
                                         </div>
                                     ) : (
                                         null
@@ -845,6 +1008,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                     Actualizar
                 </button>
             </div>
+            {isLoading && <LoadingModal title={'Actualizando planificación'} />}
         </div>
     )
 }
