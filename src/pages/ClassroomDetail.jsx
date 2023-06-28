@@ -51,6 +51,7 @@ export default function ClassroomDetail() {
             }
         };
         fetchData();
+        // eslint-disable-next-line
     }, [id, reloaded]);
 
 
@@ -71,7 +72,7 @@ export default function ClassroomDetail() {
                         <Teachers userTeachersData={userTeachersData} />
                         <Planificationinfo userPlanner={userPlanner} />
                         <ClasshistoryList userClassHistory={userClasshistory} />
-                        <Students userStudents={userStudents} />
+                        <Students userStudents={userStudents} title={"Estudiantes"} />
                     </div>
                 </div>
             </main>

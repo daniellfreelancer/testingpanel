@@ -27,8 +27,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { useCreateResumeMutation } from '../features/resumeVmAPI'
 import Swal from 'sweetalert2'
 import LoadingModal from '../components/modal/LoadingModal'
-import AlertOnLeave from '../components/AlertOnLeave'
-import ModalGoBack from '../components/modal/ModalGoBack'
+// import AlertOnLeave from '../components/AlertOnLeave'
+// import ModalGoBack from '../components/modal/ModalGoBack'
+import studentIcon from '../assets/iconStudent.png'
 
 
 
@@ -185,16 +186,55 @@ export default function Vmclass() {
     // eslint-disable-next-line
   }, [id]);
 
-  useEffect(() => {
-    const today = new Date();
-    const todayLocalDateString = today.toLocaleDateString();
-    const current = planner.find((activity) => {
-      const startDate = new Date(activity.startDate);
-      const endDate = new Date(activity.endDate);
-      const isTodayOrLater = startDate <= today && endDate >= today;
-      return startDate.toLocaleDateString() === todayLocalDateString || isTodayOrLater;
-    });
+  // useEffect(() => {
+  //   const today = new Date();
+  //   const todayLocalDateString = today.toLocaleDateString();
+  //   const current = planner.find((activity) => {
+  //     const startDate = new Date(activity.startDate);
+  //     const endDate = new Date(activity.endDate);
+  //     const isTodayOrLater = startDate <= today && endDate >= today;
+  //     return startDate.toLocaleDateString() === todayLocalDateString || isTodayOrLater;
+  //   });
 
+  //   setCurrentActivity(current || null);
+  
+  //   if (current) {
+  //     setContent(current.content);
+  //     setClassObjectives(current.classObjectives);
+  //     setIndicatorsForEvaluateClass(current.evaluationIndicators);
+  //     setIndicatorsForEvaluateClassManual(current.evaluationIndicatorsTeacher);
+  //     setActivities(current.activities);
+  //     setLearningObjetives(current.learningObjectives);
+  //     setMaterials(current.materials);
+  //     setOtherMaterials(current.otherMaterials)
+  //     setDuration(current.duration);
+  //     current.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime");
+  //     setSchoolBlock(current.schoolBlock);
+  //     setEvaluationType(current.evaluationType);
+  //     setEvaluationIndicators(current.evaluationIndicators);
+  //     setSelectedIndicators(current.evaluationIndicators);
+
+  //     current.quiz ?  setQuizDoc(current.quiz) : setQuizDoc("")
+  //     console.log(current)
+     
+  //     handleUserData();
+  //   }
+  //   // eslint-disable-next-line
+  // }, [planner]);
+  useEffect(() => {
+    const today = new Date().toISOString().slice(0, 10);
+
+
+    const current = planner.find((activity) => {
+      const isStartDateToday = activity.startDate.slice(0, 10) === today
+   
+      const isWithinRange =  activity.startDate <= today && today <= activity.endDate;
+      
+
+      
+      return isStartDateToday || isWithinRange;
+    });
+  
     setCurrentActivity(current || null);
   
     if (current) {
@@ -218,8 +258,9 @@ export default function Vmclass() {
      
       handleUserData();
     }
-    // eslint-disable-next-line
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [planner]);
+  
 
  
   
@@ -1658,7 +1699,8 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                         >
                           <div className="flex justify-between items-center gap-2 min-w-[10rem]">
                           <div className='shadow-md rounded-full w-8 h-8'>
-          <img src={`https://whale-app-qsx89.ondigitalocean.app/public/${student.imgUrl}`} alt='img' className='w-full h-full object-cover rounded-full' />
+          {/* <img src={`https://whale-app-qsx89.ondigitalocean.app/public/${student.imgUrl}`} alt='img' className='w-full h-full object-cover rounded-full' /> */}
+          <img src={studentIcon} alt='img' className='w-full h-full object-cover rounded-full' />
         </div>
                             <h2 className=" font-medium min-w-[7rem] ">{`${student.lastName}, ${student.name}`}</h2>
                             {/* <p> {student.attendance ? 'Asistente' : student.attendance === false ? 'No asistente' : null} </p> */}

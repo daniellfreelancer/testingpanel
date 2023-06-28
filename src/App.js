@@ -16,7 +16,8 @@ import ClassroomDetail from './pages/ClassroomDetail';
 import Vmclassresume from './pages/Vmclassresume';
 import VMLayout from './layout/VMLayout';
 import ScrollToTopOnRender from './layout/ScrollToTopOnRender';
-import ModalGoBack from './components/modal/ModalGoBack';
+import ProgramDetail from './pages/ProgramDetail';
+import WorkshopDetail from './pages/WorkshopDetail';
 
 function App() {
 
@@ -70,7 +71,9 @@ function App() {
             <Route path="/institutions" element={<Institutions />} />
             <Route path="/institutions/:id" element={<InstitutionDetail />} />
             <Route path="/school/:id" element={<SchoolDetail />} />
+            <Route path="/program/:id" element={<ProgramDetail />} />
             <Route path="/classroom/:id" element={<ClassroomDetail />} />
+            <Route path="/workshop/:id" element={<WorkshopDetail />} />
             <Route path="/notifications" element={<Notifications />} />
             <Route path="/vmclass/:id" element={<Vmclass />} />
             <Route path="/classroom/:id/vmclassresume/:idresume" element={<Vmclassresume />} />

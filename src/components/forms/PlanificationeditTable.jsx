@@ -35,10 +35,9 @@ import octavoBasicoIndicadores from '../../data/octavoBasicoIndicadores'
 
 import { useDispatch } from 'react-redux';
 import Modalindicators from '../../components/modal/Modalindicators';
-import { AiOutlineFileText, AiOutlineDelete } from 'react-icons/ai'
+import {  AiOutlineDelete } from 'react-icons/ai'
 import { useParams } from 'react-router';
 import Swal from 'sweetalert2';
-import { useUpdatePlanificationMutation } from '../../features/plannerAPI';
 import { v4 as uuidv4 } from 'uuid';
 import { MdPostAdd } from 'react-icons/md'
 import { BsCloudUpload } from 'react-icons/bs';
@@ -69,7 +68,6 @@ export default function PlanificationeditTable({ idPlanner }) {
     const [evaluationType, setEvaluationType] = useState([])        
     const [addExtraIndicator, setAddExtraIndicator] = useState([])                            //TIPO DE EVALUACION
     const [quizDoc, setQuizDoc] = useState(null)
-    const [updatePlanification] = useUpdatePlanificationMutation()
     const primero_sexto_transversales_actitud  = [...primero_sexto_basicoACT, ...primero_sexto_basicoATA]
     const septimo_octavo_transversales_actitud = [...septimo_octavo_basicoACT, ...septimo_octavo_basicoATA]
     const [isLoading, setIsLoading] = useState(false);
@@ -78,6 +76,7 @@ export default function PlanificationeditTable({ idPlanner }) {
      * 
      * @param {*} error 
      */
+     // eslint-disable-next-line 
     function handleError(error) {
         if (error.response) {
             console.log('La solicitud no se pudo completar:', error.response);
@@ -96,28 +95,7 @@ export default function PlanificationeditTable({ idPlanner }) {
      */
     async function handleEditPlaning() {
 
-        // let planificationData = {
-        //     classroom : id,
-        //     startDate: startDate ? startDate.toISOString() : "",
-        //     endDate: endDate ? endDate.toISOString() : null,
-        //     duration: duration ? duration : 0,
-        //     schoolBlock: schoolBlock ? schoolBlock : 0,
-        //     content: content,
-        //     classObjectives: classObjectives,
-        //     evaluationIndicators:indicatorsForEvaluateClass,
-        //     evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
-        //     learningObjectives: learningObjetives,
-        //     activities: activities,
-        //     materials: materials,
-        //     otherMaterials: otherMaterials,
-        //     evaluationType:evaluationType
 
-        // }
-
-        // const dataForUpdate = {
-        //     idPlanner,
-        //     ...planificationData
-        // }
         Swal.fire({
             title: '¿Deseas actualizar?',
             showDenyButton: true,
@@ -192,7 +170,7 @@ export default function PlanificationeditTable({ idPlanner }) {
                 // .catch(handleError);
 
             } else if (result.isDenied) {
-                Swal.fire('No se ha creado la planificación', '', 'info')
+                Swal.fire('No se ha editado la planificación', '', 'info')
                 
                 dispatch(reload())
             }
@@ -252,12 +230,7 @@ export default function PlanificationeditTable({ idPlanner }) {
         try {
             const response = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/planing/find/${idPlanner}`);
 
-            console.log(response.data.classroom)
-            console.log(response.data)
-
-
             setUserClassroom(response.data.classroom)
-
             setDuration(response.data.duration)
             setSchoolBlock(response.data.schoolBlock)
             response.data.duration > 8 ? setNormalTime("normalTime") : setNormalTime("schoolTime")
@@ -269,7 +242,6 @@ export default function PlanificationeditTable({ idPlanner }) {
             setEvaluationType(response.data.evaluationType)
             setLearningObjetives(response.data.learningObjectives)
             setStartDate(new Date(response.data.startDate))
-            
             setMaterials(response.data.materials)
             setIndicatorsForEvaluateClass(response.data.evaluationIndicators)
             setSelectedIndicators(response.data.evaluationIndicators)

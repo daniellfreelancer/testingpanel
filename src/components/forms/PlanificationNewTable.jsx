@@ -34,11 +34,10 @@ import septimoBasicoIndicadores from '../../data/septimoBasicoIndicadores'
 import octavoBasicoIndicadores from '../../data/octavoBasicoIndicadores'
 
 import Modalindicators from '../../components/modal/Modalindicators';
-import {AiOutlineFileText, AiOutlineDelete} from 'react-icons/ai'
+import {AiOutlineDelete} from 'react-icons/ai'
 import { useParams } from 'react-router';
 import swal from 'sweetalert2'
 import Swal from 'sweetalert2';
-import { useCreatePlanificationMutation } from '../../features/plannerAPI';
 import { v4 as uuidv4 } from 'uuid';
 import { MdPostAdd } from 'react-icons/md'
 import LoadingModal from '../modal/LoadingModal';
@@ -47,7 +46,7 @@ export default function PlanificationNewTable() {
 
         const dispatch = useDispatch()
         const {id} = useParams()
-        const [newPlanification] = useCreatePlanificationMutation()
+
     
 
     /**
@@ -86,7 +85,6 @@ export default function PlanificationNewTable() {
         setOtherMaterials([])
         setEvaluationType("")
         dispatch(reload())
-       
     }
 
       /**
@@ -94,24 +92,6 @@ export default function PlanificationNewTable() {
        */
     async function handleCreatePlaning() {
 
-
-        let planificationData = {
-            classroom: id,
-            startDate: startDate ? startDate.toISOString() : "",
-            endDate: endDate ? endDate.toISOString() : null,
-            duration: duration ? duration : 0,
-            schoolBlock: schoolBlock ? schoolBlock : 0,
-            content: content,
-            classObjectives: classObjectives,
-            evaluationIndicators: indicatorsForEvaluateClass,
-            evaluationIndicatorsTeacher: indicatorsForEvaluateClassManual,
-            learningObjectives: learningObjetives,
-            activities: activities,
-            materials: materials,
-            otherMaterials: otherMaterials,
-            evaluationType: evaluationType
-
-        }
 
 
 
@@ -193,9 +173,6 @@ export default function PlanificationNewTable() {
                 dispatch(reload())
             }
         })
-
-
-
 
     }
 

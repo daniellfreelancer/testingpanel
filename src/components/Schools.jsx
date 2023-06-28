@@ -13,7 +13,7 @@ function Schools({ userSchools }) {
               return (
                 <li
                   key={_id}
-                  className='p-2 m-3 bg-gray-50 hover:bg-gray-100 rounded-lg flex items-center cursor-pointer'
+                  className='p-2 bg-gray-50 hover:bg-gray-100 rounded-lg flex items-center cursor-pointer'
                 >
                   <div className='bg-blue-200 rounded-lg p-3'>
                     <FaSchool className='text-purple-800' />
@@ -37,7 +37,7 @@ function Schools({ userSchools }) {
               );
             })}
           </ul>
-        ) : null}
+        ) : (<p className='text-gray-600'>No tiene escuelas asignados</p>)}
       </div>
     </div>
   );

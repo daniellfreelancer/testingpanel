@@ -4,11 +4,12 @@ import {TbWeight} from 'react-icons/tb'
 import { GiBodyHeight} from 'react-icons/gi'
 import {HiOutlineIdentification} from 'react-icons/hi'
 import {BsTelephone} from 'react-icons/bs'
+import studentIcon from '../assets/iconStudent.png'
 
-export default function Students({ userStudents }) {
+export default function Students({ userStudents, title }) {
   return (
     <div className='w-full md:col-span-1 relative  m-auto border rounded-lg bg-white overflow-scroll'>
-      <p className='p-4 text-2xl font-bold'>Estudiantes:</p>
+      <p className='p-4 text-2xl font-bold'>{title}:</p>
       {
         userStudents.length > 0 ? (
           <ul>
@@ -26,7 +27,7 @@ export default function Students({ userStudents }) {
 }
 
 function StudentItem({ item }) {
-  
+  // eslint-disable-next-line
   const { name, lastName, age, weight, size, rut, email, phone, imgUrl, classroom } = item;
   const fullName = `${lastName.charAt(0).toUpperCase() + lastName.slice(1)}, ${name.charAt(0).toUpperCase() + name.slice(1)}`;
   function formatRut(rut) {
@@ -48,8 +49,9 @@ function StudentItem({ item }) {
   return (
     <li className='bg-gray-50 hover:bg-gray-100 rounded-lg m-3 p-2 flex items-center cursor-pointer gap-4 w-full justify-start'>
       <div className='flex items-center min-w-[10rem] gap-2'>
-        <div className='shadow-md rounded-full w-14 h-14'>
-          <img src={`https://whale-app-qsx89.ondigitalocean.app/public/${imgUrl}`} alt='img' className='w-full h-full object-cover rounded-full' />
+        <div className='shadow-md rounded-full w-12 h-12'>
+          {/* <img src={`https://whale-app-qsx89.ondigitalocean.app/public/${imgUrl}`} alt='img' className='w-full h-full object-cover rounded-full' /> */}
+          <img src={studentIcon} alt='img' className='w-full h-full object-cover rounded-full' />
         </div>
         <p className='text-gray-700'>{fullName}</p>
       </div>

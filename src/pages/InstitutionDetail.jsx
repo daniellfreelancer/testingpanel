@@ -23,10 +23,12 @@ export default function InstitutionDetail() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+       // const { data } = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/insti/find/${id}`);
         const { data } = await axios.get(`https://whale-app-qsx89.ondigitalocean.app/insti/find/${id}`);
         setUsersData(data.response);
         setUsersAdmin(data.response.admins[0]);
         setUserPrograms(data.response.programs);
+        console.log(data.response.programs)
         setUserSchools(data.response.schools);
         setUserTeachersData(data.response.teachers);
 
