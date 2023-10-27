@@ -107,6 +107,8 @@ export default function Vmclassresume() {
         return formattedDate;
       }
 
+      console.log(plannerClass?._id)
+
 
 
     return (

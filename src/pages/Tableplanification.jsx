@@ -252,7 +252,7 @@ export default function Tableplanification() {
         <div className="  overflow-x-auto min-h-[100vh] pt-5  ">
             <GoBackToButton />
             <table className="min-w-max w-full rounded-lg border my-4 ">
-                <caption className="py-3 text-gray-600 border-t">Planificación: {`${userClassroom.grade}° ${userClassroom.level === 'basico' ? 'Básico' : 'Medio'} - Sección: "${userClassroom.section}"`}</caption>
+                <caption className="py-3 text-gray-600 border-t">Planificaciónn: {`${userClassroom.grade}° ${userClassroom.level === 'basico' ? 'Básico' : 'Medio'} - Sección: "${userClassroom.section}"`}</caption>
                 <thead className='border'>
                     <tr className="bg-gray-200 text-gray-500  text-xs">
                         <th className="text-center border w-16">

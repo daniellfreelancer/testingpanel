@@ -7,7 +7,7 @@ export default function Classroomlist({userClassroom}) {
     return (
         <div className='lg:col-span-2 col-span-1 bg-white flex justify-between rounded-lg w-full border p-4 '>
           <div className='flex flex-col w-full pb-2 gap-2'>
-            <p className='text-2xl font-bold'>Grados:</p>
+            <p className='text-2xl font-bold'>Cursos:</p>
             {userClassroom.length > 0 ? (
               <ul>
                 {userClassroom.map((item, _id) => {
@@ -20,7 +20,7 @@ export default function Classroomlist({userClassroom}) {
                         <SiGoogleclassroom className='text-purple-800' />
                       </div>
                       <div className='pl-4 w-full flex items-center justify-between gap-5'>
-                        <p className='text-gray-800 font-bold'> {`${item.grade}° ${item.level === 'basico' ? 'Básico' : 'Medio'}`}</p>
+                        <p className='text-gray-800 font-bold'> {`${item.grade}° ${item.level === 'basico' ? 'Básico' : item.level === 'medio' ? 'Medio' : item.level}`}</p>
                         <p className='text-gray-800 '>Sección: {item.section}</p>
                         <Link to={`/classroom/${item._id}`}>
                         <AiOutlineEye size={20} className='text-indigo-500' aria-label="Ver mas"
