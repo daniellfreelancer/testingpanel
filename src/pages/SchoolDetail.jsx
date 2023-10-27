@@ -6,7 +6,6 @@ import axios from 'axios';
 import Schoolinfo from '../components/Schoolinfo';
 import Teachers from '../components/Teachers';
 import Classroomlist from '../components/Classroomlist';
- // eslint-disable-next-line
 import Students from '../components/Students';
 
 export default function SchoolDetail() {
@@ -18,7 +17,6 @@ export default function SchoolDetail() {
   const [userTeachersData, setUserTeachersData] = useState([])
 
   const [userClassroom, setUserClassroom] = useState([])
-   // eslint-disable-next-line
   const [userStudents, setUserStudents] = useState([])
 
   useEffect(() => {

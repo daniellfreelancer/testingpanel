@@ -37,10 +37,8 @@ export default function Clasroominfo({ userClassroom }) {
           <SiGoogleclassroom className="text-purple-800" />
         </div>
         <p className="text-2xl font-bold">
-          Grado:{" "}
-          {`${userClassroom?.grade}° ${
-            userClassroom?.level === "basico" ? "Básico" : "Medio"
-          }`}{" "}
+          Curso:{" "}
+          {`${userClassroom?.grade}° ${userClassroom?.level === 'basico' ? 'Básico' : userClassroom?.level === 'medio' ? 'Medio' : userClassroom?.level}`}{" "}
           Sección: {userClassroom?.section}
         </p>
       </div>

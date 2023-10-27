@@ -21,7 +21,7 @@ import terceroBasicoIndicadores from '../data/terceroBasicoIndicadores'
 import { MdSettingsBackupRestore, MdPostAdd } from 'react-icons/md'
 import { BiBookmarkAlt } from 'react-icons/bi';
 import { useUpdatePlanificationMutation } from '../features/plannerAPI'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { reload } from '../features/reloadSlice'
 import { v4 as uuidv4 } from 'uuid';
 import { useCreateResumeMutation } from '../features/resumeVmAPI'
@@ -50,6 +50,10 @@ export default function Vmclass() {
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
+
+  const user = useSelector(state => state.auth.user)
+
+
 
 
   /**
@@ -88,7 +92,7 @@ export default function Vmclass() {
   const [observationsList, setObservationsList] = useState([]);
   const [addExtraActivities, setAddExtraActivities] = useState('')
   const [extraActivitiesList, setExtraActivitiesList] = useState([])
-  const [teacherClass, setTeacherClass] = useState("")
+  const [teacherClass, setTeacherClass] = useState(user?.id)
   const [quizDoc, setQuizDoc] = useState("")
 
   const [addExtraIndicator, setAddExtraIndicator] = useState([])
@@ -938,7 +942,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
             <div className='lg:col-span-2 col-span-1 bg-white flex justify-between w-full border p-2 rounded' >
                 <div className='flex flex-col w-full p-2' >
                     <p className='text-2xl' >{`${userClassroom?.grade}° Sección: "${userClassroom?.section}" `}</p>
-                    <p className='text-gray-600' >{ userClassroom?.level === 'basico' ? 'Básico' : 'Medio' }</p>
+                    <p className='text-gray-600' >{ userClassroom?.level === 'basico' ? 'Básico' : userClassroom?.level === 'medio' ? 'Medio' : userClassroom?.level }</p>
                 </div>
             </div>
             <div className='lg:col-span-2 col-span-1 bg-white flex justify-between w-full border px-4 md:p-3 rounded items-center' >            
@@ -949,7 +953,7 @@ const [newResumeVMCLass] = useCreateResumeMutation();
                 <div>
                   <select
                     className="cursor-pointer p-2 border rounded bg-white text-gray-500 w-full"
-                    value={teacherClass}
+                    value={teacherClass || user?.id || ""}
                     onChange={handleSelectTeacher}
                     required
                   >
