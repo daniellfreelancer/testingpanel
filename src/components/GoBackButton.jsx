@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 
 import {BiArrowBack} from 'react-icons/bi'
+ // eslint-disable-next-line
 import { useEffect } from 'react';
 
 function GoBackToButton() {
