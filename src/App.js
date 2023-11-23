@@ -18,6 +18,7 @@ import VMLayout from './layout/VMLayout';
 import ScrollToTopOnRender from './layout/ScrollToTopOnRender';
 import ProgramDetail from './pages/ProgramDetail';
 import WorkshopDetail from './pages/WorkshopDetail';
+import ResetLinkPage from './pages/ResetLinkPage';
 
 function App() {
 
@@ -59,9 +60,11 @@ function App() {
       <Routes>
       <Route path="/" index={true} element={!userActive ? (
         <Loginpage />
+        
       ) : (
         userActive && localStorage.getItem('token') ?  <Navigate to={'/dashboard'} /> : <Loginpage />
       )} />
+      <Route path="/auth/reset-password/:code/:emailUser" element={<ResetLinkPage />} />
       </Routes>
       {userActive && localStorage.getItem('token') ? (
       <VMLayout>
@@ -79,6 +82,7 @@ function App() {
             <Route path="/classroom/:id/vmclassresume/:idresume" element={<Vmclassresume />} />
             <Route path="/create-planification" element={<CreatePlanifications />} />
             <Route path="/planifications" element={<Planifications />} />
+           
             <Route path="/*" element={<Error404 />} />
       </Routes>
       </VMLayout>) : null }

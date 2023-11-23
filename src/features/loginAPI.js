@@ -42,11 +42,21 @@ export const loginAPI = createApi({
                     'Content-type': 'application/json; charset=UTF-8',
                 },
             })
-        })
+        }),
+        sendEmailForResetPassword: builder.mutation({
+            query: (data) => ({
+                url:'/admin/reset-password',
+                method: 'POST',
+                body: data,
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                },
+            })
+        }),
         
 
     })
 })
 
 export default loginAPI;
-export const {useSigninMutation, useSignoutMutation, useResetPasswordMutation} = loginAPI;
+export const {useSigninMutation, useSignoutMutation, useResetPasswordMutation, useSendEmailForResetPasswordMutation} = loginAPI;
